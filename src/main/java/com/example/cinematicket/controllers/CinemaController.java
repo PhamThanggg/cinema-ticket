@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.service.annotation.DeleteExchange;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/cinema")
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
@@ -27,9 +29,30 @@ public class CinemaController {
                 .build();
     }
 
+    @GetMapping("")
+    public ApiResponse<List<CinemaResponse>> getAllCinema(){
+            return ApiResponse.<List<CinemaResponse>>builder()
+                .result(cinemaService.getAllCinema())
+                .build();
+    }
+
+    @GetMapping("/search")
+    public ApiResponse<List<CinemaResponse>> getAllCinema(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit
+    ){
+        List<CinemaResponse> cinemaResponses = cinemaService.searchCinema(name, page, limit).getContent();
+        Long totalCinema = cinemaService.totalCinema();
+        return ApiResponse.<List<CinemaResponse>>builder()
+                .message("Total cinema: " + totalCinema)
+                .result(cinemaResponses)
+                .build();
+    }
+
     @GetMapping("/{id}")
     public ApiResponse<CinemaResponse> getCinemaById(@PathVariable("id") Long id){
-            return ApiResponse.<CinemaResponse>builder()
+        return ApiResponse.<CinemaResponse>builder()
                 .result(cinemaService.getCinemaById(id))
                 .build();
     }

@@ -17,9 +17,19 @@ public enum ErrorCode {
     //=================== USER END =======================
 
     //=================== CINEMA BEGIN =====================
-    CINEMA_EXISTED(2001, "Cinema existed", HttpStatus.BAD_REQUEST),
-    CINEMA_NOT_EXISTED(2001, "Cinema not existed", HttpStatus.BAD_REQUEST),
+    CINEMA_EXISTED(1101, "Cinema existed", HttpStatus.BAD_REQUEST),
+    CINEMA_NOT_EXISTED(1102, "Cinema not existed", HttpStatus.BAD_REQUEST),
     //=================== CINEMA END =======================
+
+    //=================== CINEMA ROOM BEGIN =====================
+    CINEMA_ROOM_EXISTED(1201, "Cinema room existed", HttpStatus.BAD_REQUEST),
+    CINEMA_ROOM_NOT_EXISTED(1202, "Cinema room not existed", HttpStatus.BAD_REQUEST),
+    //=================== CINEMA ROOM END =======================
+
+    //=================== CINEMA ROOM TYPE BEGIN =====================
+    ROOM_TYPE_EXISTED(1301, "Cinema room existed", HttpStatus.BAD_REQUEST),
+    ROOM_TYPE_NOT_EXISTED(1302, "Cinema room not existed", HttpStatus.BAD_REQUEST),
+    //=================== CINEMA ROOM TYPE END =======================
     ;
 
 

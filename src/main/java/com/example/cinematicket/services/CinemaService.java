@@ -2,6 +2,7 @@ package com.example.cinematicket.services;
 
 import com.example.cinematicket.dtos.requests.CinemaRequest;
 import com.example.cinematicket.dtos.responses.CinemaResponse;
+import com.example.cinematicket.dtos.responses.UserResponse;
 import com.example.cinematicket.entities.Cinema;
 
 import com.example.cinematicket.exceptions.AppException;
@@ -12,6 +13,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,17 +45,24 @@ public class CinemaService implements ICinemaService{
 
     @Override
     public List<CinemaResponse> getAllCinema() {
-        return null;
+        return cinemaRepository.findAll().stream().map(cinemaMapper::toCinemaResponse).toList();
     }
 
     @Override
     public Page<CinemaResponse> searchCinema(String name, int page, int limit) {
-        return null;
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "id"));
+        Page<CinemaResponse> pageUser;
+        if(name == null){
+            pageUser = cinemaRepository.findAll(pageRequest).map(cinemaMapper::toCinemaResponse);
+        }else{
+            pageUser = cinemaRepository.findByNameContaining(name, pageRequest).map(cinemaMapper::toCinemaResponse);
+        }
+        return pageUser;
     }
 
     @Override
     public Long totalCinema() {
-        return null;
+        return cinemaRepository.count();
     }
 
     @Override
