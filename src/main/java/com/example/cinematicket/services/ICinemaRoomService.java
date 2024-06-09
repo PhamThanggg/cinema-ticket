@@ -12,11 +12,13 @@ public interface ICinemaRoomService {
 
     CinemaRoomResponse getCinemaRoomById(Long id);
 
-    Page<CinemaRoomResponse> getAllCinemaRoom(int page, int limit);
+    Page<CinemaRoomResponse> getAllCinemaRoom(int page, int limit, Long cinema_id);
 
-    Page<CinemaRoomResponse> searchCinemaRoom(String name, int page, int limit);
+    Page<CinemaRoomResponse> searchCinemaRoom(String name, Long cinema_id, int page, int limit);
 
     Long totalCinemaRoom(Long cinemaId);
+
+    Long totalCinemaRoomSearch(String name);
 
     CinemaRoomResponse updateCinemaRoom(Long id, CinemaRoomRequest request);
 

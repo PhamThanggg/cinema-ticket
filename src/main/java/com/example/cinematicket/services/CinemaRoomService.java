@@ -1,7 +1,6 @@
 package com.example.cinematicket.services;
 
 import com.example.cinematicket.dtos.requests.CinemaRoomRequest;
-import com.example.cinematicket.dtos.responses.CinemaResponse;
 import com.example.cinematicket.dtos.responses.CinemaRoomResponse;
 import com.example.cinematicket.entities.Cinema;
 import com.example.cinematicket.entities.CinemaRoom;
@@ -17,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -44,41 +44,37 @@ public class CinemaRoomService implements ICinemaRoomService{
         CinemaRoom cinemaRoom = cinemaRoomMapper.toCinemaRoom(request);
         cinemaRoom.setCinema(cinema);
         cinemaRoom.setRoomType(roomType);
-        CinemaRoomResponse cinemaRoomResponse = cinemaRoomMapper.toCinemaRoomResponse(cinemaRoomRepository.save(cinemaRoom));
-        cinemaRoomResponse.setCinema(cinema);
-        cinemaRoomResponse.setRoomType(roomType);
-        return cinemaRoomResponse;
+        return cinemaRoomMapper.toCinemaRoomResponse(cinemaRoomRepository.save(cinemaRoom));
     }
 
     @Override
     public CinemaRoomResponse getCinemaRoomById(Long id) {
         CinemaRoom cinemaRoom = cinemaRoomRepository.findById(id).
                 orElseThrow(()-> new AppException(ErrorCode.CINEMA_ROOM_NOT_EXISTED));
-
         return cinemaRoomMapper.toCinemaRoomResponse(cinemaRoom);
     }
 
     @Override
-    public Page<CinemaRoomResponse> getAllCinemaRoom(int page, int limit) {
-        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "id"));
+    public Page<CinemaRoomResponse> getAllCinemaRoom(int page, int limit, Long cinema_id) {
+        Pageable pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "id"));
 
         return cinemaRoomRepository
-                .findAll(pageRequest)
+                .findByCinemaId(cinema_id, pageRequest)
                 .map(cinemaRoomMapper::toCinemaRoomResponse);
     }
 
     @Override
-    public Page<CinemaRoomResponse> searchCinemaRoom(String name, int page, int limit) {
+    public Page<CinemaRoomResponse> searchCinemaRoom(String name, Long cinema_id, int page, int limit) {
         PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "id"));
 
         Page<CinemaRoomResponse> cinemaRoomResponses;
         if(name==null){
             cinemaRoomResponses = cinemaRoomRepository
-                    .findAll(pageRequest)
+                    .findByCinemaId(cinema_id, pageRequest)
                     .map(cinemaRoomMapper::toCinemaRoomResponse);
         }else{
             cinemaRoomResponses = cinemaRoomRepository
-                    .findByNameContaining(name, pageRequest)
+                    .findByNameContainingAndCinemaId(name, cinema_id, pageRequest)
                     .map(cinemaRoomMapper::toCinemaRoomResponse);
         }
 
@@ -91,11 +87,24 @@ public class CinemaRoomService implements ICinemaRoomService{
     }
 
     @Override
+    public Long totalCinemaRoomSearch(String name) {
+        return cinemaRoomRepository.countByCinemaName(name);
+    }
+
+    @Override
     public CinemaRoomResponse updateCinemaRoom(Long id, CinemaRoomRequest request) {
         CinemaRoom cinemaRoom = cinemaRoomRepository.findById(id).
                 orElseThrow(()->new AppException(ErrorCode.CINEMA_ROOM_NOT_EXISTED));
 
+        Cinema cinema = cinemaRepository.findById(request.getCinemaId()).
+                orElseThrow(()->new AppException(ErrorCode.CINEMA_NOT_EXISTED));
+
+        RoomType roomType = roomTypeRepository.findById(request.getRoomTypeId()).
+                orElseThrow(()->new AppException(ErrorCode.ROOM_TYPE_NOT_EXISTED));
+
         cinemaRoomMapper.updateCinemaRoom(cinemaRoom, request);
+        cinemaRoom.setCinema(cinema);
+        cinemaRoom.setRoomType(roomType);
         return cinemaRoomMapper.toCinemaRoomResponse(cinemaRoomRepository.save(cinemaRoom));
     }
 

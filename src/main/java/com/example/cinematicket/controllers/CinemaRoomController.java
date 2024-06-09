@@ -33,7 +33,9 @@ public class CinemaRoomController {
             @RequestParam("limit") int limit,
             @RequestParam("cinema_id") Long cinemaId
     ){
-        List<CinemaRoomResponse> cinemaResponses = cinemaRoomService.getAllCinemaRoom(page, limit).getContent();
+        List<CinemaRoomResponse> cinemaResponses = cinemaRoomService
+                .getAllCinemaRoom(page, limit, cinemaId)
+                .getContent();
         Long totalCinema = cinemaRoomService.totalCinemaRoom(cinemaId);
         return ApiResponse.<List<CinemaRoomResponse>>builder()
                 .message("Total cinema room: " + totalCinema)
@@ -48,8 +50,10 @@ public class CinemaRoomController {
             @RequestParam("limit") int limit,
             @RequestParam("cinema_id") Long cinemaId
     ){
-        List<CinemaRoomResponse> cinemaResponses = cinemaRoomService.searchCinemaRoom(name, page, limit).getContent();
-        Long totalCinema = cinemaRoomService.totalCinemaRoom(cinemaId);
+        List<CinemaRoomResponse> cinemaResponses = cinemaRoomService.searchCinemaRoom(name, cinemaId, page, limit).getContent();
+        Long totalCinema = name==null
+                ?cinemaRoomService.totalCinemaRoom(cinemaId)
+                :cinemaRoomService.totalCinemaRoomSearch(name);
         return ApiResponse.<List<CinemaRoomResponse>>builder()
                 .message("Total cinema room: " + totalCinema)
                 .result(cinemaResponses)
