@@ -15,7 +15,7 @@ import org.springframework.web.service.annotation.DeleteExchange;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/cinema")
+@RequestMapping("${api.prefix}/cinema")
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 @RequiredArgsConstructor
 public class CinemaController {

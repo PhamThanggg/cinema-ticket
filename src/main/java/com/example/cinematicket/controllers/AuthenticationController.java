@@ -17,7 +17,7 @@ import java.text.ParseException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/auth")
+@RequestMapping("${api.prefix}/auth")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
 

@@ -30,6 +30,30 @@ public enum ErrorCode {
     ROOM_TYPE_EXISTED(1301, "Cinema room existed", HttpStatus.BAD_REQUEST),
     ROOM_TYPE_NOT_EXISTED(1302, "Cinema room not existed", HttpStatus.BAD_REQUEST),
     //=================== CINEMA ROOM TYPE END =======================
+
+    //=================== CINEMA SEAT BEGIN =====================
+    CINEMA_SEAT_EXISTED(1401, "Cinema seat existed", HttpStatus.BAD_REQUEST),
+    CINEMA_SEAT_NOT_EXISTED(1402, "Cinema seat not existed", HttpStatus.BAD_REQUEST),
+    CINEMA_SEAT_INDEX_EXISTED(1403, "Rows and columns already exist chairs", HttpStatus.BAD_REQUEST),
+    //=================== CINEMA SEAT END =======================
+
+    //=================== CINEMA SEAT BEGIN =====================
+    GENRE_EXISTED(1501, "Genre existed", HttpStatus.BAD_REQUEST),
+    GENRE_NOT_EXISTED(1502, "Genre not existed", HttpStatus.BAD_REQUEST),
+
+    //=================== CINEMA SEAT END =======================
+
+    //=================== CINEMA SEAT BEGIN =====================
+    MOVIE_EXISTED(1601, "Movie existed", HttpStatus.BAD_REQUEST),
+    MOVIE_NOT_EXISTED(1602, "Movie not existed", HttpStatus.BAD_REQUEST),
+
+    //=================== CINEMA SEAT END =======================
+
+    //=================== CINEMA SEAT BEGIN =====================
+    SEAT_TYPE_EXISTED(1701, "Movie existed", HttpStatus.BAD_REQUEST),
+    SEAT_TYPE_NOT_EXISTED(1702, "Movie not existed", HttpStatus.BAD_REQUEST),
+
+    //=================== CINEMA SEAT END =======================
     ;
 
 
