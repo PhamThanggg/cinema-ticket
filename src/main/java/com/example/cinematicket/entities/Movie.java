@@ -1,8 +1,12 @@
 package com.example.cinematicket.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
+import java.util.Set;
 
 @Table(name="movies")
 @Entity
@@ -35,13 +39,26 @@ public class Movie {
     @Column(name="age_limit")
     int ageLimit;
 
+    @OneToMany
+    @JsonManagedReference
     @Column(name = "image_movie")
-    String image;
+    @JoinColumn(name="id_movie")
+    List<MovieImage> images;
 
     String trailer;
 
     String status;
 
     String description;
+
+    @Column(name = "star_rating")
+    String starRating;
+
+    @ManyToMany
+    @JsonManagedReference
+    @JoinTable(name = "movie_genres",
+            joinColumns = @JoinColumn(name = "id_movie"),
+            inverseJoinColumns = @JoinColumn(name = "id_genre"))
+    List<Genre> genres;
 
 }

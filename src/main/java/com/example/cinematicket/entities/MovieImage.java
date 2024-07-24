@@ -5,10 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-import java.util.Set;
-
-@Table(name="genres")
+@Table(name="movie_images")
 @Entity
 @Getter
 @Setter
@@ -16,18 +13,20 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Genre {
-
+public class MovieImage {
+    public static final int MAXIMUM_IMAGES_PER_MOVIE = 5;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_genre")
+    @Column(name="id_movie_images")
     Long id;
 
-    String name;
+    @Column(name="image_url")
+    String imageUrl;
 
-    String status;
-
-    @ManyToMany(mappedBy = "genres")
+    @ManyToOne
     @JsonBackReference
-    List<Movie> movies;
+    @JoinColumn(name = "id_movie")
+    private Movie movie;
+
+
 }

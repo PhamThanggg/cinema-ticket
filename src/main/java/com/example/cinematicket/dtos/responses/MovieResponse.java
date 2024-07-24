@@ -1,8 +1,13 @@
 package com.example.cinematicket.dtos.responses;
 
+import com.example.cinematicket.entities.Genre;
+import com.example.cinematicket.entities.MovieImage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
+import java.util.Set;
 
 
 @Data
@@ -11,13 +16,10 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MovieResponse {
-    @JsonProperty("id_movie")
     Long id;
 
-    @JsonProperty("name_movie")
     String nameMovie;
 
-    @JsonProperty("title_movie")
     String titleMovie;
 
     String duration;
@@ -28,16 +30,18 @@ public class MovieResponse {
 
     String performers;
 
-    @JsonProperty("age_limit")
     int ageLimit;
 
-    @JsonProperty("image_movie")
-    String image;
+    List<MovieImage> images;
 
     String trailer;
 
     String status;
 
     String description;
+
+    String starRating;
+
+    List<Genre> genres;
 
 }

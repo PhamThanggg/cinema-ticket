@@ -18,3 +18,7 @@ jwt:
   refreshable-duration: 36000 # in seconds
 api:
   prefix: api/v1
+cloudinary:
+  cloud-name: dsoz9gcfd
+  api-key: 791357523784923
+  api-secret: NgevDFEbDQCBM08mo5lsvW93l40

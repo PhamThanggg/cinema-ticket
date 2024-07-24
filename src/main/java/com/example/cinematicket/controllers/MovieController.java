@@ -4,14 +4,20 @@ import com.example.cinematicket.dtos.requests.GenreRequest;
 import com.example.cinematicket.dtos.requests.MovieRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
 import com.example.cinematicket.dtos.responses.GenreResponse;
+import com.example.cinematicket.dtos.responses.MovieImageResponse;
 import com.example.cinematicket.dtos.responses.MovieResponse;
+import com.example.cinematicket.entities.MovieImage;
 import com.example.cinematicket.services.MovieService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -22,10 +28,24 @@ public class MovieController {
     MovieService movieService;
 
     @PostMapping("")
-    public ApiResponse<MovieResponse> create(@RequestBody @Valid MovieRequest request){
+    public ApiResponse<MovieResponse> create(
+            @RequestBody @Valid MovieRequest request
+            ) throws IOException {
+        MovieResponse movieResponses = movieService.createMovie(request);
         return ApiResponse.<MovieResponse>builder()
                 .message("Create movie successfully")
-                .result(movieService.createMovie(request))
+                .result(movieResponses)
+                .build();
+    }
+
+    @PostMapping(value = "upload_images/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<List<MovieImageResponse>> uploadImages(
+            @PathVariable("id") Long movieId,
+            @ModelAttribute List<MultipartFile> files
+    ) throws IOException {
+        return ApiResponse.<List<MovieImageResponse>>builder()
+                .message("Create movie successfully")
+                .result(movieService.createMovieImage(movieId, files))
                 .build();
     }
 

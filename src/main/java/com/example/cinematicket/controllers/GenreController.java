@@ -30,8 +30,7 @@ public class GenreController {
     @GetMapping("")
     public ApiResponse<List<GenreResponse>> getAllCinemaSeat(
             @RequestParam("page") int page,
-            @RequestParam("limit") int limit,
-            @RequestParam("cinema_id") Long cinemaId
+            @RequestParam("limit") int limit
     ){
         List<GenreResponse> cinemaResponses = genreService
                 .getAllGenre(page, limit)
