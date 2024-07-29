@@ -15,6 +15,5 @@ import lombok.experimental.FieldDefaults;
 public class GenreResponse {
     Long id;
     String name;
-
     String status;
 }

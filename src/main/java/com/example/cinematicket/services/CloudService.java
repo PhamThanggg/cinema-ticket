@@ -28,6 +28,7 @@ public class CloudService implements ICloudService{
     private static final Set<String> VIDEO_EXTENSIONS = Set.of("mp4", "avi", "mov", "wmv", "flv", "mkv");
 
     private static final int MAX_SIZE_IMAGE = 10 * 1024 * 1024;
+    private static final int MAX_SIZE_VIDEO = 100 * 1024 * 1024;
 
     private Cloudinary cloudinary;
 
@@ -67,11 +68,29 @@ public class CloudService implements ICloudService{
         if (!isVideo(file)) {
             throw new IllegalArgumentException("File is not a valid video: " + file.getOriginalFilename());
         }
+        if (file.getSize() > MAX_SIZE_VIDEO) {
+            throw new IllegalArgumentException("File size exceeds " + MAX_SIZE_IMAGE + " : " + file.getOriginalFilename());
+        }
         return cloudinary.uploader()
                 .upload(file.getBytes(), ObjectUtils.
                         asMap("resource_type", "video",
-                                "folder", "cinema/movieVideo")
+                                "folder", "cinema/movieVideo",
+                                "unique_filename", true)
                 );
+    }
+
+    @Override
+    public void deleteImage(String publicId) throws IOException {
+        cloudinary.uploader().destroy(publicId,
+                ObjectUtils.asMap("resource_type", "image",
+                        "folder", "cinema/movieImages"));
+    }
+
+    @Override
+    public void deleteVideo(String publicId) throws IOException {
+        cloudinary.uploader().destroy(publicId,
+                ObjectUtils.asMap("resource_type", "video",
+                        "folder", "cinema/movieVideo"));
     }
 
     private boolean isImage(MultipartFile file) {

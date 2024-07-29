@@ -10,5 +10,5 @@ import java.util.Set;
 @Repository
 public interface GenreRepository extends JpaRepository<Genre, Long> {
     boolean existsByName(String name);
-    List<Genre> findByIdIn(Set<Long> ids);
+    Set<Genre> findByIdIn(Set<Long> ids);
 }

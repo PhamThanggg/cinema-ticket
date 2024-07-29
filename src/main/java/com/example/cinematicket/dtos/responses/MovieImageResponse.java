@@ -14,5 +14,4 @@ public class MovieImageResponse {
 
     String imageUrl;
 
-    Movie movie;
 }

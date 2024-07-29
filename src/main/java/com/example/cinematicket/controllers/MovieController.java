@@ -1,12 +1,9 @@
 package com.example.cinematicket.controllers;
 
-import com.example.cinematicket.dtos.requests.GenreRequest;
 import com.example.cinematicket.dtos.requests.MovieRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
-import com.example.cinematicket.dtos.responses.GenreResponse;
 import com.example.cinematicket.dtos.responses.MovieImageResponse;
 import com.example.cinematicket.dtos.responses.MovieResponse;
-import com.example.cinematicket.entities.MovieImage;
 import com.example.cinematicket.services.MovieService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -17,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("${api.prefix}/movie")
@@ -49,6 +46,17 @@ public class MovieController {
                 .build();
     }
 
+    @PostMapping(value = "upload_video/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<MovieResponse> uploadVideo(
+            @PathVariable("id") Long movieId,
+            @ModelAttribute MultipartFile file
+    ) throws IOException {
+        return ApiResponse.<MovieResponse>builder()
+                .message("Upload movie successfully")
+                .result(movieService.createMovieVideo(movieId, file))
+                .build();
+    }
+
     @GetMapping("")
     public ApiResponse<List<MovieResponse>> getAllMovie(
             @RequestParam("page") int page,
@@ -70,6 +78,13 @@ public class MovieController {
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ){
+//        @Query("SELECT p FROM Product p WHERE " +
+//                "(p.name LIKE %:searchTerm% OR p.description LIKE %:searchTerm%) " +
+//                "AND (:category IS NULL OR p.category = :category)")
+//        Page<Product> search(
+//                @Param("searchTerm") String searchTerm,
+//                @Param("category") String category,
+//                Pageable pageable);
         return null;
     }
 
@@ -90,6 +105,18 @@ public class MovieController {
                 .build();
     }
 
+    @PostMapping("/update_videoPath/{id}")
+    public ApiResponse<MovieResponse> updateVideo(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> payload)
+    {
+        String videoPath = (String) payload.get("videoPath");
+        return ApiResponse.<MovieResponse>builder()
+                .message("Create video path successfully")
+                .result(movieService.createMovieVideoLink(id, videoPath))
+                .build();
+    }
+
     @DeleteMapping("/{id}")
     public ApiResponse<String> deleteMovieById(@PathVariable("id") Long id){
         movieService.deleteMovie(id);
@@ -97,4 +124,6 @@ public class MovieController {
                 .result("Gender has been deleted")
                 .build();
     }
+
+
 }

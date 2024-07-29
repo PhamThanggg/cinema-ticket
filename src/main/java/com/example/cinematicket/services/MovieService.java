@@ -44,7 +44,7 @@ public class MovieService implements IMovieService{
 
     @Override
     public MovieResponse createMovie(MovieRequest request) throws IOException {
-        List<Genre> listGenre = genreRepository.findByIdIn(request.getGenres());
+        Set<Genre> listGenre = genreRepository.findByIdIn(request.getGenres());
         Set<Long> foundIds = listGenre.stream().map(Genre::getId).collect(Collectors.toSet());
         List<Long> missingGenreId = request.getGenres().stream()
                 .filter(id -> !foundIds.contains(id)).toList();
@@ -87,7 +87,7 @@ public class MovieService implements IMovieService{
         Movie movie = movieRepository.findById(id).
                 orElseThrow(()-> new AppException(ErrorCode.MOVIE_EXISTED));
 
-        List<Genre> listGenre = genreRepository.findByIdIn(request.getGenres());
+        Set<Genre> listGenre = genreRepository.findByIdIn(request.getGenres());
         Set<Long> foundIds = listGenre.stream().map(Genre::getId).collect(Collectors.toSet());
         List<Long> missingGenreId = request.getGenres().stream()
                 .filter(idG -> !foundIds.contains(id)).toList();
@@ -137,4 +137,65 @@ public class MovieService implements IMovieService{
 
         return movieImageResponse;
     }
+
+    @Override
+    public void deleteMovieImage(Set<String> movieId) throws IOException {
+        Set<MovieImage> movieImages = movieImageRepository.findByIdIn(movieId);
+        if(movieImages.isEmpty())
+            throw new RuntimeException("Image does not exist");
+
+        Set<Long> imageId = null;
+        for (MovieImage list : movieImages){
+            String publicId = getPublicId(list.getImageUrl());
+            if(publicId != null){
+                cloudService.deleteImage(publicId);
+            }
+            imageId.add(list.getId());
+        }
+
+        movieImageRepository.deleteByIdIn(imageId);
+    }
+
+    @Override
+    public MovieResponse createMovieVideo(Long movieId, MultipartFile file) throws IOException {
+        Movie movie = movieRepository.findById(movieId).
+                orElseThrow(()-> new AppException(ErrorCode.MOVIE_EXISTED));
+
+        Map video = cloudService.uploadVideo(file);
+        String videoPath = video.get("url").toString();
+        movie.setTrailer(videoPath);
+
+        return movieMapper.toMovieResponse(movieRepository.save(movie));
+    }
+
+    @Override
+    public MovieResponse createMovieVideoLink(Long movieId, String path) {
+        Movie movie = movieRepository.findById(movieId).
+                orElseThrow(()-> new AppException(ErrorCode.MOVIE_EXISTED));
+
+        movie.setTrailer(path);
+        return movieMapper.toMovieResponse(movieRepository.save(movie));
+    }
+
+    @Override
+    public void updateVideo(Long movieId) {
+
+    }
+
+    private String getPublicId(String imagePath){
+        if (imagePath == null || !imagePath.contains("/")) {
+            throw new RuntimeException("Invalid path");
+        }
+
+        String[] pathSegments = imagePath.split("/");
+
+        if (pathSegments.length > 0) {
+            String publicIdWithFormat = pathSegments[pathSegments.length-1];
+            String[] publicIdSegments = publicIdWithFormat.split("\\.");
+            return publicIdSegments[0];
+        }
+
+        return null;
+    }
+
 }

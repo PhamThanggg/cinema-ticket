@@ -10,4 +10,8 @@ public interface ICloudService {
     List<Map> uploadFiles(List<MultipartFile> files) throws IOException;
 
     Map uploadVideo(MultipartFile file) throws IOException;
+
+    void deleteImage(String publicId) throws IOException;
+
+    void deleteVideo(String publicId) throws IOException;
 }

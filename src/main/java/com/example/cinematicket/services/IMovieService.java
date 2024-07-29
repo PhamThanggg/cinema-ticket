@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 public interface IMovieService {
     MovieResponse createMovie(MovieRequest request) throws IOException;
@@ -23,5 +24,13 @@ public interface IMovieService {
 
     void deleteMovie(Long id);
 
-    public  List<MovieImageResponse> createMovieImage(Long movieId, List<MultipartFile> files) throws IOException;
+    List<MovieImageResponse> createMovieImage(Long movieId, List<MultipartFile> files) throws IOException;
+
+    void deleteMovieImage(Set<String> movieId) throws IOException;
+
+    MovieResponse createMovieVideo(Long movieId, MultipartFile file) throws IOException;
+
+    MovieResponse createMovieVideoLink(Long movieId, String path);
+
+    void updateVideo(Long movieId);
 }

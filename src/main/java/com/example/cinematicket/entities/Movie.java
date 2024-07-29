@@ -39,11 +39,10 @@ public class Movie {
     @Column(name="age_limit")
     int ageLimit;
 
-    @OneToMany
-    @JsonManagedReference
+    @OneToMany(fetch = FetchType.LAZY)
     @Column(name = "image_movie")
     @JoinColumn(name="id_movie")
-    List<MovieImage> images;
+    Set<MovieImage> images;
 
     String trailer;
 
@@ -54,11 +53,11 @@ public class Movie {
     @Column(name = "star_rating")
     String starRating;
 
-    @ManyToMany
-    @JsonManagedReference
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JsonManagedReference
     @JoinTable(name = "movie_genres",
-            joinColumns = @JoinColumn(name = "id_movie"),
-            inverseJoinColumns = @JoinColumn(name = "id_genre"))
-    List<Genre> genres;
+            joinColumns = @JoinColumn(name = "id_movie", referencedColumnName = "id_movie"),
+            inverseJoinColumns = @JoinColumn(name = "id_genre", referencedColumnName = "id_genre"))
+    Set<Genre> genres;
 
 }

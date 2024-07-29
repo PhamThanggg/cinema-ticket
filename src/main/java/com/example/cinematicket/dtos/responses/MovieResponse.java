@@ -32,7 +32,7 @@ public class MovieResponse {
 
     int ageLimit;
 
-    List<MovieImage> images;
+    Set<MovieImageResponse> images;
 
     String trailer;
 
@@ -42,6 +42,6 @@ public class MovieResponse {
 
     String starRating;
 
-    List<Genre> genres;
+    Set<GenreResponse> genres;
 
 }

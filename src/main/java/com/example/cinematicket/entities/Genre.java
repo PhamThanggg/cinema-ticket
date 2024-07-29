@@ -1,6 +1,7 @@
 package com.example.cinematicket.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -27,7 +28,6 @@ public class Genre {
 
     String status;
 
-    @ManyToMany(mappedBy = "genres")
-    @JsonBackReference
-    List<Movie> movies;
+    @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
+    Set<Movie> movies;
 }
