@@ -54,7 +54,6 @@ public class Movie {
     String starRating;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JsonManagedReference
     @JoinTable(name = "movie_genres",
             joinColumns = @JoinColumn(name = "id_movie", referencedColumnName = "id_movie"),
             inverseJoinColumns = @JoinColumn(name = "id_genre", referencedColumnName = "id_genre"))
