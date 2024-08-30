@@ -20,7 +20,7 @@ public class CinemaSeat {
     @Column(name="name_seat")
     String name;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_seat_type")
     SeatType seatType;
 
@@ -33,5 +33,6 @@ public class CinemaSeat {
 
     @Column(name = "column_seat")
     String colum;
+
     String status;
 }

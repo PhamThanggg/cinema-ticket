@@ -3,7 +3,7 @@ package com.example.cinematicket.controllers;
 import com.example.cinematicket.dtos.requests.GenreRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
 import com.example.cinematicket.dtos.responses.GenreResponse;
-import com.example.cinematicket.services.GenreService;
+import com.example.cinematicket.services.movie.GenreService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -28,22 +28,22 @@ public class GenreController {
     }
 
     @GetMapping("")
-    public ApiResponse<List<GenreResponse>> getAllCinemaSeat(
+    public ApiResponse<List<GenreResponse>> getAllGenre(
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ){
-        List<GenreResponse> cinemaResponses = genreService
+        List<GenreResponse> genreResponses = genreService
                 .getAllGenre(page, limit)
                 .getContent();
-        int totalCinema = cinemaResponses.size();
+        int totalGenre = genreResponses.size();
         return ApiResponse.<List<GenreResponse>>builder()
-                .message("Total genre: " + totalCinema)
-                .result(cinemaResponses)
+                .message("Total genre: " + totalGenre)
+                .result(genreResponses)
                 .build();
     }
 
     @GetMapping("/search")
-    public ApiResponse<List<GenreResponse>> getAllCinema(
+    public ApiResponse<List<GenreResponse>> getAllGenre(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam("page") int page,
             @RequestParam("limit") int limit,
@@ -53,14 +53,14 @@ public class GenreController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<GenreResponse> getCinemaById(@PathVariable("id") Long id){
+    public ApiResponse<GenreResponse> getGenreById(@PathVariable("id") Long id){
         return ApiResponse.<GenreResponse>builder()
                 .result(genreService.findById(id))
                 .build();
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<GenreResponse> updateCinemaById(
+    public ApiResponse<GenreResponse> updateGenreById(
             @PathVariable("id") Long id,
             @RequestBody GenreRequest request
     ){
@@ -70,7 +70,7 @@ public class GenreController {
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<String> deleteCinemaById(@PathVariable("id") Long id){
+    public ApiResponse<String> deleteGenreById(@PathVariable("id") Long id){
         genreService.deleteGenre(id);
         return ApiResponse.<String>builder()
                 .result("Gender has been deleted")

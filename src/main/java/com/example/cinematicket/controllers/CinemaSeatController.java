@@ -1,11 +1,9 @@
 package com.example.cinematicket.controllers;
 
-import com.example.cinematicket.dtos.requests.CinemaRoomRequest;
 import com.example.cinematicket.dtos.requests.CinemaSeatRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
-import com.example.cinematicket.dtos.responses.CinemaRoomResponse;
 import com.example.cinematicket.dtos.responses.CinemaSeatResponse;
-import com.example.cinematicket.services.CinemaSeatService;
+import com.example.cinematicket.services.cinemaSeat.CinemaSeatService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

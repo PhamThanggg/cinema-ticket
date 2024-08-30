@@ -5,7 +5,7 @@ import com.example.cinematicket.dtos.requests.TokenRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
 import com.example.cinematicket.dtos.responses.AuthenticationResponse;
 import com.example.cinematicket.dtos.responses.IntrospectResponse;
-import com.example.cinematicket.services.AuthenticationService;
+import com.example.cinematicket.services.user.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

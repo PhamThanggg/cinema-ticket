@@ -4,7 +4,7 @@ import com.example.cinematicket.dtos.requests.MovieRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
 import com.example.cinematicket.dtos.responses.MovieImageResponse;
 import com.example.cinematicket.dtos.responses.MovieResponse;
-import com.example.cinematicket.services.MovieService;
+import com.example.cinematicket.services.movie.MovieService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("${api.prefix}/movie")
@@ -74,18 +75,17 @@ public class MovieController {
 
     @GetMapping("/search")
     public ApiResponse<List<MovieResponse>> searchMovie(
-            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "nameMovie", required = false) String nameMovie,
+            @RequestParam(value = "genreId", required = false) Set<Integer> genreId,
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ){
-//        @Query("SELECT p FROM Product p WHERE " +
-//                "(p.name LIKE %:searchTerm% OR p.description LIKE %:searchTerm%) " +
-//                "AND (:category IS NULL OR p.category = :category)")
-//        Page<Product> search(
-//                @Param("searchTerm") String searchTerm,
-//                @Param("category") String category,
-//                Pageable pageable);
-        return null;
+        List<MovieResponse> movieResponse = movieService
+                .searchMovieOrGenre(nameMovie, genreId, page, limit)
+                .getContent();
+        return ApiResponse.<List<MovieResponse>> builder()
+                .result(movieResponse)
+                .build();
     }
 
     @GetMapping("/{id}")

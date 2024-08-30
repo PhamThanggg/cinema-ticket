@@ -1,8 +1,5 @@
 package com.example.cinematicket.dtos.responses;
 
-import com.example.cinematicket.entities.CinemaRoom;
-import com.example.cinematicket.entities.SeatType;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,8 +11,8 @@ import lombok.experimental.FieldDefaults;
 public class CinemaSeatResponse {
     Long id;
     String name;
-    SeatType seatType;
-    CinemaRoom cinemaRoom;
+    SeatTypeResponse seatType;
+    CinemaRoomResponse cinemaRoom;
     String row;
     String colum;
     String status;

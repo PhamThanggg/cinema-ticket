@@ -16,6 +16,10 @@ public class Cinema {
     @Column(name = "id_cinema")
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "area_id")
+    private Area area;
+
     @Column(name = "name_cinema")
     private String name;
 

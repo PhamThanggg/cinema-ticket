@@ -12,6 +12,11 @@ import lombok.experimental.FieldDefaults;
 public class CinemaRequest {
     @JsonProperty("name_cinema")
     String name;
+
+    @JsonProperty("area_id")
+    Long idArea;
+
     String address;
+
     String status;
 }

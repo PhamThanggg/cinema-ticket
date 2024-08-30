@@ -1,10 +1,5 @@
 package com.example.cinematicket.dtos.responses;
 
-import com.example.cinematicket.entities.Cinema;
-import com.example.cinematicket.entities.RoomType;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -21,7 +16,7 @@ public class CinemaRoomResponse {
 
     String status;
 
-    Cinema cinema;
+    CinemaResponse cinema;
 
-    RoomType roomType;
+    RoomTypeResponse roomType;
 }

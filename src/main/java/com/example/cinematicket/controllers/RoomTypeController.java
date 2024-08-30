@@ -3,12 +3,11 @@ package com.example.cinematicket.controllers;
 import com.example.cinematicket.dtos.requests.RoomTypeRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
 import com.example.cinematicket.dtos.responses.RoomTypeResponse;
-import com.example.cinematicket.services.RoomTypeService;
+import com.example.cinematicket.services.cinemaRoom.RoomTypeService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

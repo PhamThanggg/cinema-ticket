@@ -23,11 +23,11 @@ public class CinemaRoom {
 
     String status;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_cinema")
     Cinema cinema;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_room_type")
     RoomType roomType;
 }
