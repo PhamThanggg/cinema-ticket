@@ -3,7 +3,7 @@ package com.example.cinematicket.controllers;
 import com.example.cinematicket.dtos.requests.AreaRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
 import com.example.cinematicket.dtos.responses.AreaResponse;
-import com.example.cinematicket.services.Area.AreaService;
+import com.example.cinematicket.services.area.AreaService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

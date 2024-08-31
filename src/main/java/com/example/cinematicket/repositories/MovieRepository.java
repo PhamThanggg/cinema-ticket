@@ -20,4 +20,5 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
                            @Param("genreIds") Set<Integer> genreIds,
                            Pageable pageable);
 
+    boolean existsByProducerAndDuration(String producer, String duration);
 }

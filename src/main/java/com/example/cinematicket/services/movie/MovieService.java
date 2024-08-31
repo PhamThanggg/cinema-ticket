@@ -6,14 +6,17 @@ import com.example.cinematicket.dtos.responses.MovieResponse;
 import com.example.cinematicket.entities.Genre;
 import com.example.cinematicket.entities.Movie;
 import com.example.cinematicket.entities.MovieImage;
+import com.example.cinematicket.entities.MoviePeople;
 import com.example.cinematicket.exceptions.AppException;
 import com.example.cinematicket.exceptions.ErrorCode;
 import com.example.cinematicket.mapper.MovieImageMapper;
 import com.example.cinematicket.mapper.MovieMapper;
 import com.example.cinematicket.repositories.GenreRepository;
 import com.example.cinematicket.repositories.MovieImageRepository;
+import com.example.cinematicket.repositories.MoviePeopleRepository;
 import com.example.cinematicket.repositories.MovieRepository;
 import com.example.cinematicket.services.uploadFile.CloudService;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -40,15 +43,28 @@ public class MovieService implements IMovieService {
     MovieMapper movieMapper;
     MovieImageRepository movieImageRepository;
     MovieImageMapper movieImageMapper;
+    MoviePeopleRepository moviePeopleRepository;
     GenreRepository genreRepository;
     CloudService cloudService;
 
     @Override
+    @Transactional
     public MovieResponse createMovie(MovieRequest request) throws IOException {
+        if(movieRepository.existsByProducerAndDuration(request.getProducer(), request.getDuration())){
+            throw new RuntimeException("This movie already exists in the system");
+        }
+
         Set<Genre> listGenre = genreRepository.findByIdIn(request.getGenres());
+        Set<MoviePeople> moviePeople = moviePeopleRepository.findByIdIn(request.getMoviePeople());
+
         Set<Long> foundIds = listGenre.stream().map(Genre::getId).collect(Collectors.toSet());
+        Set<Long> foundMoviePeopleIds = moviePeople.stream().map(MoviePeople::getId).collect(Collectors.toSet());
+
         List<Long> missingGenreId = request.getGenres().stream()
                 .filter(id -> !foundIds.contains(id)).toList();
+
+        List<Long> missMoviePeopleId = request.getMoviePeople().stream()
+                .filter(id -> !foundMoviePeopleIds.contains(id)).toList();
 
         if(!missingGenreId.isEmpty()){
             String errorMessage = missingGenreId.stream()
@@ -57,9 +73,16 @@ public class MovieService implements IMovieService {
             throw new RuntimeException("Genre with id = " + errorMessage);
         }
 
+        if(!missMoviePeopleId.isEmpty()){
+            String errorMessage = missMoviePeopleId.stream()
+                    .map(id -> "Genre with id = " + id)
+                    .collect(Collectors.joining(", "));
+            throw new RuntimeException("Genre with id = " + errorMessage);
+        }
+
         Movie movie = movieMapper.toMovie(request);
         movie.setGenres(listGenre);
-
+        movie.setMoviePeople(moviePeople);
         return movieMapper.toMovieResponse(movieRepository.save(movie));
     }
 
@@ -86,25 +109,46 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public MovieResponse updateMovie(Long id, MovieRequest request) {
-        Movie movie = movieRepository.findById(id).
+    public MovieResponse updateMovie(Long idG, MovieRequest request) {
+        Movie movie = movieRepository.findById(idG).
                 orElseThrow(()-> new AppException(ErrorCode.MOVIE_EXISTED));
 
+        if(!request.getDuration().equals(movie.getDuration())
+            || !request.getProducer().equals(movie.getProducer())){
+            if(movieRepository.existsByProducerAndDuration(request.getProducer(), request.getDuration())){
+                throw new RuntimeException("This movie already exists in the system");
+            }
+        }
+
         Set<Genre> listGenre = genreRepository.findByIdIn(request.getGenres());
+        Set<MoviePeople> moviePeople = moviePeopleRepository.findByIdIn(request.getMoviePeople());
+
         Set<Long> foundIds = listGenre.stream().map(Genre::getId).collect(Collectors.toSet());
+        Set<Long> foundMoviePeopleIds = moviePeople.stream().map(MoviePeople::getId).collect(Collectors.toSet());
+
         List<Long> missingGenreId = request.getGenres().stream()
-                .filter(idG -> !foundIds.contains(idG)).toList();
+                .filter(id -> !foundIds.contains(id)).toList();
+
+        List<Long> missMoviePeopleId = request.getMoviePeople().stream()
+                .filter(id -> !foundMoviePeopleIds.contains(id)).toList();
 
         if(!missingGenreId.isEmpty()){
             String errorMessage = missingGenreId.stream()
-                    .map(idG -> "Genre with id = " + idG)
+                    .map(id -> "Genre with id = " + id)
+                    .collect(Collectors.joining(", "));
+            throw new RuntimeException("Genre with id = " + errorMessage);
+        }
+
+        if(!missMoviePeopleId.isEmpty()){
+            String errorMessage = missMoviePeopleId.stream()
+                    .map(id -> "Genre with id = " + id)
                     .collect(Collectors.joining(", "));
             throw new RuntimeException("Genre with id = " + errorMessage);
         }
 
         movieMapper.updateMovie(movie, request);
         movie.setGenres(listGenre);
-
+        movie.setMoviePeople(moviePeople);
         return movieMapper.toMovieResponse(movieRepository.save(movie));
     }
 

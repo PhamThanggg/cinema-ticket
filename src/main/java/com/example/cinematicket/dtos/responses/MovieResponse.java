@@ -2,10 +2,12 @@ package com.example.cinematicket.dtos.responses;
 
 import com.example.cinematicket.entities.Genre;
 import com.example.cinematicket.entities.MovieImage;
+import com.example.cinematicket.entities.MoviePeople;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -20,19 +22,15 @@ public class MovieResponse {
 
     String nameMovie;
 
+    String producer;
+
     String titleMovie;
 
     String duration;
 
     String language;
 
-    String director;
-
-    String performers;
-
     int ageLimit;
-
-    Set<MovieImageResponse> images;
 
     String trailer;
 
@@ -42,6 +40,11 @@ public class MovieResponse {
 
     String starRating;
 
+    LocalDateTime premiereDate;
+
+    Set<MovieImageResponse> images;
+
     Set<GenreResponse> genres;
 
+    Set<MoviePeople> moviePeople;
 }

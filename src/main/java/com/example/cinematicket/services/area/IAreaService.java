@@ -1,4 +1,4 @@
-package com.example.cinematicket.services.Area;
+package com.example.cinematicket.services.area;
 
 import com.example.cinematicket.dtos.requests.AreaRequest;
 import com.example.cinematicket.dtos.responses.AreaResponse;
