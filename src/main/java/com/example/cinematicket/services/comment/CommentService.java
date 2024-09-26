@@ -37,7 +37,7 @@ public class CommentService implements ICommentService {
         User user = getMyInfoLogin();
 
         Movie movie = movieRepository.findById(request.getIdMovie())
-                .orElseThrow(() -> new RuntimeException("Movie not exists"));
+                .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_EXISTED));
 
         Comment comment = commentMapper.toComment(request);
         comment.setUser(user);
@@ -63,7 +63,7 @@ public class CommentService implements ICommentService {
     @Override
     public CommentResponse updateComment(CommentRequest request, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new RuntimeException("Comment not exists"));
+                .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_EXISTED));
 
         User user = getMyInfoLogin();
         if(!user.getId().equals(comment.getUser().getId())){
@@ -77,7 +77,7 @@ public class CommentService implements ICommentService {
     @Override
     public void deleteComment(Long id) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Comment not exists"));
+                .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_EXISTED));
 
         User user = getMyInfoLogin();
         if(!user.getId().equals(comment.getUser().getId())){

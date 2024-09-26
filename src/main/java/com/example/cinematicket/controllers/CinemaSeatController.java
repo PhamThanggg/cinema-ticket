@@ -62,7 +62,7 @@ public class CinemaSeatController {
     @PutMapping("/{id}")
     public ApiResponse<CinemaSeatResponse> updateCinemaById(
             @PathVariable("id") Long id,
-            @RequestBody CinemaSeatRequest request
+            @RequestBody @Valid CinemaSeatRequest request
     ){
         return ApiResponse.<CinemaSeatResponse>builder()
                 .result(cinemaSeatService.updateCinemaSeat(id, request))

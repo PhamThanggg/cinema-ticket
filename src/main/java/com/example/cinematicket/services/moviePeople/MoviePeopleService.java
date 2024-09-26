@@ -4,6 +4,8 @@ import com.example.cinematicket.dtos.requests.MoviePeopleRequest;
 import com.example.cinematicket.dtos.responses.MoviePeopleResponse;
 import com.example.cinematicket.entities.MoviePeople;
 import com.example.cinematicket.entities.MovieRoleType;
+import com.example.cinematicket.exceptions.AppException;
+import com.example.cinematicket.exceptions.ErrorCode;
 import com.example.cinematicket.mapper.MoviePeopleMapper;
 import com.example.cinematicket.mapper.MovieRoleTypeRepository;
 import com.example.cinematicket.repositories.MoviePeopleRepository;
@@ -26,12 +28,12 @@ public class MoviePeopleService implements IMoviePeopleService {
     @Override
     public MoviePeopleResponse createMoviePeople(MoviePeopleRequest request) {
         MovieRoleType roleType = movieRoleTypeRepository.findById(request.getIdRoleType())
-                .orElseThrow(() -> new RuntimeException("Role type not exists"));
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_TYPE_NOT_EXISTS));
 
         if(moviePeopleRepository.existsByIdAndNameAndDateOfBirth(
                 request.getIdRoleType(), request.getName(), request.getDateOfBirth())
         ){
-            throw new RuntimeException("This person already exists");
+            throw new AppException(ErrorCode.MOVIE_PP_NOT_EXISTS);
         }
 
         MoviePeople moviePeople = moviePeopleMapper.toMoviePeople(request);
@@ -42,7 +44,7 @@ public class MoviePeopleService implements IMoviePeopleService {
     @Override
     public MoviePeopleResponse findById(Long id) {
         MoviePeople moviePeople = moviePeopleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("person does not exist"));
+                .orElseThrow(() -> new AppException(ErrorCode.MOVIE_PP_NOT_EXISTS));
 
         return moviePeopleMapper.toMoviePeopleResponse(moviePeopleRepository.save(moviePeople));
     }
@@ -57,10 +59,10 @@ public class MoviePeopleService implements IMoviePeopleService {
     @Override
     public MoviePeopleResponse updateMoviePeople(MoviePeopleRequest request, Long id) {
         MoviePeople moviePeople = moviePeopleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("person does not exist"));
+                .orElseThrow(() -> new AppException(ErrorCode.MOVIE_PP_NOT_EXISTS));
 
         MovieRoleType roleType = movieRoleTypeRepository.findById(request.getIdRoleType())
-                .orElseThrow(() -> new RuntimeException("Role type not exists"));
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_TYPE_NOT_EXISTS));
 
         if(!request.getIdRoleType().equals(moviePeople.getId())
             || !request.getName().equals(moviePeople.getName())
@@ -69,7 +71,7 @@ public class MoviePeopleService implements IMoviePeopleService {
             if(moviePeopleRepository.existsByIdAndNameAndDateOfBirth(
                     request.getIdRoleType(), request.getName(), request.getDateOfBirth())
             ){
-                throw new RuntimeException("This person already exists");
+                throw new AppException(ErrorCode.MOVIE_PP_EXISTS);
             }
         }
 

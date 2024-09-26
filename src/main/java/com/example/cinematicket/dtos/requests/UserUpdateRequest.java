@@ -1,6 +1,7 @@
 package com.example.cinematicket.dtos.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -12,11 +13,12 @@ import lombok.*;
 @Builder
 public class UserUpdateRequest {
     @JsonProperty("full_name")
-    @Size(min = 1, max = 25, message = "name must be between 1 and 25 characters")
+    @Size(min = 1, max = 25, message = "NAME_VALID")
     private String fullName;
 
     private String image;
 
+    @NotBlank(message = "GENDER_NOT_BLANK")
     private String gender;
 
     @Size(min = 10, message = "USERNAME_INVALID")

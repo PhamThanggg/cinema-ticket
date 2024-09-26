@@ -3,6 +3,8 @@ package com.example.cinematicket.services.ticket;
 import com.example.cinematicket.dtos.requests.TicketTypeRequest;
 import com.example.cinematicket.dtos.responses.TicketTypeResponse;
 import com.example.cinematicket.entities.TicketType;
+import com.example.cinematicket.exceptions.AppException;
+import com.example.cinematicket.exceptions.ErrorCode;
 import com.example.cinematicket.mapper.TicketTypeMapper;
 import com.example.cinematicket.repositories.TicketTypeRepository;
 import lombok.AccessLevel;
@@ -23,7 +25,7 @@ public class TicketTypeService implements ITicketTypeService {
     @Override
     public TicketTypeResponse createTicketType(TicketTypeRequest request) {
         if(ticketTypeRepository.existsByName(request.getName()))
-            throw new RuntimeException("Name ticket type exists");
+            throw new AppException(ErrorCode.TICKET_TYPE_EXISTS);
 
         TicketType ticketType = ticketTypeMapper.toTicketPrice(request);
         return ticketTypeMapper.toTicketPriceResponse(ticketTypeRepository.save(ticketType));
@@ -32,7 +34,7 @@ public class TicketTypeService implements ITicketTypeService {
     @Override
     public TicketTypeResponse findById(Long id) {
         TicketType ticketType = ticketTypeRepository.findById(id).
-                orElseThrow(() -> new RuntimeException("Ticket type not exists"));
+                orElseThrow(() -> new AppException(ErrorCode.TICKET_TYPE_NOT_EXISTS));
 
         return ticketTypeMapper.toTicketPriceResponse(ticketType);
     }
@@ -50,7 +52,7 @@ public class TicketTypeService implements ITicketTypeService {
     @Override
     public TicketTypeResponse updateTicketType(Long id, TicketTypeRequest request) {
         TicketType ticketType = ticketTypeRepository.findById(id).
-                orElseThrow(() -> new RuntimeException("Ticket type not exists"));
+                orElseThrow(() -> new AppException(ErrorCode.TICKET_TYPE_NOT_EXISTS));
 
         ticketTypeMapper.updateTicketPrice(ticketType, request);
         return ticketTypeMapper.toTicketPriceResponse(ticketTypeRepository.save(ticketType));

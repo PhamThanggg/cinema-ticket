@@ -62,7 +62,7 @@ public class GenreController {
     @PutMapping("/{id}")
     public ApiResponse<GenreResponse> updateGenreById(
             @PathVariable("id") Long id,
-            @RequestBody GenreRequest request
+            @RequestBody @Valid GenreRequest request
     ){
         return ApiResponse.<GenreResponse>builder()
                 .result(genreService.updateGenre(id, request))

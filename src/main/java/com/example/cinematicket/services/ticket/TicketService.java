@@ -1,9 +1,11 @@
 package com.example.cinematicket.services.ticket;
 
 import com.example.cinematicket.dtos.requests.TicketRequest;
-import com.example.cinematicket.dtos.responses.CreateTicketRequest;
+import com.example.cinematicket.dtos.responses.CreateTicketResponse;
 import com.example.cinematicket.dtos.responses.TicketResponse;
 import com.example.cinematicket.entities.Ticket;
+import com.example.cinematicket.exceptions.AppException;
+import com.example.cinematicket.exceptions.ErrorCode;
 import com.example.cinematicket.mapper.TicketMapper;
 import com.example.cinematicket.repositories.TicketRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +28,13 @@ public class TicketService implements ITicketService {
     TicketRepository ticketRepository;
 
     @Override
-    public List<CreateTicketRequest> createTicket(List<Ticket> tickets) {
-        return ticketRepository.saveAll(tickets).stream().map(ticketMapper::toCreateTicketRequest).toList();
+    public List<CreateTicketResponse> createTicket(List<Ticket> tickets) {
+        return ticketRepository.saveAll(tickets).stream().map(ticketMapper::toCreateTicketResponse).toList();
     }
     @Override
     public TicketResponse getTicketById(Long id) {
         Ticket ticket = ticketRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Ticket not exists"));
+                .orElseThrow(() -> new AppException(ErrorCode.TICKET_NOT_EXISTS));
         return ticketMapper.toTicketResponse(ticket);
     }
 

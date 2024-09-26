@@ -17,7 +17,7 @@ public class MoviePeopleResponse {
 
     Long id;
 
-    MovieRoleType roleType;
+    Long roleTypeId;
 
     String name;
 

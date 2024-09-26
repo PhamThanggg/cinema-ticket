@@ -11,8 +11,8 @@ import lombok.experimental.FieldDefaults;
 public class CinemaSeatResponse {
     Long id;
     String name;
-    SeatTypeResponse seatType;
-    CinemaRoomResponse cinemaRoom;
+    Long seatTypeId;
+    Long cinemaRoomId;
     String row;
     String colum;
     String status;

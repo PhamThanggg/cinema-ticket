@@ -5,6 +5,8 @@ import com.example.cinematicket.dtos.responses.ScheduleResponse;
 import com.example.cinematicket.entities.CinemaRoom;
 import com.example.cinematicket.entities.Movie;
 import com.example.cinematicket.entities.Schedule;
+import com.example.cinematicket.exceptions.AppException;
+import com.example.cinematicket.exceptions.ErrorCode;
 import com.example.cinematicket.mapper.ScheduleMapper;
 import com.example.cinematicket.repositories.CinemaRoomRepository;
 import com.example.cinematicket.repositories.MovieRepository;
@@ -33,9 +35,9 @@ public class ScheduleService implements IScheduleService {
     @Override
     public ScheduleResponse createSchedule(ScheduleRequest request) {
         Movie movie = movieRepository.findById(request.getMovieId())
-                .orElseThrow(() -> new RuntimeException("Movie not exists"));
+                .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_EXISTED));
         CinemaRoom cinemaRoom = cinemaRoomRepository.findById(request.getCinemaRoomId())
-                .orElseThrow(() -> new RuntimeException("Cinema room not exists"));
+                .orElseThrow(() -> new AppException(ErrorCode.CINEMA_ROOM_NOT_EXISTED));
 
         int timeMovie = Integer.parseInt(movie.getDuration());
         checkSchedule(request, timeMovie);
@@ -50,7 +52,7 @@ public class ScheduleService implements IScheduleService {
     @Override
     public ScheduleResponse findById(Long id) {
         Schedule schedule = scheduleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Schedule not exists"));
+                .orElseThrow(() -> new AppException(ErrorCode.SCHEDULE_NOT_EXISTS));
 
         return scheduleMapper.toScheduleResponse(schedule);
     }
@@ -68,7 +70,7 @@ public class ScheduleService implements IScheduleService {
     @Override
     public ScheduleResponse updateSchedule(Long id, ScheduleRequest request) {
         Schedule schedule = scheduleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Schedule not exists"));
+                .orElseThrow(() -> new AppException(ErrorCode.SCHEDULE_NOT_EXISTS));
 
         LocalDateTime currentDateTime = LocalDateTime.now();
         if(ChronoUnit.MINUTES.between(currentDateTime, request.getStartTime()) >= 30){
@@ -76,10 +78,10 @@ public class ScheduleService implements IScheduleService {
         }
 
         Movie movie = movieRepository.findById(request.getMovieId())
-                .orElseThrow(() -> new RuntimeException("Movie not exists"));
+                .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_EXISTED));
 
         CinemaRoom cinemaRoom = cinemaRoomRepository.findById(request.getCinemaRoomId())
-                .orElseThrow(() -> new RuntimeException("Cinema room not exists"));
+                .orElseThrow(() -> new AppException(ErrorCode.CINEMA_ROOM_NOT_EXISTED));
 
         if(!schedule.getStartTime().equals(request.getStartTime())
                 || !schedule.getEndTime().equals(request.getEndTime())

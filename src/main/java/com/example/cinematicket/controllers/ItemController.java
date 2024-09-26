@@ -41,7 +41,7 @@ public class ItemController {
     @PutMapping("/{id}")
     public ApiResponse<ItemResponse> updateItemById(
             @PathVariable("id") Long id,
-            @RequestBody ItemRequest request
+            @RequestBody @Valid ItemRequest request
     ){
         return ApiResponse.<ItemResponse>builder()
                 .result(itemService.updateItem(request, id))

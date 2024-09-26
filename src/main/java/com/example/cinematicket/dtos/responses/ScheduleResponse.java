@@ -21,9 +21,9 @@ import java.util.Set;
 public class ScheduleResponse {
     Long id;
 
-    CinemaRoomResponse cinemaRooms;
+    Long cinemaRoomIds;
 
-    MovieResponse movies;
+    Long movieIds;
 
     LocalDate screeningDate;
 

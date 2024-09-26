@@ -40,7 +40,7 @@ public class AreaController {
     @PutMapping("/{id}")
     public ApiResponse<AreaResponse> updateAreaById(
             @PathVariable("id") Long id,
-            @RequestBody AreaRequest request
+            @RequestBody @Valid AreaRequest request
     ){
         return ApiResponse.<AreaResponse>builder()
                 .result(areaService.updateArea(request, id))

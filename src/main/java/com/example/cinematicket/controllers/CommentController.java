@@ -64,7 +64,7 @@ public class CommentController {
     @PutMapping("/{id}")
     public ApiResponse<CommentResponse> updateCommentById(
             @PathVariable("id") Long id,
-            @RequestBody CommentRequest request
+            @RequestBody @Valid CommentRequest request
     ){
         return ApiResponse.<CommentResponse>builder()
                 .result(commentService.updateComment(request, id))

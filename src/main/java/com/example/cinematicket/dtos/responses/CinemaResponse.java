@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CinemaResponse {
     Long id;
-    AreaResponse area;
+    Long areaId;
     String name;
     String address;
     String status;

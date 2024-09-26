@@ -34,7 +34,7 @@ public class CinemaService implements ICinemaService {
             throw new AppException(ErrorCode.CINEMA_EXISTED);
 
         Area area = areaRepository.findById(request.getIdArea())
-                .orElseThrow(() -> new RuntimeException("Area not exists"));
+                .orElseThrow(() -> new AppException(ErrorCode.AREA_NOT_EXISTS));
 
         Cinema cinema = cinemaMapper.toCinema(request);
         cinema.setArea(area);
@@ -76,7 +76,7 @@ public class CinemaService implements ICinemaService {
         Cinema cinema = cinemaRepository.findById(id).
                 orElseThrow(()->new AppException(ErrorCode.CINEMA_NOT_EXISTED));
         Area area = areaRepository.findById(request.getIdArea())
-                .orElseThrow(() -> new RuntimeException("Area not exists"));
+                .orElseThrow(() -> new AppException(ErrorCode.AREA_NOT_EXISTS));
 
         cinemaMapper.updateCinema(cinema, request);
         cinema.setArea(area);

@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Table(name="invoices")
 @Entity
@@ -24,7 +25,13 @@ public class Invoice {
     @JoinColumn(name="id_user")
     User user;
 
-    Double TotalAmount;
+    @OneToMany(mappedBy = "invoice")
+    Set<Ticket> tickets;
+
+    @OneToMany(mappedBy = "invoice")
+    Set<InvoiceItem> invoiceItems;
+
+    Double totalAmount;
 
     @Column(name = "reservation_time")
     LocalDateTime reservationTime;

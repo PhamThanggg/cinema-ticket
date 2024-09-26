@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -15,11 +16,13 @@ import java.util.List;
 public class InvoiceResponse {
     Long id;
 
-    UserResponse user;
+    Long userId;
 
-    List<CreateTicketRequest> tickets;
+    Set<Long> ticketIds;
 
-    Double TotalAmount;
+    Set<Long> itemIds;
+
+    Double totalAmount;
 
     LocalDateTime reservationTime;
 

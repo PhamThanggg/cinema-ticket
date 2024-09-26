@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateTicketRequest {
+public class CreateTicketResponse {
     Long id;
 
     ScheduleResponse schedule;

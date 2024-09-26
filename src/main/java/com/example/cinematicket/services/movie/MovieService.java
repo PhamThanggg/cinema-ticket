@@ -51,7 +51,7 @@ public class MovieService implements IMovieService {
     @Transactional
     public MovieResponse createMovie(MovieRequest request) throws IOException {
         if(movieRepository.existsByProducerAndDuration(request.getProducer(), request.getDuration())){
-            throw new RuntimeException("This movie already exists in the system");
+            throw new AppException(ErrorCode.MOVIE_EXISTED);
         }
 
         Set<Genre> listGenre = genreRepository.findByIdIn(request.getGenres());
@@ -75,9 +75,9 @@ public class MovieService implements IMovieService {
 
         if(!missMoviePeopleId.isEmpty()){
             String errorMessage = missMoviePeopleId.stream()
-                    .map(id -> "Genre with id = " + id)
+                    .map(String::valueOf)
                     .collect(Collectors.joining(", "));
-            throw new RuntimeException("Genre with id = " + errorMessage);
+            throw new RuntimeException("Movie people with id = " + errorMessage);
         }
 
         Movie movie = movieMapper.toMovie(request);
@@ -111,12 +111,12 @@ public class MovieService implements IMovieService {
     @Override
     public MovieResponse updateMovie(Long idG, MovieRequest request) {
         Movie movie = movieRepository.findById(idG).
-                orElseThrow(()-> new AppException(ErrorCode.MOVIE_EXISTED));
+                orElseThrow(()-> new AppException(ErrorCode.MOVIE_NOT_EXISTED));
 
         if(!request.getDuration().equals(movie.getDuration())
             || !request.getProducer().equals(movie.getProducer())){
             if(movieRepository.existsByProducerAndDuration(request.getProducer(), request.getDuration())){
-                throw new RuntimeException("This movie already exists in the system");
+                throw new AppException(ErrorCode.MOVIE_EXISTED);
             }
         }
 

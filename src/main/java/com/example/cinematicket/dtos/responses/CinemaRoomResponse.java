@@ -16,7 +16,7 @@ public class CinemaRoomResponse {
 
     String status;
 
-    CinemaResponse cinema;
+    Long cinemaId;
 
-    RoomTypeResponse roomType;
+    Long roomTypeId;
 }

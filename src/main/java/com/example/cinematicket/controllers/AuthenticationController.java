@@ -7,6 +7,7 @@ import com.example.cinematicket.dtos.responses.AuthenticationResponse;
 import com.example.cinematicket.dtos.responses.IntrospectResponse;
 import com.example.cinematicket.services.user.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,14 +23,14 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/token")
-    public ApiResponse<AuthenticationResponse> token(@RequestBody AuthenticationRequest request){
+    public ApiResponse<AuthenticationResponse> token(@RequestBody @Valid AuthenticationRequest request){
         return ApiResponse.<AuthenticationResponse>builder()
                 .result(authenticationService.authentication(request))
                 .build();
     }
 
     @PostMapping("/introspect")
-    public ApiResponse<IntrospectResponse> tokenIntrospect(@RequestBody TokenRequest request)
+    public ApiResponse<IntrospectResponse> tokenIntrospect(@RequestBody @Valid TokenRequest request)
             throws ParseException, JOSEException {
         return ApiResponse.<IntrospectResponse>builder()
                 .result(authenticationService.introspect(request))

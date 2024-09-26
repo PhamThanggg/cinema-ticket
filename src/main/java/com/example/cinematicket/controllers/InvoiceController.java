@@ -40,14 +40,16 @@ public class InvoiceController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<InvoiceResponse> getById(@PathVariable("Id") Long id) {
+    public ApiResponse<InvoiceResponse> getById(@PathVariable("id") Long id) {
         return ApiResponse.<InvoiceResponse>builder()
                 .result(invoiceService.getInvoiceById(id))
                 .build();
     }
 
     @PutMapping("/{userId}")
-    public ApiResponse<InvoiceResponse> update(@PathVariable("userId") Long id, @RequestBody InvoiceRequest request) {
+    public ApiResponse<InvoiceResponse> update(
+            @PathVariable("userId") Long id,
+            @RequestBody @Valid InvoiceRequest request) {
         return ApiResponse.<InvoiceResponse>builder()
                 .message("update successfully")
                 .result(invoiceService.updateInvoice(id, request))

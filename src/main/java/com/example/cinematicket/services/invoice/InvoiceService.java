@@ -2,13 +2,14 @@ package com.example.cinematicket.services.invoice;
 
 import com.example.cinematicket.dtos.requests.InvoiceRequest;
 import com.example.cinematicket.dtos.requests.ListTicketRequest;
-import com.example.cinematicket.dtos.responses.CreateTicketRequest;
+import com.example.cinematicket.dtos.responses.CreateTicketResponse;
 import com.example.cinematicket.dtos.responses.InvoiceResponse;
 import com.example.cinematicket.entities.*;
 import com.example.cinematicket.exceptions.AppException;
 import com.example.cinematicket.exceptions.ErrorCode;
 import com.example.cinematicket.mapper.InvoiceMapper;
 import com.example.cinematicket.repositories.*;
+import com.example.cinematicket.services.invoiceItem.InvoiceItemService;
 import com.example.cinematicket.services.ticket.TicketService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class InvoiceService implements IInvoiceService {
     InvoiceRepository invoiceRepository;
     InvoiceMapper invoiceMapper;
     TicketService ticketService;
-
+    InvoiceItemService invoiceItemService;
     @Override
     @Transactional
     public InvoiceResponse createInvoice(ListTicketRequest request) {
@@ -92,7 +93,7 @@ public class InvoiceService implements IInvoiceService {
         // tao hoa don
         Invoice invoice = Invoice.builder()
                 .user(user)
-                .TotalAmount(request.getTotalAmount())
+                .totalAmount(request.getTotalAmount())
                 .status("Not yet paid")
                 .build();
         Invoice invoiceResult = invoiceRepository.save(invoice);
@@ -110,17 +111,17 @@ public class InvoiceService implements IInvoiceService {
                 .collect(Collectors.toList());
 
         // tao vé
-        List<CreateTicketRequest> ticketRequests = ticketService.createTicket(tickets);
-        InvoiceResponse invoiceResponse = invoiceMapper.toInvoiceResponse(invoiceResult);
-        invoiceResponse.setTickets(ticketRequests);
+        List<CreateTicketResponse> ticketRequests = ticketService.createTicket(tickets);
+        // tao item
+        List<Item> items = invoiceItemService.create(request.getInvoiceItems(), request.getCinemaId(), invoice.getId());
 
-       return invoiceResponse;
+       return invoiceMapper.toInvoiceResponse(invoiceResult);
     }
 
     @Override
     public InvoiceResponse getInvoiceById(Long id) {
         Invoice invoice = invoiceRepository.findById(id).
-                orElseThrow(() -> new RuntimeException("Invoice not exists"));
+                orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_EXISTS));
 
         return invoiceMapper.toInvoiceResponse(invoice);
     }
@@ -140,7 +141,7 @@ public class InvoiceService implements IInvoiceService {
     @Override
     public InvoiceResponse updateInvoice(Long id, InvoiceRequest request) {
         Invoice invoice = invoiceRepository.findById(id).
-                orElseThrow(() -> new RuntimeException("Invoice not exists"));
+                orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_EXISTS));
 
         invoiceMapper.updateInvoice(invoice, request);
         return invoiceMapper.toInvoiceResponse(invoiceRepository.save(invoice));

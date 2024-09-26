@@ -42,7 +42,9 @@ public class TicketTypeController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<TicketTypeResponse> update(@PathVariable("id") Long id, @RequestBody TicketTypeRequest request) {
+    public ApiResponse<TicketTypeResponse> update(
+            @PathVariable("id") Long id,
+            @RequestBody @Valid  TicketTypeRequest request) {
         return ApiResponse.<TicketTypeResponse>builder()
                 .message("update successfully")
                 .result(ticketTypeService.updateTicketType(id, request))

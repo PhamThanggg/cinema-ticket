@@ -63,7 +63,7 @@ public class RoomTypeController {
     @PutMapping("/{id}")
     ApiResponse<RoomTypeResponse> updateRoomType(
             @PathVariable("id") Long id,
-            @RequestBody RoomTypeRequest request
+            @RequestBody @Valid RoomTypeRequest request
     ){
         return ApiResponse.<RoomTypeResponse>builder()
                 .message("Update successfully")

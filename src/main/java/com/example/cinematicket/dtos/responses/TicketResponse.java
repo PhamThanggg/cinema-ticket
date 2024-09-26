@@ -18,12 +18,12 @@ import lombok.experimental.FieldDefaults;
 public class TicketResponse {
     Long id;
 
-    ScheduleResponse schedule;
+    Long scheduleId;
 
-    CinemaSeatResponse cinemaSeat;
+    Long cinemaSeatId;
 
-    TicketTypeResponse ticketType;
+    Long ticketTypeId;
 
-    InvoiceResponse invoiceResponse;
+    Long invoiceId;
 
 }

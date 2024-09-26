@@ -1,10 +1,7 @@
 package com.example.cinematicket.dtos.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Data
@@ -15,28 +12,34 @@ import lombok.*;
 @Builder
 public class UserCreationRequest {
     @JsonProperty("full_name")
-    @Size(min = 1, max = 25, message = "name must be between 1 and 25 characters")
+    @NotBlank(message = "NAME_NOT_BLANK")
+    @Size(min = 1, max = 30, message = "NAME_VALID")
     private String fullName;
 
+    @NotBlank(message = "GENDER_NOT_BLANK")
     private String gender;
 
-    @Size(min = 10, message = "USERNAME_INVALID")
+
+    @Size(min = 10, max = 30, message = "PHONE_VALID")
+    @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "PHONE_FORMAT")
     private String phone;
 
     @JsonProperty("date_of_birth")
     private String dateOfBirth;
 
-    @NotBlank(message = "Email cannot be blank")
-    @Email(message = "Email is not in correct format")
+    @NotBlank(message = "EMAIL_NOT_BLANK")
+    @Email(message = "EMAIL_FORMAT")
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "EMAIL_FORMAT")
     private String email;
 
-    @NotBlank(message = "Password cannot be blank")
+    @NotBlank(message = "PASSWORD_NOT_BLANK")
+    @Size(min = 6, message = "PASSWORD_INVALID")
     private String password;
 
+    @NotBlank(message = "REPASSWORD_NOT_BLANK")
     private String repassword;
 
     private String status;
 
-    @NotNull(message = "Role id is required")
     private Long role;
 }

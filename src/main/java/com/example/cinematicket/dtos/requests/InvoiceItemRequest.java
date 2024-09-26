@@ -8,20 +8,22 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
+@Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MovieImageRequest {
-    @JsonProperty("image_url")
-    @NotBlank(message = "IMAGE_NOT_NULL")
-    @Size(min = 2,max = 500, message = "IMAGE_INVALID")
-    String image;
+public class InvoiceItemRequest {
+    @NotNull(message = "Item is required")
+    @Min(value = 1, message = "Item id must be greater than or equal to 1")
+    @JsonProperty("item_id")
+    Long id;
 
-    @JsonProperty("id_movie")
-    @NotNull(message = "MOVIE_NOT_NULL")
-    @Min(value = 1, message = "MOVIE_VALID")
-    Long idMovie;
+    @NotNull(message = "Quantity is required")
+    @Min(value = 1, message = "Quantity must be greater than or equal to 1")
+    int quantity;
 }

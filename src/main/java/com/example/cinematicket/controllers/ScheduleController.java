@@ -61,7 +61,7 @@ public class ScheduleController {
     @PutMapping("/{id}")
     public ApiResponse<ScheduleResponse> updateCinemaById(
             @PathVariable("id") Long id,
-            @RequestBody ScheduleRequest request
+            @RequestBody @Valid ScheduleRequest request
     ){
         return ApiResponse.<ScheduleResponse>builder()
                 .result(scheduleService.updateSchedule(id, request))

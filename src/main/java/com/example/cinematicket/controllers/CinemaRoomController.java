@@ -70,7 +70,7 @@ public class CinemaRoomController {
     @PutMapping("/{id}")
     public ApiResponse<CinemaRoomResponse> updateCinemaById(
             @PathVariable("id") Long id,
-            @RequestBody CinemaRoomRequest request
+            @RequestBody @Valid CinemaRoomRequest request
     ){
         return ApiResponse.<CinemaRoomResponse>builder()
                 .result(cinemaRoomService.updateCinemaRoom(id, request))

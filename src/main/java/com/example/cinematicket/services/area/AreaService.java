@@ -3,6 +3,8 @@ package com.example.cinematicket.services.area;
 import com.example.cinematicket.dtos.requests.AreaRequest;
 import com.example.cinematicket.dtos.responses.AreaResponse;
 import com.example.cinematicket.entities.Area;
+import com.example.cinematicket.exceptions.AppException;
+import com.example.cinematicket.exceptions.ErrorCode;
 import com.example.cinematicket.mapper.AreaMapper;
 import com.example.cinematicket.repositories.AreaRepository;
 import lombok.AccessLevel;
@@ -21,7 +23,7 @@ public class AreaService implements IAreaService{
     @Override
     public AreaResponse createArea(AreaRequest request) {
         if(areaRepository.existsByAreaName(request.getAreaName())){
-            throw  new RuntimeException("Area exists");
+            throw new AppException(ErrorCode.AREA_EXISTS);
         }
 
         Area area = areaMapper.toArea(request);
@@ -36,11 +38,11 @@ public class AreaService implements IAreaService{
     @Override
     public AreaResponse updateArea(AreaRequest request, Long id) {
         Area area = areaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Area not exists"));
+                .orElseThrow(() -> new AppException(ErrorCode.AREA_NOT_EXISTS));
 
         if(!area.getAreaName().equals(request.getAreaName())){
             if(areaRepository.existsByAreaName(request.getAreaName())){
-                throw  new RuntimeException("Area exists");
+                throw  new AppException(ErrorCode.AREA_EXISTS);
             }
         }
 

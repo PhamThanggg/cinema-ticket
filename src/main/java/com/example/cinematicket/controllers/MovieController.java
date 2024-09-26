@@ -98,7 +98,7 @@ public class MovieController {
     @PutMapping("/{id}")
     public ApiResponse<MovieResponse> updateMovieById(
             @PathVariable("id") Long id,
-            @RequestBody MovieRequest request
+            @RequestBody @Valid MovieRequest request
     ){
         return ApiResponse.<MovieResponse>builder()
                 .result(movieService.updateMovie(id, request))
