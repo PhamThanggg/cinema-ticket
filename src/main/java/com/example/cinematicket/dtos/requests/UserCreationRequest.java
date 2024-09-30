@@ -39,7 +39,7 @@ public class UserCreationRequest {
     @NotBlank(message = "REPASSWORD_NOT_BLANK")
     private String repassword;
 
-    private String status;
+    private int status;
 
-    private Long role;
+//    private Long role;
 }

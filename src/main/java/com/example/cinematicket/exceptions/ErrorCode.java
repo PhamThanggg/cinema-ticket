@@ -11,6 +11,7 @@ public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_KEY(1001, "Uncategorized error", HttpStatus.BAD_REQUEST),
     INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
+    UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
 
     ADDRESS_NOT_BLANK(1009, "Address is required", HttpStatus.BAD_REQUEST),
     ADDRESS_VALID(1010, "Address must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
@@ -216,6 +217,23 @@ public enum ErrorCode {
     REPASSWORD_NOT_BLANK(2301, "Repassword is required", HttpStatus.BAD_REQUEST),
     PASSWORD_INVALID(2302, "Password must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
     //=================== USER END =======================
+
+
+    //=================== PERMISSION BEGIN =====================
+    PERMISSION_NOT_NULL(2501, "Permission is required", HttpStatus.BAD_REQUEST),
+    PERMISSION_INVALID(2502, "Permission ID must be greater than {value}", HttpStatus.BAD_REQUEST),
+
+    PERMISSION_EXISTS(2602, "Permission name exists", HttpStatus.BAD_REQUEST),
+    PERMISSION_NOT_EXISTS(2602, "Permission not exists", HttpStatus.BAD_REQUEST),
+    //=================== PERMISSION END =======================
+
+    //=================== ROLE BEGIN =====================
+    ROLE_NOT_NULL(2501, "Role is required", HttpStatus.BAD_REQUEST),
+    ROLE_INVALID(2502, "Role ID must be greater than {value}", HttpStatus.BAD_REQUEST),
+
+    ROLE_EXISTS(2602, "Role name exists", HttpStatus.BAD_REQUEST),
+    ROLE_NOT_EXISTS(2602, "Role not exists", HttpStatus.BAD_REQUEST),
+    //=================== ROLE END =======================
     ;
 
 

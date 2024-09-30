@@ -14,5 +14,5 @@ public class RoomTypeRequest {
     @NotBlank(message = "NAME_NOT_BLANK")
     @Size(min = 1, max = 50, message = "NAME_VALID")
     String name;
-    String status;
+    int status;
 }

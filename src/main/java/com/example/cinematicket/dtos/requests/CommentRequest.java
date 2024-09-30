@@ -26,5 +26,5 @@ public class CommentRequest {
     @Size(min = 2,max = 200, message = "COMMENT_INVALID")
     String commentText;
 
-    String status;
+    int status;
 }

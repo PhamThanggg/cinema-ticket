@@ -27,7 +27,5 @@ public class TicketTypeRequest {
     @DecimalMax(value = "100.0", inclusive = true, message = "Discount must be less than or equal to 100")
     float discount ;
 
-    @NotBlank(message = "Status is required")
-    @Pattern(regexp = "^(ACTIVE|INACTIVE|DISCONTINUED)$", message = "Status must be either ACTIVE, INACTIVE, or DISCONTINUED")
-    String status;
+    int status;
 }

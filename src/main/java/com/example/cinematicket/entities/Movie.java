@@ -45,7 +45,7 @@ public class Movie extends BaseEntity{
 
     String trailer;
 
-    String status;
+    int status;
 
     String description;
 

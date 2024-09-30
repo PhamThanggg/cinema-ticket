@@ -34,5 +34,5 @@ public class CinemaSeat {
     @Column(name = "column_seat")
     String colum;
 
-    String status;
+    int status;
 }

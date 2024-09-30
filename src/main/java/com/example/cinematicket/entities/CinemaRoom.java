@@ -21,7 +21,7 @@ public class CinemaRoom {
     @Column(name = "name_cinema_room")
     String name;
 
-    String status;
+    int status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_cinema")

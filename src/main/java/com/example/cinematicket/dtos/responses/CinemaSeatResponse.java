@@ -15,5 +15,5 @@ public class CinemaSeatResponse {
     Long cinemaRoomId;
     String row;
     String colum;
-    String status;
+    int status;
 }

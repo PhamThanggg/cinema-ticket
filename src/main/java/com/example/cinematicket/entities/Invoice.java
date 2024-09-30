@@ -45,7 +45,7 @@ public class Invoice {
     @Column(name = "amount_paid")
     Double amountPaid;
 
-    String status;
+    int status;
 
     @PrePersist
     protected void onCreate() {

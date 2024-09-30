@@ -28,5 +28,5 @@ public class CinemaRequest {
     @Size(min = 2,max = 30, message = "ADDRESS_VALID")
     String address;
 
-    String status;
+    int status;
 }

@@ -32,6 +32,6 @@ public class InvoiceResponse {
 
     Double amountPaid;
 
-    String status;
+    int status;
 
 }

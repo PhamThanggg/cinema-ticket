@@ -40,5 +40,5 @@ public class CinemaSeatRequest {
     @JsonProperty("column_seat")
     String colum;
 
-    String status;
+    int status;
 }

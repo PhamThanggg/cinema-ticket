@@ -21,5 +21,5 @@ public class TicketTypeResponse {
 
     float discount ;
 
-    String status;
+    int status;
 }

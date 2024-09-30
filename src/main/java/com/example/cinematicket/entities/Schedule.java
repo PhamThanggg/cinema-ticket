@@ -37,5 +37,5 @@ public class Schedule {
     @Column(name = "end_time")
     LocalDateTime endTime;
 
-    String status;
+    int status;
 }

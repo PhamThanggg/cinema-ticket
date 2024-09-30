@@ -29,7 +29,7 @@ public class MovieResponse {
 
     String trailer;
 
-    String status;
+    int status;
 
     String description;
 

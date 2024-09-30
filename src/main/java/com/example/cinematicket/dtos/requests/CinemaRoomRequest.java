@@ -23,7 +23,7 @@ public class CinemaRoomRequest {
     @Size(min = 2,max = 60, message = "ROOM_NAME_VALID")
     String name;
 
-    String status;
+    int status;
 
     @JsonProperty("id_cinema")
     @NotNull(message = "CINEMA_NOT_NULL")

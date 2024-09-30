@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @Getter
 @Setter
@@ -27,4 +29,5 @@ public class UserUpdateRequest {
     @JsonProperty("date_of_birth")
     private String dateOfBirth;
 
+    List<Long> roleId;
 }

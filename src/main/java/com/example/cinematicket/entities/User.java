@@ -3,6 +3,8 @@ package com.example.cinematicket.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Table(name="users")
 @Entity
 @Getter
@@ -34,5 +36,13 @@ public class User {
 
     private String password;
 
-    private String status;
+    private int status;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_role")
+    )
+    Set<Role> roles;
 }

@@ -14,7 +14,7 @@ public class CinemaRoomResponse {
 
     String name;
 
-    String status;
+    int status;
 
     Long cinemaId;
 

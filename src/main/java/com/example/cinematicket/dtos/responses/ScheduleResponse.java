@@ -31,5 +31,5 @@ public class ScheduleResponse {
 
     LocalDateTime endTime;
 
-    String status;
+    int status;
 }

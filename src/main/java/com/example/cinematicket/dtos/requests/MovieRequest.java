@@ -1,17 +1,13 @@
 package com.example.cinematicket.dtos.requests;
 
-import com.example.cinematicket.entities.Genre;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.Set;
-
 
 @Data
 @AllArgsConstructor
@@ -46,7 +42,7 @@ public class    MovieRequest {
     @Max(value = 18, message = "AGE_VALID_MAX")
     int ageLimit;
 
-    String status;
+    int status;
 
     String description;
 

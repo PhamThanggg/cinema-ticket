@@ -15,5 +15,5 @@ public class GenreRequest {
     @Size(min = 2,max = 30, message = "GENRE_VALID")
     String name;
 
-    String status;
+    int status;
 }

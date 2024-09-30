@@ -36,5 +36,5 @@ public class InvoiceRequest {
     @JsonProperty("amount_paid")
     Double amountPaid;
 
-    String status;
+    int status;
 }

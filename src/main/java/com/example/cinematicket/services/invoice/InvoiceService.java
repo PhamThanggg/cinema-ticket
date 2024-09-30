@@ -94,7 +94,6 @@ public class InvoiceService implements IInvoiceService {
         Invoice invoice = Invoice.builder()
                 .user(user)
                 .totalAmount(request.getTotalAmount())
-                .status("Not yet paid")
                 .build();
         Invoice invoiceResult = invoiceRepository.save(invoice);
 

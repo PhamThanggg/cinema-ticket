@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 public class TicketType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ticket_price_id")
+    @Column(name = "ticket_type_id")
     Long id;
 
     String name;
@@ -27,5 +27,5 @@ public class TicketType {
 
     float discount ;
 
-    String status;
+    int status;
 }

@@ -28,7 +28,7 @@ public class Comment {
     @JoinColumn(name = "id_user")
     User user;
 
-    String status;
+    int status;
 
     @Column(name = "comment_text")
     String commentText;
