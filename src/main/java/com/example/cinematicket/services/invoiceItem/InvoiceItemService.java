@@ -12,6 +12,7 @@ import com.example.cinematicket.repositories.ItemRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -27,6 +28,7 @@ public class InvoiceItemService implements IInvoiceItemService{
     InvoiceRepository invoiceRepository;
     
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
     public List<Item> create(Set<InvoiceItemRequest> requests, Long cinemaId, Long invoiceId) {
 
         if(!cinemaRepository.existsById(cinemaId))

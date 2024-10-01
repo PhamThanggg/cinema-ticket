@@ -49,7 +49,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    @PostAuthorize("returnObject.username == authentication.name or hasRole('ADMIN')")
+    @PostAuthorize("returnObject.email == authentication.name or hasRole('ADMIN')")
     public UserResponse getMyInfo() {
 
         return null;
@@ -63,6 +63,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ACCOUNT')")
     public Page<UserResponse> searchUsers(String search, int page, int limit) {
         PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "id"));
         Page<UserResponse> pageUser;
@@ -75,12 +76,13 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ACCOUNT')")
     public Long getCountUsers() {
         return userRepository.count();
     }
 
     @Override
-    @PostAuthorize("returnObject.username == authentication.name or hasRole('ADMIN')")
+    @PostAuthorize("returnObject.email == authentication.name or hasRole('ADMIN') or returnObject.email == authentication.name")
     public UserResponse updateUser(Long id, UserUpdateRequest request) {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
@@ -94,6 +96,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ACCOUNT')")
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
     }

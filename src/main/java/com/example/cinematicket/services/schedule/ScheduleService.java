@@ -14,6 +14,7 @@ import com.example.cinematicket.repositories.ScheduleRepository;
 import com.example.cinematicket.services.schedule.IScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -33,6 +34,7 @@ public class ScheduleService implements IScheduleService {
     private static final int TIME_BEFORE_START = 60;
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_SHOWTIME')")
     public ScheduleResponse createSchedule(ScheduleRequest request) {
         Movie movie = movieRepository.findById(request.getMovieId())
                 .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_EXISTED));
@@ -68,6 +70,7 @@ public class ScheduleService implements IScheduleService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_SHOWTIME')")
     public ScheduleResponse updateSchedule(Long id, ScheduleRequest request) {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SCHEDULE_NOT_EXISTS));
@@ -99,6 +102,7 @@ public class ScheduleService implements IScheduleService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_SHOWTIME')")
     public void deleteSchedule(Long id) {
         scheduleRepository.deleteById(id);
     }

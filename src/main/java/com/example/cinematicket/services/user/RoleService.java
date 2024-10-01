@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -25,6 +26,7 @@ public class RoleService {
     PermissionRepository permissionRepository;
     RoleMapper roleMapper;
 
+    @PostAuthorize("hasRole('ADMIN')")
     public RoleResponse create(RoleRequest request) {
         if(roleRepository.existsByName(request.getName())){
             throw new AppException(ErrorCode.ROLE_EXISTS);
@@ -39,10 +41,12 @@ public class RoleService {
         return roleMapper.toRoleResponse(role);
     }
 
+    @PostAuthorize("hasRole('ADMIN')")
     public List<RoleResponse> getAll() {
         return roleRepository.findAll().stream().map(roleMapper::toRoleResponse).toList();
     }
 
+    @PostAuthorize("hasRole('ADMIN')")
     public void delete(Long id) {
         roleRepository.deleteById(id);
     }

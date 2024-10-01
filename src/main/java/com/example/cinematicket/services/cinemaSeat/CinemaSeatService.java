@@ -17,6 +17,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class CinemaSeatService implements ICinemaSeatService {
     CinemaRoomRepository cinemaRoomRepository;
     CinemaSeatMapper cinemaSeatMapper;
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_SEAT')")
     public CinemaSeatResponse createCinemaSeat(CinemaSeatRequest request) {
         if(cinemaSeatRepository.existsByCinemaRoomIdAndName(request.getCinemaRoomId(), request.getName()))
             throw new AppException(ErrorCode.CINEMA_SEAT_EXISTED);
@@ -72,6 +74,7 @@ public class CinemaSeatService implements ICinemaSeatService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_SEAT')")
     public CinemaSeatResponse updateCinemaSeat(Long id, CinemaSeatRequest request) {
         CinemaSeat seat = cinemaSeatRepository.findById(id).
                 orElseThrow(()->new AppException(ErrorCode.CINEMA_SEAT_NOT_EXISTED));
@@ -101,6 +104,7 @@ public class CinemaSeatService implements ICinemaSeatService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_SEAT')")
     public void deleteCinemaSeat(Long id) {
         cinemaSeatRepository.deleteById(id);
     }

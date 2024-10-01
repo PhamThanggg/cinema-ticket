@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class TicketService implements ITicketService {
     TicketRepository ticketRepository;
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
     public List<CreateTicketResponse> createTicket(List<Ticket> tickets) {
         return ticketRepository.saveAll(tickets).stream().map(ticketMapper::toCreateTicketResponse).toList();
     }
@@ -52,12 +54,14 @@ public class TicketService implements ITicketService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
     public TicketResponse updateTicket(Long id, TicketRequest request) {
 
         return null;
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
     public void deleteTicket(Long id) {
         ticketRepository.deleteById(id);
     }

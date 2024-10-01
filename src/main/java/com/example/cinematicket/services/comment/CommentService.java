@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,7 @@ public class CommentService implements ICommentService {
     CommentMapper commentMapper;
 
     @Override
+    @PostAuthorize("hasRole('USER') or hasAuthority('MANAGE_SEAT')")
     public CommentResponse createComment(CommentRequest request) {
         User user = getMyInfoLogin();
 
@@ -52,6 +54,7 @@ public class CommentService implements ICommentService {
     }
 
     @Override
+    @PostAuthorize("returnObject.email == authentication.name or hasRole('ADMIN')")
     public Page<CommentResponse> getMyComment(Long movie, int page, int limit) {
         User user = getMyInfoLogin();
 
@@ -61,6 +64,7 @@ public class CommentService implements ICommentService {
     }
 
     @Override
+    @PostAuthorize("returnObject.email == authentication.name or hasRole('ADMIN')")
     public CommentResponse updateComment(CommentRequest request, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_EXISTED));
@@ -75,6 +79,7 @@ public class CommentService implements ICommentService {
     }
 
     @Override
+    @PostAuthorize("returnObject.email == authentication.name or hasRole('ADMIN')")
     public void deleteComment(Long id) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_EXISTED));
@@ -85,7 +90,7 @@ public class CommentService implements ICommentService {
         }
         commentRepository.deleteById(id);
     }
-
+    @PostAuthorize("returnObject.email == authentication.name or hasRole('ADMIN')")
     private User getMyInfoLogin(){
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();

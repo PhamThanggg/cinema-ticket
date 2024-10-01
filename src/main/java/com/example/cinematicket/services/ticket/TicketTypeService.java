@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class TicketTypeService implements ITicketTypeService {
     TicketTypeMapper ticketTypeMapper;
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
     public TicketTypeResponse createTicketType(TicketTypeRequest request) {
         if(ticketTypeRepository.existsByName(request.getName()))
             throw new AppException(ErrorCode.TICKET_TYPE_EXISTS);
@@ -50,6 +52,7 @@ public class TicketTypeService implements ITicketTypeService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
     public TicketTypeResponse updateTicketType(Long id, TicketTypeRequest request) {
         TicketType ticketType = ticketTypeRepository.findById(id).
                 orElseThrow(() -> new AppException(ErrorCode.TICKET_TYPE_NOT_EXISTS));
@@ -59,6 +62,7 @@ public class TicketTypeService implements ITicketTypeService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
     public void deleteTicketType(Long id) {
         ticketTypeRepository.deleteById(id);
     }

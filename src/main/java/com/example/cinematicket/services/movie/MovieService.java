@@ -24,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,6 +50,7 @@ public class MovieService implements IMovieService {
 
     @Override
     @Transactional
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
     public MovieResponse createMovie(MovieRequest request) throws IOException {
         if(movieRepository.existsByProducerAndDuration(request.getProducer(), request.getDuration())){
             throw new AppException(ErrorCode.MOVIE_EXISTED);
@@ -109,6 +111,7 @@ public class MovieService implements IMovieService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
     public MovieResponse updateMovie(Long idG, MovieRequest request) {
         Movie movie = movieRepository.findById(idG).
                 orElseThrow(()-> new AppException(ErrorCode.MOVIE_NOT_EXISTED));
@@ -153,11 +156,13 @@ public class MovieService implements IMovieService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
     public void deleteMovie(Long id) {
         movieRepository.deleteById(id);
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
     public List<MovieImageResponse> createMovieImage(
             Long movieId,
             List<MultipartFile> files) throws IOException {
@@ -186,6 +191,7 @@ public class MovieService implements IMovieService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
     public void deleteMovieImage(Set<String> movieId) throws IOException {
         Set<MovieImage> movieImages = movieImageRepository.findByIdIn(movieId);
         if(movieImages.isEmpty())
@@ -204,6 +210,7 @@ public class MovieService implements IMovieService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
     public MovieResponse createMovieVideo(Long movieId, MultipartFile file) throws IOException {
         Movie movie = movieRepository.findById(movieId).
                 orElseThrow(()-> new AppException(ErrorCode.MOVIE_EXISTED));
@@ -216,6 +223,7 @@ public class MovieService implements IMovieService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
     public MovieResponse createMovieVideoLink(Long movieId, String path) {
         Movie movie = movieRepository.findById(movieId).
                 orElseThrow(()-> new AppException(ErrorCode.MOVIE_EXISTED));
@@ -225,6 +233,7 @@ public class MovieService implements IMovieService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
     public void updateVideo(Long movieId) {
 
     }

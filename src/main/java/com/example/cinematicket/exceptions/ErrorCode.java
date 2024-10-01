@@ -220,7 +220,7 @@ public enum ErrorCode {
 
 
     //=================== PERMISSION BEGIN =====================
-    PERMISSION_NOT_NULL(2501, "Permission is required", HttpStatus.BAD_REQUEST),
+    PERMISSION_NOT_BLANK(2501, "Permission is required", HttpStatus.BAD_REQUEST),
     PERMISSION_INVALID(2502, "Permission ID must be greater than {value}", HttpStatus.BAD_REQUEST),
 
     PERMISSION_EXISTS(2602, "Permission name exists", HttpStatus.BAD_REQUEST),
@@ -228,12 +228,13 @@ public enum ErrorCode {
     //=================== PERMISSION END =======================
 
     //=================== ROLE BEGIN =====================
-    ROLE_NOT_NULL(2501, "Role is required", HttpStatus.BAD_REQUEST),
+    ROLE_NOT_BLANK(2501, "Role is required", HttpStatus.BAD_REQUEST),
     ROLE_INVALID(2502, "Role ID must be greater than {value}", HttpStatus.BAD_REQUEST),
 
     ROLE_EXISTS(2602, "Role name exists", HttpStatus.BAD_REQUEST),
     ROLE_NOT_EXISTS(2602, "Role not exists", HttpStatus.BAD_REQUEST),
     //=================== ROLE END =======================
+
     ;
 
 

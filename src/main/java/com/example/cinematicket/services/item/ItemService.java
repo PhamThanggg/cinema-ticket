@@ -11,6 +11,7 @@ import com.example.cinematicket.repositories.MovieRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class ItemService implements IItemService {
     ItemMapper itemMapper;
     MovieRepository movieRepository;
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ITEM')")
     public ItemResponse createItem(ItemRequest request) {
         if(movieRepository.existsById(request.getIdCinema())){
             throw new AppException(ErrorCode.CINEMA_NOT_EXISTED);
@@ -41,6 +43,7 @@ public class ItemService implements IItemService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ITEM')")
     public ItemResponse updateItem(ItemRequest request, Long id) {
         if(movieRepository.existsById(request.getIdCinema())){
             throw new AppException(ErrorCode.CINEMA_NOT_EXISTED);
@@ -59,6 +62,7 @@ public class ItemService implements IItemService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ITEM')")
     public void deleteItem(Long id) {
         itemRepository.deleteById(id);
     }

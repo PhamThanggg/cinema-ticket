@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,6 +27,7 @@ public class MoviePeopleService implements IMoviePeopleService {
     MoviePeopleMapper moviePeopleMapper;
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
     public MoviePeopleResponse createMoviePeople(MoviePeopleRequest request) {
         MovieRoleType roleType = movieRoleTypeRepository.findById(request.getIdRoleType())
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_TYPE_NOT_EXISTS));
@@ -57,6 +59,7 @@ public class MoviePeopleService implements IMoviePeopleService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
     public MoviePeopleResponse updateMoviePeople(MoviePeopleRequest request, Long id) {
         MoviePeople moviePeople = moviePeopleRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.MOVIE_PP_NOT_EXISTS));
@@ -81,6 +84,7 @@ public class MoviePeopleService implements IMoviePeopleService {
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
     public void deleteMoviePeople(Long id) {
         moviePeopleRepository.deleteById(id);
     }

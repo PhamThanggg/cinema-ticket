@@ -10,6 +10,7 @@ import com.example.cinematicket.repositories.AreaRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class AreaService implements IAreaService{
     AreaRepository areaRepository;
     AreaMapper areaMapper;
     @Override
+    @PostAuthorize("hasRole('ADMIN')")
     public AreaResponse createArea(AreaRequest request) {
         if(areaRepository.existsByAreaName(request.getAreaName())){
             throw new AppException(ErrorCode.AREA_EXISTS);
@@ -36,6 +38,7 @@ public class AreaService implements IAreaService{
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN')")
     public AreaResponse updateArea(AreaRequest request, Long id) {
         Area area = areaRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.AREA_NOT_EXISTS));
@@ -51,6 +54,7 @@ public class AreaService implements IAreaService{
     }
 
     @Override
+    @PostAuthorize("hasRole('ADMIN')")
     public void deleteArea(Long id) {
         areaRepository.deleteById(id);
     }

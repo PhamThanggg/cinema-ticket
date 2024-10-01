@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class PermissionService {
     PermissionRepository permissionRepository;
     PermissionMapper permissionMapper;
 
+    @PostAuthorize("hasRole('ADMIN'")
     public PermissionResponse create(PermissionRequest request) {
         if(permissionRepository.existsByName(request.getName())){
             throw new AppException(ErrorCode.PERMISSION_EXISTS);
@@ -33,11 +35,13 @@ public class PermissionService {
         return permissionMapper.toPermissionResponse(permission);
     }
 
+    @PostAuthorize("hasRole('ADMIN')")
     public List<PermissionResponse> getAll() {
         List<Permission> permissions = permissionRepository.findAll();
         return permissions.stream().map(permissionMapper::toPermissionResponse).toList();
     }
 
+    @PostAuthorize("hasRole('ADMIN')")
     public void delete(Long id) {
         permissionRepository.deleteById(id);
     }
