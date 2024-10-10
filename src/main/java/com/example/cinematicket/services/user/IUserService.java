@@ -5,6 +5,8 @@ import com.example.cinematicket.dtos.requests.UserUpdateRequest;
 import com.example.cinematicket.dtos.responses.UserResponse;
 import org.springframework.data.domain.Page;
 
+import java.util.Set;
+
 public interface IUserService {
     UserResponse createUser(UserCreationRequest request);
 
@@ -12,13 +14,14 @@ public interface IUserService {
 
     Page<UserResponse> getAllUsers(int page, int limit);
 
-    //List<UserResponse> getAllUsers();
-
     Page<UserResponse> searchUsers(String search, int page, int limit);
 
     Long getCountUsers();
 
     UserResponse updateUser(Long id,UserUpdateRequest request);
+
+    UserResponse updateRole(Long id, Set<Long> roleIds);
+
     void deleteUser(Long userId);
 
 }

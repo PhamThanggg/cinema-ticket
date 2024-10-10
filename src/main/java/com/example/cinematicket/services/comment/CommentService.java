@@ -14,12 +14,15 @@ import com.example.cinematicket.repositories.UserRepository;
 import com.example.cinematicket.services.comment.ICommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -27,6 +30,7 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
+@Slf4j
 public class CommentService implements ICommentService {
     UserRepository userRepository;
     MovieRepository movieRepository;
@@ -34,7 +38,7 @@ public class CommentService implements ICommentService {
     CommentMapper commentMapper;
 
     @Override
-    @PostAuthorize("hasRole('USER') or hasAuthority('MANAGE_SEAT')")
+    @PreAuthorize("hasRole('USER') or hasAuthority('MANAGE_SEAT')")
     public CommentResponse createComment(CommentRequest request) {
         User user = getMyInfoLogin();
 
@@ -54,7 +58,7 @@ public class CommentService implements ICommentService {
     }
 
     @Override
-    @PostAuthorize("returnObject.email == authentication.name or hasRole('ADMIN')")
+    @PostAuthorize("returnObject.id == authentication.id or hasRole('ADMIN')")
     public Page<CommentResponse> getMyComment(Long movie, int page, int limit) {
         User user = getMyInfoLogin();
 
@@ -64,33 +68,20 @@ public class CommentService implements ICommentService {
     }
 
     @Override
-    @PostAuthorize("returnObject.email == authentication.name or hasRole('ADMIN')")
+    @PostAuthorize("returnObject.userId.toString() == authentication.principal.getClaimAsString('id')")
     public CommentResponse updateComment(CommentRequest request, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_EXISTED));
 
-        User user = getMyInfoLogin();
-        if(!user.getId().equals(comment.getUser().getId())){
-            throw new RuntimeException("You cannot update another user comment");
-        }
-
-        commentMapper.updateComment(comment, request);
         return commentMapper.toCommentResponse(commentRepository.save(comment));
     }
 
     @Override
-    @PostAuthorize("returnObject.email == authentication.name or hasRole('ADMIN')")
+    @PreAuthorize("@securityService.isCommentOwner(#id, authentication) or hasRole('ADMIN')")
     public void deleteComment(Long id) {
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_EXISTED));
-
-        User user = getMyInfoLogin();
-        if(!user.getId().equals(comment.getUser().getId())){
-            throw new RuntimeException("You cannot delete another user comment");
-        }
         commentRepository.deleteById(id);
     }
-    @PostAuthorize("returnObject.email == authentication.name or hasRole('ADMIN')")
+    @PostAuthorize("returnObject.email == authentication.name")
     private User getMyInfoLogin(){
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();

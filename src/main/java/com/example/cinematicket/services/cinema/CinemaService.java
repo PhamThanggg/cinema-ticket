@@ -4,7 +4,6 @@ import com.example.cinematicket.dtos.requests.CinemaRequest;
 import com.example.cinematicket.dtos.responses.CinemaResponse;
 import com.example.cinematicket.entities.Area;
 import com.example.cinematicket.entities.Cinema;
-
 import com.example.cinematicket.exceptions.AppException;
 import com.example.cinematicket.exceptions.ErrorCode;
 import com.example.cinematicket.mapper.CinemaMapper;
@@ -16,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +29,7 @@ public class CinemaService implements ICinemaService {
     AreaRepository areaRepository;
 
     @Override
-    @PostAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public CinemaResponse createCinema(CinemaRequest request) {
         if(cinemaRepository.existsByName(request.getName()))
             throw new AppException(ErrorCode.CINEMA_EXISTED);
@@ -69,13 +68,13 @@ public class CinemaService implements ICinemaService {
     }
 
     @Override
-    @PostAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public Long totalCinema() {
         return cinemaRepository.count();
     }
 
     @Override
-    @PostAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public CinemaResponse updateCinema(Long id, CinemaRequest request) {
         Cinema cinema = cinemaRepository.findById(id).
                 orElseThrow(()->new AppException(ErrorCode.CINEMA_NOT_EXISTED));
@@ -88,7 +87,7 @@ public class CinemaService implements ICinemaService {
     }
 
     @Override
-    @PostAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteCinema(Long id) {
         cinemaRepository.deleteById(id);
     }

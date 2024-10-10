@@ -121,7 +121,7 @@ public class MovieController {
     public ApiResponse<String> deleteMovieById(@PathVariable("id") Long id){
         movieService.deleteMovie(id);
         return ApiResponse.<String>builder()
-                .result("Gender has been deleted")
+                .result("Movie has been deleted")
                 .build();
     }
 

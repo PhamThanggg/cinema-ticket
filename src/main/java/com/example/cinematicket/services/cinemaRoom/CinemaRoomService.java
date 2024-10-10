@@ -11,7 +11,6 @@ import com.example.cinematicket.mapper.CinemaRoomMapper;
 import com.example.cinematicket.repositories.CinemaRepository;
 import com.example.cinematicket.repositories.CinemaRoomRepository;
 import com.example.cinematicket.repositories.RoomTypeRepository;
-import com.example.cinematicket.services.cinemaRoom.ICinemaRoomService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,7 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,7 +30,7 @@ public class CinemaRoomService implements ICinemaRoomService {
     RoomTypeRepository roomTypeRepository;
     CinemaRoomMapper cinemaRoomMapper;
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ROOM')")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ROOM')")
     public CinemaRoomResponse createCinemaRoom(CinemaRoomRequest request) {
         if(cinemaRoomRepository.existsByName(request.getName()))
             throw new AppException(ErrorCode.CINEMA_ROOM_EXISTED);
@@ -93,7 +92,7 @@ public class CinemaRoomService implements ICinemaRoomService {
     }
 
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ROOM')")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ROOM')")
     public CinemaRoomResponse updateCinemaRoom(Long id, CinemaRoomRequest request) {
         CinemaRoom cinemaRoom = cinemaRoomRepository.findById(id).
                 orElseThrow(()->new AppException(ErrorCode.CINEMA_ROOM_NOT_EXISTED));
@@ -111,7 +110,7 @@ public class CinemaRoomService implements ICinemaRoomService {
     }
 
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ROOM')")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ROOM')")
     public void deleteCinemaRoom(Long id) {
         cinemaRoomRepository.deleteById(id);
     }

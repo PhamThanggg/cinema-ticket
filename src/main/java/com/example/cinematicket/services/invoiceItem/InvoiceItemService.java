@@ -28,7 +28,6 @@ public class InvoiceItemService implements IInvoiceItemService{
     InvoiceRepository invoiceRepository;
     
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
     public List<Item> create(Set<InvoiceItemRequest> requests, Long cinemaId, Long invoiceId) {
 
         if(!cinemaRepository.existsById(cinemaId))

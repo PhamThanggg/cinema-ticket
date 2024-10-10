@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public class RoomTypeService implements IRoomTypeService {
     RoomTypeRepository roomTypeRepository;
     RoomTypeMapper roomTypeMapper;
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ROOM')")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ROOM')")
     public RoomTypeResponse createRoomType(RoomTypeRequest request) {
         if(roomTypeRepository.existsByName(request.getName()))
             throw new AppException(ErrorCode.ROOM_TYPE_EXISTED);
@@ -62,7 +63,7 @@ public class RoomTypeService implements IRoomTypeService {
     }
 
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ROOM')")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ROOM')")
     public RoomTypeResponse updateRoomType(Long id, RoomTypeRequest request) {
         RoomType roomType = roomTypeRepository.findById(id).
                 orElseThrow(()-> new AppException(ErrorCode.ROOM_TYPE_NOT_EXISTED));
@@ -72,7 +73,7 @@ public class RoomTypeService implements IRoomTypeService {
     }
 
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ROOM')")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ROOM')")
     public void deleteRoomType(Long id) {
         roomTypeRepository.deleteById(id);
     }

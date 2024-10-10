@@ -1,6 +1,5 @@
 package com.example.cinematicket.dtos.responses;
 
-import jakarta.persistence.Column;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,6 +12,8 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentResponse {
+    Long id;
+
     Long userId;
 
     String commentText;

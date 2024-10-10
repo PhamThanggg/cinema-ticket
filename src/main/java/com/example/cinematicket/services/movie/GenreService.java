@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,7 +24,7 @@ public class GenreService implements IGenreService {
     GenreRepository genreRepository;
     GenreMapper genreMapper;
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
     public GenreResponse createGenre(GenreRequest request) {
         if(genreRepository.existsByName(request.getName()))
             throw new AppException(ErrorCode.GENRE_EXISTED);
@@ -53,7 +54,7 @@ public class GenreService implements IGenreService {
     }
 
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
     public GenreResponse updateGenre(Long id, GenreRequest request) {
         Genre genre = genreRepository.findById(id).
                 orElseThrow(()->new AppException(ErrorCode.GENRE_NOT_EXISTED));
@@ -63,7 +64,7 @@ public class GenreService implements IGenreService {
     }
 
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
     public void deleteGenre(Long id) {
         genreRepository.deleteById(id);
     }

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -66,8 +67,10 @@ public class CommentController {
             @PathVariable("id") Long id,
             @RequestBody @Valid CommentRequest request
     ){
+        CommentResponse commentResponse = commentService.updateComment(request, id);
+
         return ApiResponse.<CommentResponse>builder()
-                .result(commentService.updateComment(request, id))
+                .result(commentResponse)
                 .build();
     }
 

@@ -41,5 +41,4 @@ public class UserCreationRequest {
 
     private int status;
 
-//    private Long role;
 }

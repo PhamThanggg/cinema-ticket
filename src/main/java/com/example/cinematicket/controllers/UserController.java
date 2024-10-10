@@ -2,6 +2,7 @@ package com.example.cinematicket.controllers;
 
 import com.example.cinematicket.dtos.requests.UserCreationRequest;
 import com.example.cinematicket.dtos.requests.UserUpdateRequest;
+import com.example.cinematicket.dtos.requests.user.UserUpdateRoleRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
 import com.example.cinematicket.dtos.responses.UserResponse;
 import com.example.cinematicket.services.user.UserService;
@@ -12,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("${api.prefix}/users")
@@ -31,8 +33,8 @@ public class UserController {
     }
 
     @GetMapping("/myInfo")
-    public ApiResponse<List<UserResponse>> getMyInfo() {
-        return null;
+    public UserResponse getMyInfo() {
+        return userService.getMyInfo();
     }
 
     @GetMapping("")
@@ -77,6 +79,16 @@ public class UserController {
         return ApiResponse.<UserResponse>builder()
                 .message("update successfully")
                 .result(userService.updateUser(id, request))
+                .build();
+    }
+
+    @PutMapping("/addRole/{userId}")
+    public ApiResponse<UserResponse> updateUserRole(
+            @PathVariable("userId") Long id,
+            @RequestBody @Valid UserUpdateRoleRequest request) {
+        return ApiResponse.<UserResponse>builder()
+                .message("Update successfully")
+                .result(userService.updateRole(id, request.getRoleIds()))
                 .build();
     }
 

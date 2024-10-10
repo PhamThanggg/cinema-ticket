@@ -29,7 +29,6 @@ public class TicketService implements ITicketService {
     TicketRepository ticketRepository;
 
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
     public List<CreateTicketResponse> createTicket(List<Ticket> tickets) {
         return ticketRepository.saveAll(tickets).stream().map(ticketMapper::toCreateTicketResponse).toList();
     }
@@ -54,14 +53,14 @@ public class TicketService implements ITicketService {
     }
 
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET') or @securityService.isTicketOwner(#id, authentication)")
     public TicketResponse updateTicket(Long id, TicketRequest request) {
 
         return null;
     }
 
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET') or @securityService.isTicketOwner(#id, authentication)")
     public void deleteTicket(Long id) {
         ticketRepository.deleteById(id);
     }

@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +43,6 @@ public class InvoiceService implements IInvoiceService {
     InvoiceItemService invoiceItemService;
     @Override
     @Transactional
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
     public InvoiceResponse createInvoice(ListTicketRequest request) {
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();
@@ -120,7 +120,7 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET') or returnObject.email == authentication.name")
+    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET') or returnObject.userId.toString() == authentication.principal.getClaimAsString('id')")
     public InvoiceResponse getInvoiceById(Long id) {
         Invoice invoice = invoiceRepository.findById(id).
                 orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_EXISTS));
@@ -129,7 +129,7 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
     public Page<InvoiceResponse> getAllInvoice(int page, int limit) {
         Pageable pageable = PageRequest.of(page, limit);
 
@@ -137,13 +137,13 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
     public Page<InvoiceResponse> searchInvoice(String name, int page, int limit) {
         return null;
     }
 
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
     public InvoiceResponse updateInvoice(Long id, InvoiceRequest request) {
         Invoice invoice = invoiceRepository.findById(id).
                 orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_EXISTS));
@@ -153,7 +153,7 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
     public void deleteInvoice(Long id) {
         invoiceRepository.deleteById(id);
     }

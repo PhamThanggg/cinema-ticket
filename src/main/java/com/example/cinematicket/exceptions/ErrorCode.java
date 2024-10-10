@@ -135,6 +135,8 @@ public enum ErrorCode {
 
     COMMENT_EXISTS(1902, "Comment name exists", HttpStatus.BAD_REQUEST),
     COMMENT_NOT_EXISTS(1902, "Comment not exists", HttpStatus.BAD_REQUEST),
+    COMMENT_UPDATE(1902, "You cannot update another user comment", HttpStatus.BAD_REQUEST),
+    COMMENT_DELETE(1902, "You cannot delete another user comment", HttpStatus.BAD_REQUEST),
     //=================== COMMENT END =======================
 
     //=================== INVOICE BEGIN =====================
