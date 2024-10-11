@@ -18,6 +18,8 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Component;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -39,16 +41,26 @@ public class SecurityConfig {
     private final String[] PUBLIC_GET_ENDPOINTS = {
             "/api/v1/area", "/api/v1/cinema", "/api/v1/cinema/search",
             "/api/v1/cinema", "/api/v1/cinema_room/search", "/api/v1/movie/comment",
-            "/api/v1/genre", "/api/v1/genre/search", "/api/v1/movie/search", "/api/v1/movie/search",
+            "/api/v1/genre", "/api/v1/genre/search", "/api/v1/movie/search/**","/api/v1/movie/show/**",
             "/api/v1/moviePeople", "/api/v1/schedule",  "/api/v1/schedule/search"
     };
 
     @Autowired
     @Lazy
     private CustomJwtDecoder customJwtDecoder;
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.cors(customizer -> {
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            CorsConfiguration config = new CorsConfiguration();
+            config.addAllowedOrigin("http://localhost:3000"); // Cho phép origin của ứng dụng React
+            config.addAllowedHeader("*"); // Cho phép tất cả các header
+            config.addAllowedMethod("*"); // Cho phép tất cả các phương thức HTTP
+            config.setAllowCredentials(true); // Nếu bạn cần gửi cookie hoặc thông tin xác thực
+            source.registerCorsConfiguration("/**", config); // Áp dụng cho tất cả các endpoint
+            customizer.configurationSource(source);
+        });
+
         httpSecurity.authorizeHttpRequests(request -> request
                 .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                 .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()

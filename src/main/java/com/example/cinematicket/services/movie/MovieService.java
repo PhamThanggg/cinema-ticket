@@ -98,10 +98,10 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public Page<MovieResponse> getAllMovie(int page, int limit) {
+    public Page<MovieResponse> getAllMovie(int page, int limit, int status) {
         Pageable pageable = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "id"));
 
-        return movieRepository.findAll(pageable).map(movieMapper::toMovieResponse);
+        return movieRepository.findByStatus(status, pageable).map(movieMapper::toMovieResponse);
     }
 
     @Override

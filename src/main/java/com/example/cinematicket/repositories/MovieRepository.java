@@ -20,5 +20,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
                            @Param("genreIds") Set<Integer> genreIds,
                            Pageable pageable);
 
+    @Query("SELECT m FROM Movie m WHERE (:status IS NULL OR m.status = :status)")
+    Page<Movie> findByStatus(@Param("status") int status, Pageable pageable);
+
     boolean existsByProducerAndDuration(String producer, String duration);
 }

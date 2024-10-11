@@ -37,9 +37,9 @@ public class MovieResponse {
 
     LocalDateTime premiereDate;
 
-    Set<Long> imageIds;
+    Set<MovieImageResponse> images;
 
-    Set<Long> genreIds;
+    Set<GenreResponse> genres;
 
-    Set<Long> moviePeopleIds;
+    Set<MoviePeopleResponse> moviePeople;
 }

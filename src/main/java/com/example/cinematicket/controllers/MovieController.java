@@ -4,11 +4,13 @@ import com.example.cinematicket.dtos.requests.MovieRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
 import com.example.cinematicket.dtos.responses.MovieImageResponse;
 import com.example.cinematicket.dtos.responses.MovieResponse;
+import com.example.cinematicket.dtos.responses.PageResponse;
 import com.example.cinematicket.services.movie.MovieService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -58,17 +60,22 @@ public class MovieController {
                 .build();
     }
 
-    @GetMapping("")
-    public ApiResponse<List<MovieResponse>> getAllMovie(
+    @GetMapping("/show/{status}")
+    public PageResponse<List<MovieResponse>> getMovieShowNow(
             @RequestParam("page") int page,
-            @RequestParam("limit") int limit
+            @RequestParam("limit") int limit,
+            @PathVariable("status") int status
     ){
-        List<MovieResponse> movieResponses = movieService
-                .getAllMovie(page, limit)
-                .getContent();
+        Page<MovieResponse> moviePage = movieService.getAllMovie(page, limit, status);
+
+        List<MovieResponse> movieResponses = moviePage.getContent();
         int totalCinema = movieResponses.size();
-        return ApiResponse.<List<MovieResponse>>builder()
+        return PageResponse.<List<MovieResponse>>builder()
                 .message("Total genre: " + totalCinema)
+                .currentPage(moviePage.getNumber())
+                .totalPages(moviePage.getTotalPages())
+                .totalElements(moviePage.getTotalElements())
+                .pageSize(moviePage.getSize())
                 .result(movieResponses)
                 .build();
     }
