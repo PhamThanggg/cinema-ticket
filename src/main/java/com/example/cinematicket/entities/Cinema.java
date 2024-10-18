@@ -3,6 +3,8 @@ package com.example.cinematicket.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Table(name = "cinemas")
 @Entity
 @Getter
@@ -26,4 +28,7 @@ public class Cinema {
     private String address;
 
     private int status;
+
+    @OneToMany(mappedBy = "cinema", fetch = FetchType.LAZY)
+    private Set<CinemaRoom> cinemaRooms;
 }

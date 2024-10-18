@@ -1,12 +1,10 @@
 package com.example.cinematicket.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Table(name="movies")
@@ -44,6 +42,8 @@ public class Movie extends BaseEntity{
     Set<MovieImage> images;
 
     String trailer;
+
+    String nation;
 
     int status;
 

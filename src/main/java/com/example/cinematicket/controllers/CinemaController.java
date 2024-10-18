@@ -3,6 +3,7 @@ package com.example.cinematicket.controllers;
 import com.example.cinematicket.dtos.requests.CinemaRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
 import com.example.cinematicket.dtos.responses.CinemaResponse;
+import com.example.cinematicket.dtos.responses.CinemaScheduleResponse;
 import com.example.cinematicket.services.cinema.CinemaService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -31,6 +33,27 @@ public class CinemaController {
     public ApiResponse<List<CinemaResponse>> getAllCinema(){
             return ApiResponse.<List<CinemaResponse>>builder()
                 .result(cinemaService.getAllCinema())
+                .build();
+    }
+
+    @GetMapping("/schedule")
+    public ApiResponse<List<CinemaScheduleResponse>> getCinemaSchedule(
+            @RequestParam(required = false) Long cinemaId,
+            @RequestParam(required = false) Long movieId,
+            @RequestParam(required = false) Long areaId,
+            @RequestParam(required = false) LocalDate screeningDate
+    ){
+        return ApiResponse.<List<CinemaScheduleResponse>>builder()
+                .result(cinemaService.getCinemaSchedule(cinemaId, movieId, areaId, screeningDate))
+                .build();
+    }
+
+    @GetMapping("/area/{areaId}")
+    public ApiResponse<List<CinemaResponse>> getAllCinemaArea(
+        @PathVariable("areaId") Long areaId
+    ){
+        return ApiResponse.<List<CinemaResponse>>builder()
+                .result(cinemaService.getAllCinema(areaId))
                 .build();
     }
 

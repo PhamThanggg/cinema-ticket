@@ -29,6 +29,8 @@ public class MovieResponse {
 
     String trailer;
 
+    String nation;
+
     int status;
 
     String description;

@@ -2,8 +2,11 @@ package com.example.cinematicket.services.cinema;
 
 import com.example.cinematicket.dtos.requests.CinemaRequest;
 import com.example.cinematicket.dtos.responses.CinemaResponse;
+import com.example.cinematicket.dtos.responses.CinemaScheduleResponse;
+import com.example.cinematicket.dtos.responses.ScheduleResponse;
 import com.example.cinematicket.entities.Area;
 import com.example.cinematicket.entities.Cinema;
+import com.example.cinematicket.entities.Schedule;
 import com.example.cinematicket.exceptions.AppException;
 import com.example.cinematicket.exceptions.ErrorCode;
 import com.example.cinematicket.mapper.CinemaMapper;
@@ -18,7 +21,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +60,45 @@ public class CinemaService implements ICinemaService {
     @Override
     public List<CinemaResponse> getAllCinema() {
         return cinemaRepository.findAll().stream().map(cinemaMapper::toCinemaResponse).toList();
+    }
+
+    @Override
+    public List<CinemaResponse> getAllCinema(Long areaId) {
+        return cinemaRepository.findByAreaId(areaId).stream().map(cinemaMapper::toCinemaResponse).toList();
+    }
+
+    @Override
+    public List<CinemaScheduleResponse> getCinemaSchedule(Long cinemaId, Long movieId, Long areaId, LocalDate screeningDate) {
+        List<Object[]> results = cinemaRepository.findCinemasWithSchedules(cinemaId, movieId, areaId, screeningDate);
+
+        Map<Long, CinemaScheduleResponse> responseMap = new HashMap<>();
+
+        for (Object[] result : results) {
+            Cinema cinema = (Cinema) result[0];
+            Schedule schedule = (Schedule) result[1];
+
+            CinemaScheduleResponse response = responseMap.get(cinema.getId());
+            if (response == null) {
+                response = new CinemaScheduleResponse(cinema.getId(), cinema.getName());
+                responseMap.put(cinema.getId(), response);
+            }
+
+            if (schedule != null) {
+                ScheduleResponse scheduleResponse = new ScheduleResponse(
+                        schedule.getId(),
+                        schedule.getCinemaRooms().getId(),
+                        schedule.getMovies().getId(),
+                        schedule.getScreeningDate(),
+                        schedule.getStartTime(),
+                        schedule.getEndTime(),
+                        schedule.getStatus()
+                );
+
+                response.addSchedule(scheduleResponse);
+            }
+        }
+
+        return new ArrayList<>(responseMap.values());
     }
 
     @Override

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Set;
+
 @Table(name="cinema_room")
 @Entity
 @Getter
@@ -30,4 +32,7 @@ public class CinemaRoom {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_room_type")
     RoomType roomType;
+
+    @OneToMany(mappedBy = "cinemaRooms", fetch = FetchType.LAZY)
+    private Set<Schedule> schedules;
 }

@@ -12,5 +12,5 @@ public class CinemaResponse {
     Long id;
     Long areaId;
     String name;
-    int address;
+    String address;
 }

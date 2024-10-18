@@ -80,6 +80,27 @@ public class MovieController {
                 .build();
     }
 
+    @GetMapping("/show-area/{status}/{areaId}")
+    public PageResponse<List<MovieResponse>> getMovieArea(
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit,
+            @PathVariable("status") int status,
+            @PathVariable("areaId") Long areaId
+    ){
+        Page<MovieResponse> moviePage = movieService.getAllMovie(page, limit, status, areaId);
+
+        List<MovieResponse> movieResponses = moviePage.getContent();
+        int totalCinema = movieResponses.size();
+        return PageResponse.<List<MovieResponse>>builder()
+                .message("Total genre: " + totalCinema)
+                .currentPage(moviePage.getNumber())
+                .totalPages(moviePage.getTotalPages())
+                .totalElements(moviePage.getTotalElements())
+                .pageSize(moviePage.getSize())
+                .result(movieResponses)
+                .build();
+    }
+
     @GetMapping("/search")
     public ApiResponse<List<MovieResponse>> searchMovie(
             @RequestParam(value = "nameMovie", required = false) String nameMovie,

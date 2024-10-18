@@ -33,19 +33,19 @@ public class ScheduleRequest {
     @JsonProperty("screening_date")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "Screening Date is required")
-    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "DATE_VALID")
+//    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "DATE_VALID")
     LocalDate screeningDate;
 
     @JsonProperty("start_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @NotNull(message = "TIME_START_NOT_NULL")
-    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "DATE_VALID")
+//    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "DATE_VALID")
     LocalDateTime startTime;
 
     @JsonProperty("end_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @NotNull(message = "TIME_END_NOT_NULL")
-    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "DATE_VALID")
+//    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "DATE_VALID")
     LocalDateTime endTime;
 
     int status;

@@ -42,13 +42,16 @@ public class    MovieRequest {
     @Max(value = 18, message = "AGE_VALID_MAX")
     int ageLimit;
 
+    String nation;
+
     int status;
 
     String description;
 
     @JsonProperty("premiere_date")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "DATE_VALID")
+//    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "DATE_VALID")
+    @Future(message = "Premiere date must be in the future")
     LocalDateTime premiereDate;
 
     @Builder.Default

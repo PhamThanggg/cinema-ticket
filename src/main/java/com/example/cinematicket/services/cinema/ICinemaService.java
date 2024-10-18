@@ -2,8 +2,10 @@ package com.example.cinematicket.services.cinema;
 
 import com.example.cinematicket.dtos.requests.CinemaRequest;
 import com.example.cinematicket.dtos.responses.CinemaResponse;
+import com.example.cinematicket.dtos.responses.CinemaScheduleResponse;
 import org.springframework.data.domain.Page;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ICinemaService {
@@ -12,6 +14,10 @@ public interface ICinemaService {
     CinemaResponse getCinemaById(Long id);
 
     List<CinemaResponse> getAllCinema();
+
+    List<CinemaResponse> getAllCinema(Long areaId);
+
+    List<CinemaScheduleResponse> getCinemaSchedule(Long cinemaId, Long movieId, Long areaId, LocalDate screeningDate);
 
     Page<CinemaResponse> searchCinema(String name, int page, int limit);
 

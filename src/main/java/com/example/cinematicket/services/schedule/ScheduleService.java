@@ -126,7 +126,7 @@ public class ScheduleService implements IScheduleService {
                     String.format("You must make an schedule at least %d hour in advance", TIME_BEFORE_START));
         }
 
-        LocalDateTime timeEndMovie = request.getEndTime().plusMinutes(timeMovie + 10); // them 10p t gian cho
+        LocalDateTime timeEndMovie = request.getEndTime().plusMinutes(timeMovie + 10);
         if(request.getStartTime().isAfter(request.getEndTime())
                 && timeEndMovie.isAfter(request.getEndTime()))
             throw new RuntimeException(("The start time must be less than the end time " +
