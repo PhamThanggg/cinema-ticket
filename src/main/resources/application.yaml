@@ -16,6 +16,13 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
+
+outbound:
+  identity:
+    client-id: "296253261995-l9h9uurvmsmb31l9lenrv3iau6p1c6lj.apps.googleusercontent.com"
+    client-secret: "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"
+    redirect-uri: "http://localhost:3000"
+
 jwt:
   signerKey: "/4QGxOo+h7hFa4/maPoOzQqaSQs8FoRNm67ifE5FbYlDaiH+7mG3MflDHn1aWpeS"
   valid-duration: 6000 #2592000 # in second

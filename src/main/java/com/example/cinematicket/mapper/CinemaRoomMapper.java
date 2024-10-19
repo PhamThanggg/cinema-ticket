@@ -11,7 +11,6 @@ import org.mapstruct.MappingTarget;
 public interface CinemaRoomMapper {
     CinemaRoom toCinemaRoom(CinemaRoomRequest request);
 
-    @Mapping(source = "cinema.id", target = "cinemaId")
     @Mapping(source = "roomType.id", target = "roomTypeId")
     CinemaRoomResponse toCinemaRoomResponse(CinemaRoom cinemaRoom);
 

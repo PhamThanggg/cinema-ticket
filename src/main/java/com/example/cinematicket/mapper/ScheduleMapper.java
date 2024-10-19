@@ -10,7 +10,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface ScheduleMapper {
     Schedule toSchedule(ScheduleRequest scheduleRequest);
-    @Mapping(source = "cinemaRooms.id", target = "cinemaRoomIds")
+
     @Mapping(source = "movies.id", target = "movieIds")
     ScheduleResponse toScheduleResponse(Schedule schedule);
 

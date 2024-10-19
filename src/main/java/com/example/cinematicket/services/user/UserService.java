@@ -3,6 +3,7 @@ package com.example.cinematicket.services.user;
 import com.example.cinematicket.constant.PredefinedRole;
 import com.example.cinematicket.dtos.requests.UserCreationRequest;
 import com.example.cinematicket.dtos.requests.UserUpdateRequest;
+import com.example.cinematicket.dtos.responses.UserInfo;
 import com.example.cinematicket.dtos.responses.UserResponse;
 import com.example.cinematicket.entities.Role;
 import com.example.cinematicket.entities.User;
@@ -11,20 +12,27 @@ import com.example.cinematicket.exceptions.ErrorCode;
 import com.example.cinematicket.mapper.UserMapper;
 import com.example.cinematicket.repositories.RoleRepository;
 import com.example.cinematicket.repositories.UserRepository;
-import com.example.cinematicket.services.user.IUserService;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +42,25 @@ public class UserService implements IUserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
+
+    @NonFinal
+    @Value("${outbound.identity.client-id}")
+    protected String CLIENT_ID;
+    private JsonFactory jsonFactory;
+    private GoogleIdTokenVerifier verifier;
+
+    @PostConstruct
+    public void init() throws GeneralSecurityException, IOException {
+        jsonFactory = GsonFactory.getDefaultInstance();
+        NetHttpTransport transport = new NetHttpTransport();
+        // Khởi tạo GoogleIdTokenVerifier với GooglePublicKeysManager
+        verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
+                .setAudience(Collections.singletonList(CLIENT_ID))
+                .build();
+    }
+    public GoogleIdToken verifyGoogleToken(String idTokenString) throws GeneralSecurityException, IOException {
+        return verifier.verify(idTokenString);
+    }
     @Override
     public UserResponse createUser(UserCreationRequest request) {
         if(!request.getPassword().equals(request.getRepassword()))
@@ -131,5 +158,40 @@ public class UserService implements IUserService {
     @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ACCOUNT')")
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
+    }
+
+    public User getUserInfoFromGoogle(String idTokenString) throws GeneralSecurityException, IOException {
+        GoogleIdToken idToken = verifyGoogleToken(idTokenString);
+        if (idToken != null) {
+            GoogleIdToken.Payload payload = idToken.getPayload();
+            String email = payload.getEmail();
+            String name = (String) payload.get("name");
+            String pictureUrl = (String) payload.get("picture");
+
+            User user = User.builder()
+                    .email(email)
+                    .fullName(name)
+                    .image(pictureUrl)
+                    .build();
+            return user;
+        }
+        return null;
+    }
+
+    public User registerUser(UserInfo userGG) {
+        Optional<User> user = userRepository.findByEmail(userGG.getEmail());
+        if (user.isEmpty()) {
+            User userData = User.builder()
+                    .email(userGG.getEmail())
+                    .fullName(userGG.getName())
+                    .image(userGG.getPicture())
+                    .build();
+            return userRepository.save(userData);
+        } else {
+            User existingUser = user.get();
+            existingUser.setFullName(userGG.getName());
+            existingUser.setImage(userGG.getPicture());
+            return userRepository.save(existingUser);
+        }
     }
 }

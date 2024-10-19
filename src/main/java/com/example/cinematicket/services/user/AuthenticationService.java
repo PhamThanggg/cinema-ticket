@@ -1,14 +1,17 @@
 package com.example.cinematicket.services.user;
 
 import com.example.cinematicket.dtos.requests.AuthenticationRequest;
+import com.example.cinematicket.dtos.requests.ExchangeTokenRequest;
 import com.example.cinematicket.dtos.requests.TokenRequest;
 import com.example.cinematicket.dtos.responses.AuthenticationResponse;
 import com.example.cinematicket.dtos.responses.IntrospectResponse;
+import com.example.cinematicket.dtos.responses.UserInfo;
 import com.example.cinematicket.entities.InvalidatedToken;
 import com.example.cinematicket.entities.User;
 import com.example.cinematicket.exceptions.AppException;
 import com.example.cinematicket.exceptions.ErrorCode;
 import com.example.cinematicket.repositories.InvalidatedTokenRepository;
+import com.example.cinematicket.repositories.OutboundIdentityClient;
 import com.example.cinematicket.repositories.UserRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -16,11 +19,17 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import java.text.ParseException;
 import java.time.Instant;
@@ -36,6 +45,8 @@ public class AuthenticationService implements IAuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final InvalidatedTokenRepository invalidatedTokenRepository;
+    private  final OutboundIdentityClient outboundIdentityClient;
+    private  final UserService userService;
 
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
@@ -45,6 +56,21 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Value("${jwt.refreshable-duration}")
     protected long REFRESHABLE_DURATION;
+
+    @NonFinal
+    @Value("${outbound.identity.client-id}")
+    protected String CLIENT_ID;
+
+    @NonFinal
+    @Value("${outbound.identity.client-secret}")
+    protected String CLIENT_SECRET;
+
+    @NonFinal
+    @Value("${outbound.identity.redirect-uri}")
+    protected String REDIRECT_URI;
+
+    @NonFinal
+    protected final String GRANT_TYPE = "authorization_code";
 
     @Override
     public AuthenticationResponse authentication(AuthenticationRequest request) {
@@ -61,6 +87,47 @@ public class AuthenticationService implements IAuthenticationService {
                 .token(token)
                 .authenticated(true)
                 .build();
+    }
+
+    public AuthenticationResponse outboundAuthenticate(String code){
+        var response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
+                .code(code)
+                .clientId(CLIENT_ID)
+                .clientSecret(CLIENT_SECRET)
+                .redirectUri(REDIRECT_URI)
+                .grantType(GRANT_TYPE)
+                .build());
+
+        UserInfo userInfo = getUserInfo(response.getAccessToken());
+        User user = userService.registerUser(userInfo);
+
+        var token = generateToken(user);
+        return AuthenticationResponse.builder()
+                .token(token)
+                .authenticated(true)
+                .build();
+    }
+
+    private UserInfo getUserInfo(String accessToken) {
+        // Tạo RestTemplate
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Tạo tiêu đề yêu cầu với Access Token
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        // Tạo đối tượng HttpEntity với tiêu đề
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        // Gửi yêu cầu đến API userinfo và ánh xạ phản hồi vào đối tượng User
+        ResponseEntity<UserInfo> response = restTemplate.exchange(
+                "https://www.googleapis.com/oauth2/v3/userinfo",
+                HttpMethod.GET,
+                entity,
+                UserInfo.class
+        );
+
+        return response.getBody();
     }
 
     @Override
@@ -173,5 +240,4 @@ public class AuthenticationService implements IAuthenticationService {
 
         return stringJoiner.toString();
     }
-
 }

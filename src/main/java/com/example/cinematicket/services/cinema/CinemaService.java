@@ -10,6 +10,7 @@ import com.example.cinematicket.entities.Schedule;
 import com.example.cinematicket.exceptions.AppException;
 import com.example.cinematicket.exceptions.ErrorCode;
 import com.example.cinematicket.mapper.CinemaMapper;
+import com.example.cinematicket.mapper.ScheduleMapper;
 import com.example.cinematicket.repositories.AreaRepository;
 import com.example.cinematicket.repositories.CinemaRepository;
 import lombok.AccessLevel;
@@ -34,6 +35,7 @@ public class CinemaService implements ICinemaService {
     CinemaRepository cinemaRepository;
     CinemaMapper cinemaMapper;
     AreaRepository areaRepository;
+    ScheduleMapper scheduleMapper;
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
@@ -84,15 +86,7 @@ public class CinemaService implements ICinemaService {
             }
 
             if (schedule != null) {
-                ScheduleResponse scheduleResponse = new ScheduleResponse(
-                        schedule.getId(),
-                        schedule.getCinemaRooms().getId(),
-                        schedule.getMovies().getId(),
-                        schedule.getScreeningDate(),
-                        schedule.getStartTime(),
-                        schedule.getEndTime(),
-                        schedule.getStatus()
-                );
+                ScheduleResponse scheduleResponse = scheduleMapper.toScheduleResponse(schedule);
 
                 response.addSchedule(scheduleResponse);
             }
