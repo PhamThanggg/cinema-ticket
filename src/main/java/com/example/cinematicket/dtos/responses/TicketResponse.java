@@ -1,11 +1,8 @@
 package com.example.cinematicket.dtos.responses;
 
-import com.example.cinematicket.entities.CinemaSeat;
-import com.example.cinematicket.entities.Schedule;
-import com.example.cinematicket.entities.TicketType;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import com.example.cinematicket.dtos.responses.cinemaSeat.CinemaSeatBookedResponse;
+import com.example.cinematicket.dtos.responses.schedule.ScheduleBookedResponse;
+import com.example.cinematicket.dtos.responses.schedule.ScheduleResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -18,9 +15,7 @@ import lombok.experimental.FieldDefaults;
 public class TicketResponse {
     Long id;
 
-    Long scheduleId;
-
-    Long cinemaSeatId;
+    CinemaSeatBookedResponse cinemaSeat;
 
     Long ticketTypeId;
 

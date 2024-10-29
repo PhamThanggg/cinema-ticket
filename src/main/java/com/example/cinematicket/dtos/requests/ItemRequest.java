@@ -27,6 +27,9 @@ public class ItemRequest {
     @Size(min = 2,max = 100, message = "ITEM_INVALID")
     String name;
 
+    @JsonProperty(" image_url;")
+    String imageUrl;
+
     @JsonProperty("item_description")
     String description;
 

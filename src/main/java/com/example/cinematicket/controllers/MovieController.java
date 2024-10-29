@@ -3,7 +3,7 @@ package com.example.cinematicket.controllers;
 import com.example.cinematicket.dtos.requests.MovieRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
 import com.example.cinematicket.dtos.responses.MovieImageResponse;
-import com.example.cinematicket.dtos.responses.MovieResponse;
+import com.example.cinematicket.dtos.responses.movie.MovieResponse;
 import com.example.cinematicket.dtos.responses.PageResponse;
 import com.example.cinematicket.services.movie.MovieService;
 import jakarta.validation.Valid;

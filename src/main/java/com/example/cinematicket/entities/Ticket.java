@@ -18,10 +18,6 @@ public class Ticket {
     @Column(name = "id_ticket")
     Long id;
 
-    @ManyToOne(fetch =  FetchType.LAZY)
-    @JoinColumn(name = "id_schedule")
-    Schedule schedule;
-
     @OneToOne(fetch =  FetchType.LAZY)
     @JoinColumn(name = "id_cinema_seat")
     CinemaSeat cinemaSeat;

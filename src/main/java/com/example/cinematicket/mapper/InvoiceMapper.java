@@ -1,6 +1,7 @@
 package com.example.cinematicket.mapper;
 
-import com.example.cinematicket.dtos.requests.InvoiceRequest;
+import com.example.cinematicket.dtos.requests.invoice.InvoiceRequest;
+import com.example.cinematicket.dtos.requests.invoice.InvoiceUpdateRequest;
 import com.example.cinematicket.dtos.responses.InvoiceResponse;
 import com.example.cinematicket.entities.Invoice;
 import com.example.cinematicket.entities.InvoiceItem;
@@ -9,27 +10,25 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface InvoiceMapper {
     Invoice toInvoice(InvoiceRequest request);
     @Mapping(source = "user.id", target = "userId")
-    @Mapping(target = "ticketIds", expression = "java(mapTicketIds(invoice.getTickets()))")
-    @Mapping(target = "itemIds", expression = "java(mapItemIds(invoice.getInvoiceItems()))")
     InvoiceResponse toInvoiceResponse(Invoice invoice);
-    void updateInvoice(@MappingTarget Invoice invoice, InvoiceRequest request);
+    void updateInvoice(@MappingTarget Invoice invoice, InvoiceUpdateRequest request);
 
-    default Set<Long> mapTicketIds(Set<Ticket> tickets) {
+    default List<Long> mapTicketIds(List<Ticket> tickets) {
         return tickets.stream()
                 .map(Ticket::getId)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
-    default Set<Long> mapItemIds(Set<InvoiceItem> invoiceItems) {
+    default List<Long> mapItemIds(List<InvoiceItem> invoiceItems) {
         return invoiceItems.stream()
                 .map(InvoiceItem::getId)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 }

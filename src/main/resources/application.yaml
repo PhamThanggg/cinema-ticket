@@ -25,7 +25,7 @@ outbound:
 
 jwt:
   signerKey: "/4QGxOo+h7hFa4/maPoOzQqaSQs8FoRNm67ifE5FbYlDaiH+7mG3MflDHn1aWpeS"
-  valid-duration: 6000 #2592000 # in second
+  valid-duration: 600000 #2592000 # in second
   refreshable-duration: 36000 # in seconds
 api:
   prefix: api/v1
@@ -33,3 +33,9 @@ cloudinary:
   cloud-name: dsoz9gcfd
   api-key: 791357523784923
   api-secret: NgevDFEbDQCBM08mo5lsvW93l40
+
+vnp:
+  partnerCode: K126GZDF
+  accessKey: ACCESS_KEY
+  secretKey: AVUIGDB260WKO4IV9VJMDZGUDOZLHUQU
+  endpoint: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html

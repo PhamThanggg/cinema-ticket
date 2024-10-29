@@ -2,8 +2,7 @@ package com.example.cinematicket.services.movie;
 
 import com.example.cinematicket.dtos.requests.MovieRequest;
 import com.example.cinematicket.dtos.responses.MovieImageResponse;
-import com.example.cinematicket.dtos.responses.MovieResponse;
-import com.example.cinematicket.entities.MovieImage;
+import com.example.cinematicket.dtos.responses.movie.MovieResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 

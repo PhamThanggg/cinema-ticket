@@ -29,8 +29,8 @@ public class TicketService implements ITicketService {
     TicketRepository ticketRepository;
 
     @Override
-    public List<CreateTicketResponse> createTicket(List<Ticket> tickets) {
-        return ticketRepository.saveAll(tickets).stream().map(ticketMapper::toCreateTicketResponse).toList();
+    public List<Ticket> createTicket(List<Ticket> tickets) {
+        return ticketRepository.saveAll(tickets);
     }
     @Override
     public TicketResponse getTicketById(Long id) {
@@ -65,7 +65,7 @@ public class TicketService implements ITicketService {
         ticketRepository.deleteById(id);
     }
 
-    public boolean isCinemaSeatBooked(Set<Long> cinemaSeatId, Set<Long> scheduleId){
-        return ticketRepository.existsByCinemaSeatIdInAndScheduleIdIn(cinemaSeatId,  scheduleId);
+    public boolean isCinemaSeatBooked(Set<Long> cinemaSeatId, Long scheduleId){
+        return ticketRepository.existsByCinemaSeatIdInAndInvoiceScheduleId(cinemaSeatId,  scheduleId);
     }
 }

@@ -8,5 +8,5 @@ import java.util.Set;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
-    boolean existsByCinemaSeatIdInAndScheduleIdIn(Set<Long> cinemaSeatIds, Set<Long> movieIds);
+    boolean existsByCinemaSeatIdInAndInvoiceScheduleId(Set<Long> cinemaSeatIds, Long scheduleId);
 }

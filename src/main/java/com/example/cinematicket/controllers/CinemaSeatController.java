@@ -1,8 +1,9 @@
 package com.example.cinematicket.controllers;
 
-import com.example.cinematicket.dtos.requests.CinemaSeatRequest;
+import com.example.cinematicket.dtos.requests.seat.CinemaSeatRequest;
+import com.example.cinematicket.dtos.requests.seat.SeatAutoRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
-import com.example.cinematicket.dtos.responses.CinemaSeatResponse;
+import com.example.cinematicket.dtos.responses.cinemaSeat.CinemaSeatResponse;
 import com.example.cinematicket.services.cinemaSeat.CinemaSeatService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -26,15 +27,33 @@ public class CinemaSeatController {
                 .build();
     }
 
+    @PostMapping("/add-seat")
+    public ApiResponse<List<CinemaSeatResponse>> createSeatAuto(@RequestBody @Valid SeatAutoRequest request){
+        return ApiResponse.<List<CinemaSeatResponse>>builder()
+                .message("Create successfully")
+                .result(cinemaSeatService.addSeatsAutomatic(request))
+                .build();
+    }
+
     @GetMapping("")
     public ApiResponse<List<CinemaSeatResponse>> getAllCinemaSeat(
-            @RequestParam("page") int page,
-            @RequestParam("limit") int limit,
-            @RequestParam("cinema_room_id") Long cinemaRoomId
+            @RequestParam("schedule_id") Long scheduleId
     ){
         List<CinemaSeatResponse> cinemaResponses = cinemaSeatService
-                .getCinemaSeat(page, limit, cinemaRoomId)
-                .getContent();
+                .getCinemaSeat(scheduleId);
+        int totalCinema = cinemaResponses.size();
+        return ApiResponse.<List<CinemaSeatResponse>>builder()
+                .message("Total cinema room: " + totalCinema)
+                .result(cinemaResponses)
+                .build();
+    }
+
+    @GetMapping("/seatBooked")
+    public ApiResponse<List<CinemaSeatResponse>> getCinemaSeatBooked(
+            @RequestParam("schedule_id") Long scheduleId
+    ){
+        List<CinemaSeatResponse> cinemaResponses = cinemaSeatService
+                .getCinemaSeat(scheduleId, 0);
         int totalCinema = cinemaResponses.size();
         return ApiResponse.<List<CinemaSeatResponse>>builder()
                 .message("Total cinema room: " + totalCinema)

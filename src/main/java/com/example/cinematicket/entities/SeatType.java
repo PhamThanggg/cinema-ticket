@@ -18,4 +18,6 @@ public class SeatType {
 
     @Column(name = "name_seat_type")
     String name;
+
+    double price;
 }

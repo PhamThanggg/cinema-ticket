@@ -28,7 +28,7 @@ public class InvoiceItemService implements IInvoiceItemService{
     InvoiceRepository invoiceRepository;
     
     @Override
-    public List<Item> create(Set<InvoiceItemRequest> requests, Long cinemaId, Long invoiceId) {
+    public List<InvoiceItem> create(Set<InvoiceItemRequest> requests, Long cinemaId, Long invoiceId) {
 
         if(!cinemaRepository.existsById(cinemaId))
                 throw new RuntimeException("Cinema not exists");
@@ -67,6 +67,6 @@ public class InvoiceItemService implements IInvoiceItemService{
                 .collect(Collectors.toList());
         invoiceItemRepository.saveAll(invoiceItems);
 
-        return new ArrayList<>(itemMap.values());
+        return invoiceItems;
     }
 }

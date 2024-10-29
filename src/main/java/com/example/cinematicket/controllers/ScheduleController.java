@@ -2,7 +2,7 @@ package com.example.cinematicket.controllers;
 
 import com.example.cinematicket.dtos.requests.ScheduleRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
-import com.example.cinematicket.dtos.responses.ScheduleResponse;
+import com.example.cinematicket.dtos.responses.schedule.ScheduleResponse;
 import com.example.cinematicket.services.schedule.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;

@@ -2,7 +2,7 @@ package com.example.cinematicket.services.movie;
 
 import com.example.cinematicket.dtos.requests.MovieRequest;
 import com.example.cinematicket.dtos.responses.MovieImageResponse;
-import com.example.cinematicket.dtos.responses.MovieResponse;
+import com.example.cinematicket.dtos.responses.movie.MovieResponse;
 import com.example.cinematicket.entities.Genre;
 import com.example.cinematicket.entities.Movie;
 import com.example.cinematicket.entities.MovieImage;
@@ -24,7 +24,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

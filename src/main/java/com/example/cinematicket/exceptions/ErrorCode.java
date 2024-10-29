@@ -82,6 +82,11 @@ public enum ErrorCode {
     ROW_VALID(1411, "Row must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
     COLUM_NOT_NULL(1412, "Column name is required", HttpStatus.BAD_REQUEST),
     COLUM_VALID(1413, "Column must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
+    ROW_MIN(1405, "Row min {value}", HttpStatus.BAD_REQUEST),
+    ROW_MAX(1405, "Row max {value}", HttpStatus.BAD_REQUEST),
+    COLUMN_MIN(1405, "Column min {value}", HttpStatus.BAD_REQUEST),
+    COLUMN_MAX(1405, "Column max {value}", HttpStatus.BAD_REQUEST),
+    SEAT_COUNT(1405, "Chỉ thực hiện chức năng này khi phòng k có ghế", HttpStatus.BAD_REQUEST),
     //=================== CINEMA SEAT END =======================
 
     //=================== GENRE BEGIN =====================
@@ -116,6 +121,7 @@ public enum ErrorCode {
     SEAT_TYPE_EXISTED(1701, "Movie existed", HttpStatus.BAD_REQUEST),
     SEAT_TYPE_NOT_EXISTED(1702, "Movie not existed", HttpStatus.BAD_REQUEST),
 
+    SEAT_BOOKING(1701, "Ghế đã được đặt hoặc giữ chỗ", HttpStatus.BAD_REQUEST),
     //=================== CINEMA SEAT END =======================
 
 

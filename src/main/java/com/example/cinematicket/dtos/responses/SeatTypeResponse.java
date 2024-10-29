@@ -1,5 +1,7 @@
 package com.example.cinematicket.dtos.responses;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,4 +13,5 @@ import lombok.experimental.FieldDefaults;
 public class SeatTypeResponse {
     Long id;
     String name;
+    double price;
 }

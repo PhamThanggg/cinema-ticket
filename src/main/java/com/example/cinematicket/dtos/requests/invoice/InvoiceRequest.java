@@ -1,4 +1,4 @@
-package com.example.cinematicket.dtos.requests;
+package com.example.cinematicket.dtos.requests.invoice;
 
 import com.example.cinematicket.entities.Ticket;
 import com.example.cinematicket.entities.User;

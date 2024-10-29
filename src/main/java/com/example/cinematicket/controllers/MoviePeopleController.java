@@ -1,25 +1,17 @@
 package com.example.cinematicket.controllers;
 
 import com.example.cinematicket.dtos.requests.MoviePeopleRequest;
-import com.example.cinematicket.dtos.requests.MovieRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
-import com.example.cinematicket.dtos.responses.MovieImageResponse;
 import com.example.cinematicket.dtos.responses.MoviePeopleResponse;
-import com.example.cinematicket.dtos.responses.MovieResponse;
-import com.example.cinematicket.services.movie.MovieService;
 import com.example.cinematicket.services.moviePeople.MoviePeopleService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @RestController
 @RequestMapping("${api.prefix}/moviePeople")

@@ -1,7 +1,9 @@
 package com.example.cinematicket.services.cinemaSeat;
 
-import com.example.cinematicket.dtos.requests.CinemaSeatRequest;
-import com.example.cinematicket.dtos.responses.CinemaSeatResponse;
+import com.example.cinematicket.dtos.requests.seat.CinemaSeatRequest;
+import com.example.cinematicket.dtos.requests.seat.SeatAutoRequest;
+import com.example.cinematicket.dtos.responses.cinemaSeat.CinemaSeatResponse;
+import com.example.cinematicket.dtos.responses.UserResponse;
 import com.example.cinematicket.entities.CinemaRoom;
 import com.example.cinematicket.entities.CinemaSeat;
 import com.example.cinematicket.entities.SeatType;
@@ -11,18 +13,17 @@ import com.example.cinematicket.mapper.CinemaSeatMapper;
 import com.example.cinematicket.repositories.CinemaRoomRepository;
 import com.example.cinematicket.repositories.CinemaSeatRepository;
 import com.example.cinematicket.repositories.SeatTypeRepository;
+import com.example.cinematicket.services.user.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +33,7 @@ public class CinemaSeatService implements ICinemaSeatService {
     SeatTypeRepository seatTypeRepository;
     CinemaRoomRepository cinemaRoomRepository;
     CinemaSeatMapper cinemaSeatMapper;
+    UserService userService;
     @Override
     @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_SEAT')")
     public CinemaSeatResponse createCinemaSeat(CinemaSeatRequest request) {
@@ -54,6 +56,40 @@ public class CinemaSeatService implements ICinemaSeatService {
         return cinemaSeatMapper.toCinemaSeatResponse(cinemaSeatRepository.save(cinemaSeat));
     }
 
+    public List<CinemaSeatResponse> addSeatsAutomatic(SeatAutoRequest request) {
+        if(cinemaSeatRepository.countByCinemaRoomId(request.getCinemaRoomId()) != 0){
+            throw new AppException(ErrorCode.SEAT_COUNT);
+        }
+        SeatType seatType = seatTypeRepository.findById(request.getSeatTypeId()).
+                orElseThrow(()-> new AppException(ErrorCode.SEAT_TYPE_NOT_EXISTED));
+
+        CinemaRoom cinemaRoom = cinemaRoomRepository.findById(request.getCinemaRoomId()).
+                orElseThrow(()-> new AppException(ErrorCode.CINEMA_ROOM_NOT_EXISTED));
+
+        List<CinemaSeat> cinemaSeats = new ArrayList<>();
+
+        for (int row = 0; row < request.getRow(); row++) {
+            String rowName = String.valueOf((char) ('A' + row));
+
+            for (int col = 1; col <= request.getColum(); col++) {
+                CinemaSeat seat = new CinemaSeat();
+                seat.setName(rowName + col);
+                seat.setCinemaRoom(cinemaRoom);
+                seat.setSeatType(seatType);
+                seat.setRow(rowName);
+                seat.setColum(String.valueOf(col));
+                seat.setStatus(1);
+
+                cinemaSeats.add(seat);
+            }
+        }
+
+        List<CinemaSeat> Seats = cinemaSeatRepository.saveAll(cinemaSeats);
+        return Seats.stream()
+                .map(cinemaSeatMapper::toCinemaSeatResponse)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public CinemaSeatResponse getCinemaSeatById(Long id) {
         CinemaSeat seat = cinemaSeatRepository.findById(id).
@@ -63,10 +99,22 @@ public class CinemaSeatService implements ICinemaSeatService {
     }
 
     @Override
-    public Page<CinemaSeatResponse> getCinemaSeat(int page, int limit, Long cinemaRoomId) {
-        Pageable pageable = PageRequest.of(page, limit);
+    public List<CinemaSeatResponse> getCinemaSeat(Long scheduleId) {
+        List<CinemaSeat> cinemaSeats = cinemaSeatRepository.findBySeatCinemaRoomId(scheduleId);
 
-        return cinemaSeatRepository.findByCinemaRoomId(cinemaRoomId, pageable).map(cinemaSeatMapper::toCinemaSeatResponse);
+        return cinemaSeats.stream()
+                .map(cinemaSeatMapper::toCinemaSeatResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<CinemaSeatResponse> getCinemaSeat(Long scheduleId, int status) {
+        UserResponse user = userService.getMyInfo();
+
+        List<CinemaSeat> cinemaSeats = cinemaSeatRepository.findBySeatBooked(scheduleId, status, user.getId());
+
+        return cinemaSeats.stream()
+                .map(cinemaSeatMapper::toCinemaSeatResponse)
+                .collect(Collectors.toList());
     }
 
     @Override

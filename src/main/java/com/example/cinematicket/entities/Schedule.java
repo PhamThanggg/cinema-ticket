@@ -37,5 +37,7 @@ public class Schedule {
     @Column(name = "end_time")
     LocalDateTime endTime;
 
+    double price;
+
     int status;
 }

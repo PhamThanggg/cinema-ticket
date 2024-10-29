@@ -48,5 +48,9 @@ public class ScheduleRequest {
 //    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "DATE_VALID")
     LocalDateTime endTime;
 
+    @NotNull(message = "PRICE_NOT_NULL")
+    @Min(value = 1, message = "PRICE_INVALID")
+    double price;
+
     int status;
 }

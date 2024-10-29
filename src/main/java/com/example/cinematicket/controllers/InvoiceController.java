@@ -1,14 +1,17 @@
 package com.example.cinematicket.controllers;
 
-import com.example.cinematicket.dtos.requests.InvoiceRequest;
+import com.example.cinematicket.dtos.requests.invoice.InvoiceRequest;
 import com.example.cinematicket.dtos.requests.ListTicketRequest;
+import com.example.cinematicket.dtos.requests.invoice.InvoiceUpdateRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
 import com.example.cinematicket.dtos.responses.InvoiceResponse;
+import com.example.cinematicket.dtos.responses.PageResponse;
 import com.example.cinematicket.services.invoice.InvoiceService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,13 +32,32 @@ public class InvoiceController {
     }
 
     @GetMapping("")
-    public ApiResponse<List<InvoiceResponse>> getAll(
+    public PageResponse<List<InvoiceResponse>> getAll(
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ) {
-        List<InvoiceResponse> userResponses = invoiceService.getAllInvoice(page, limit).getContent();
-        return ApiResponse.<List<InvoiceResponse>>builder()
-                .result(userResponses)
+        Page<InvoiceResponse> userResponses = invoiceService.getAllInvoice(page, limit);
+        return PageResponse.<List<InvoiceResponse>>builder()
+                .currentPage(userResponses.getNumber())
+                .totalPages(userResponses.getTotalPages())
+                .totalElements(userResponses.getTotalElements())
+                .pageSize(userResponses.getSize())
+                .result(userResponses.getContent())
+                .build();
+    }
+
+    @GetMapping("/my-invoice")
+    public PageResponse<List<InvoiceResponse>> getAllMyInvoice(
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit
+    ) {
+        Page<InvoiceResponse> userResponses = invoiceService.getMyInvoice(page, limit);
+        return PageResponse.<List<InvoiceResponse>>builder()
+                .currentPage(userResponses.getNumber())
+                .totalPages(userResponses.getTotalPages())
+                .totalElements(userResponses.getTotalElements())
+                .pageSize(userResponses.getSize())
+                .result(userResponses.getContent())
                 .build();
     }
 
@@ -43,16 +65,6 @@ public class InvoiceController {
     public ApiResponse<InvoiceResponse> getById(@PathVariable("id") Long id) {
         return ApiResponse.<InvoiceResponse>builder()
                 .result(invoiceService.getInvoiceById(id))
-                .build();
-    }
-
-    @PutMapping("/{userId}")
-    public ApiResponse<InvoiceResponse> update(
-            @PathVariable("userId") Long id,
-            @RequestBody @Valid InvoiceRequest request) {
-        return ApiResponse.<InvoiceResponse>builder()
-                .message("update successfully")
-                .result(invoiceService.updateInvoice(id, request))
                 .build();
     }
 

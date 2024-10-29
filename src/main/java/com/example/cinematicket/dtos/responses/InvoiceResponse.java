@@ -1,5 +1,10 @@
 package com.example.cinematicket.dtos.responses;
 
+import com.example.cinematicket.dtos.responses.item.InvoiceItemBookedResponse;
+import com.example.cinematicket.dtos.responses.schedule.ScheduleBookedResponse;
+import com.example.cinematicket.entities.InvoiceItem;
+import com.example.cinematicket.entities.Ticket;
+import jakarta.persistence.OneToMany;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -18,9 +23,11 @@ public class InvoiceResponse {
 
     Long userId;
 
-    Set<Long> ticketIds;
+    ScheduleBookedResponse schedule;
 
-    Set<Long> itemIds;
+    List<TicketResponse> tickets;
+
+    List<InvoiceItemBookedResponse> invoiceItems;
 
     Double totalAmount;
 

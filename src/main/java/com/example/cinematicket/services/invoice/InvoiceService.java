@@ -1,8 +1,6 @@
 package com.example.cinematicket.services.invoice;
 
-import com.example.cinematicket.dtos.requests.InvoiceRequest;
 import com.example.cinematicket.dtos.requests.ListTicketRequest;
-import com.example.cinematicket.dtos.responses.CreateTicketResponse;
 import com.example.cinematicket.dtos.responses.InvoiceResponse;
 import com.example.cinematicket.entities.*;
 import com.example.cinematicket.exceptions.AppException;
@@ -11,6 +9,7 @@ import com.example.cinematicket.mapper.InvoiceMapper;
 import com.example.cinematicket.repositories.*;
 import com.example.cinematicket.services.invoiceItem.InvoiceItemService;
 import com.example.cinematicket.services.ticket.TicketService;
+import com.example.cinematicket.services.user.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,6 +21,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +34,7 @@ import java.util.stream.IntStream;
 @FieldDefaults(makeFinal = true)
 public class InvoiceService implements IInvoiceService {
     UserRepository userRepository;
+    UserService userService;
     ScheduleRepository scheduleRepository;
     CinemaSeatRepository cinemaSeatRepository;
     TicketTypeRepository ticketTypeRepository;
@@ -50,71 +51,55 @@ public class InvoiceService implements IInvoiceService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        if (request.getCinemaSeatId().size() != request.getTicketTypeId().size() || request.getScheduleID().size() != request.getTicketTypeId().size()) {
-            throw new IllegalArgumentException("Thong tin cac ve chua đủ!!!");
-        }
+        Schedule schedule = scheduleRepository.findById(request.getScheduleID())
+                .orElseThrow(() -> new AppException(ErrorCode.SCHEDULE_NOT_EXISTS));
 
-        int listSize = request.getScheduleID().size();
-        // Lấy tất cả các ID cần thiết từ các yêu cầu
-        Set<Long> scheduleIds = new HashSet<>(request.getScheduleID());
+        TicketType ticketType = ticketTypeRepository.findById(request.getTicketTypeId())
+                .orElseThrow(() -> new AppException(ErrorCode.TICKET_TYPE_NOT_EXISTS));
+
+        int listSize = request.getCinemaSeatId().size();
         Set<Long> cinemaSeatIds = new HashSet<>(request.getCinemaSeatId());
-        Set<Long> ticketTypeIds = new HashSet<>(request.getTicketTypeId());
 
-        // check ghế có ai đặt chưa
-        if(ticketService.isCinemaSeatBooked(cinemaSeatIds, scheduleIds)){
+        if(ticketService.isCinemaSeatBooked(cinemaSeatIds, request.getScheduleID())){
             throw new RuntimeException("The chair has been booked");
         }
-        if(request.getScheduleID().size() > cinemaSeatIds.size()){
-            throw new RuntimeException("Do not place them in duplicate");
-        }
 
-        // Truy vấn tất cả các đối tượng từ cơ sở dữ liệu
-        Map<Long, Schedule> scheduleMap = scheduleRepository.findAllById(scheduleIds).stream()
-                .collect(Collectors.toMap(Schedule::getId, schedule -> schedule));
         Map<Long, CinemaSeat> cinemaSeatMap = cinemaSeatRepository.findAllById(cinemaSeatIds).stream()
                 .collect(Collectors.toMap(CinemaSeat::getId, cinemaSeat -> cinemaSeat));
-        Map<Long, TicketType> ticketTypeMap = ticketTypeRepository.findAllById(ticketTypeIds).stream()
-                .collect(Collectors.toMap(TicketType::getId, ticketType -> ticketType));
 
-        // Kiểm tra và xử lý lỗi
         for (int i = 0; i < listSize; i++) {
             // Kiểm tra sự tồn tại của từng đối tượng
-            if (!scheduleMap.containsKey(request.getScheduleID().get(i))) {
-                throw new RuntimeException("Schedule ID " + request.getScheduleID() + " not exists");
-            }
-
             if (!cinemaSeatMap.containsKey(request.getCinemaSeatId().get(i))) {
                 throw new RuntimeException("CinemaSeat ID " + request.getCinemaSeatId() + " not exists.");
-            }
-
-            if (!ticketTypeMap.containsKey(request.getTicketTypeId().get(i))) {
-                throw new RuntimeException("TicketType ID " + request.getTicketTypeId() + " not exists.");
             }
         }
 
         // tao hoa don
         Invoice invoice = Invoice.builder()
                 .user(user)
+                .schedule(schedule)
                 .totalAmount(request.getTotalAmount())
                 .build();
         Invoice invoiceResult = invoiceRepository.save(invoice);
 
         // Chuyển đổi danh sách ID thành danh sách Ticket
-        List<Ticket> tickets = IntStream.range(0, request.getScheduleID().size())
+        List<Ticket> tickets = IntStream.range(0, request.getCinemaSeatId().size())
                 .mapToObj(i -> {
                     Ticket ticket = new Ticket();
-                    ticket.setSchedule(scheduleMap.get(request.getScheduleID().get(i)));
                     ticket.setCinemaSeat(cinemaSeatMap.get(request.getCinemaSeatId().get(i)));
-                    ticket.setTicketType(ticketTypeMap.get(request.getTicketTypeId().get(i)));
+                    ticket.setTicketType(ticketType);
                     ticket.setInvoice(invoiceResult);
                     return ticket;
                 })
                 .collect(Collectors.toList());
 
         // tao vé
-        List<CreateTicketResponse> ticketRequests = ticketService.createTicket(tickets);
+        List<Ticket> ticketRequests = ticketService.createTicket(tickets);
         // tao item
-        List<Item> items = invoiceItemService.create(request.getInvoiceItems(), request.getCinemaId(), invoice.getId());
+        List<InvoiceItem> items = invoiceItemService.create(request.getInvoiceItems(), request.getCinemaId(), invoice.getId());
+
+        invoiceResult.setTickets(ticketRequests);
+        invoiceResult.setInvoiceItems(items);
 
        return invoiceMapper.toInvoiceResponse(invoiceResult);
     }
@@ -136,6 +121,14 @@ public class InvoiceService implements IInvoiceService {
         return invoiceRepository.findAll(pageable).map(invoiceMapper::toInvoiceResponse);
     }
 
+
+    public Page<InvoiceResponse> getMyInvoice(int page, int limit) {
+        var user = userService.getMyInfo();
+        Pageable pageable = PageRequest.of(page, limit);
+
+        return invoiceRepository.findByUserId(pageable, user.getId()).map(invoiceMapper::toInvoiceResponse);
+    }
+
     @Override
     @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
     public Page<InvoiceResponse> searchInvoice(String name, int page, int limit) {
@@ -143,17 +136,19 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
-    public InvoiceResponse updateInvoice(Long id, InvoiceRequest request) {
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET') or @securityService.isInvoiceOwner(#id, authentication)")
+    public InvoiceResponse updateInvoice(Long id, LocalDateTime paymentTime, Double amountPaid, int status) {
         Invoice invoice = invoiceRepository.findById(id).
                 orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_EXISTS));
 
-        invoiceMapper.updateInvoice(invoice, request);
+        invoice.setPaymentTime(paymentTime);
+        invoice.setAmountPaid(amountPaid);
+        invoice.setStatus(status);
         return invoiceMapper.toInvoiceResponse(invoiceRepository.save(invoice));
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET') or @securityService.isInvoiceOwner(#id, authentication)")
     public void deleteInvoice(Long id) {
         invoiceRepository.deleteById(id);
     }

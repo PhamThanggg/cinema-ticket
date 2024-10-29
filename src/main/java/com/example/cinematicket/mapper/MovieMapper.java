@@ -1,7 +1,7 @@
 package com.example.cinematicket.mapper;
 
 import com.example.cinematicket.dtos.requests.MovieRequest;
-import com.example.cinematicket.dtos.responses.MovieResponse;
+import com.example.cinematicket.dtos.responses.movie.MovieResponse;
 import com.example.cinematicket.entities.Movie;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

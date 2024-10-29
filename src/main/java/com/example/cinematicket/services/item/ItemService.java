@@ -1,7 +1,7 @@
 package com.example.cinematicket.services.item;
 
 import com.example.cinematicket.dtos.requests.ItemRequest;
-import com.example.cinematicket.dtos.responses.ItemResponse;
+import com.example.cinematicket.dtos.responses.item.ItemResponse;
 import com.example.cinematicket.entities.Item;
 import com.example.cinematicket.exceptions.AppException;
 import com.example.cinematicket.exceptions.ErrorCode;
@@ -11,7 +11,6 @@ import com.example.cinematicket.repositories.MovieRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 

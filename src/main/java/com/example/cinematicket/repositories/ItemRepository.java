@@ -1,6 +1,5 @@
 package com.example.cinematicket.repositories;
 
-import com.example.cinematicket.dtos.responses.ItemResponse;
 import com.example.cinematicket.entities.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

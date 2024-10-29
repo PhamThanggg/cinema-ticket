@@ -24,6 +24,9 @@ public class Item extends BaseEntity{
     @Column(name = "item_name")
     String name;
 
+    @Column(name = "image_url")
+    String imageUrl;
+
     @Column(name = "item_description")
     String description;
 

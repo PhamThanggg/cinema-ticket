@@ -1,6 +1,5 @@
 package com.example.cinematicket.repositories;
 
-import com.example.cinematicket.dtos.responses.MovieResponse;
 import com.example.cinematicket.entities.Movie;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

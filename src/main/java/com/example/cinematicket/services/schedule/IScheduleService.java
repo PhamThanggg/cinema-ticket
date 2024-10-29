@@ -1,8 +1,7 @@
 package com.example.cinematicket.services.schedule;
 
-import com.example.cinematicket.dtos.requests.GenreRequest;
 import com.example.cinematicket.dtos.requests.ScheduleRequest;
-import com.example.cinematicket.dtos.responses.ScheduleResponse;
+import com.example.cinematicket.dtos.responses.schedule.ScheduleResponse;
 import org.springframework.data.domain.Page;
 
 public interface IScheduleService {

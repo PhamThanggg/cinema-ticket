@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Set;
+
 @Table(name="cinema_seats")
 @Entity
 @Getter
@@ -20,13 +22,16 @@ public class CinemaSeat {
     @Column(name="name_seat")
     String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_seat_type")
     SeatType seatType;
 
     @ManyToOne
     @JoinColumn(name="id_cinema_room")
     CinemaRoom cinemaRoom;
+
+    @OneToMany(mappedBy = "cinemaSeat")
+    private Set<SeatReservation> seatReservations;
 
     @Column(name = "row_seat")
     String row;

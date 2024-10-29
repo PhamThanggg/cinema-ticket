@@ -32,7 +32,8 @@ public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {
             "/api/v1/auth/token", "/api/v1/users/register", "/api/v1/auth/introspect",
-            "/api/v1/auth/logout",  "/api/v1/login/**", "/api/v1/auth/oauth2/google"
+            "/api/v1/auth/logout",  "/api/v1/login/**", "/api/v1/auth/oauth2/google",
+
     };
 
     @Autowired
@@ -42,7 +43,9 @@ public class SecurityConfig {
             "/api/v1/area", "/api/v1/cinema/**","/api/v1/cinema/schedule",
             "/api/v1/cinema_room/**", "/api/v1/movie/comment/**",
             "/api/v1/genre/**", "/api/v1/movie/**","/api/v1/movie/show/**",
-            "/api/v1/moviePeople/**", "/api/v1/schedule/**"
+            "/api/v1/moviePeople/**", "/api/v1/schedule/**",
+            "/api/v1/cinema_seat", "/api/v1/seat_reservation/**",
+            "/api/v1/item", "/api/v1/payment/vnpay-callback"
     };
 
     @Autowired
@@ -64,6 +67,7 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(request -> request
                 .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                 .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()
+                .requestMatchers("/ws/**").permitAll()
                 .anyRequest()
                 .authenticated());
 

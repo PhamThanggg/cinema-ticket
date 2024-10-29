@@ -1,12 +1,10 @@
 package com.example.cinematicket.services.invoice;
 
-import com.example.cinematicket.dtos.requests.InvoiceRequest;
 import com.example.cinematicket.dtos.requests.ListTicketRequest;
-import com.example.cinematicket.dtos.requests.TicketRequest;
 import com.example.cinematicket.dtos.responses.InvoiceResponse;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 public interface IInvoiceService {
     InvoiceResponse createInvoice(ListTicketRequest request);
@@ -17,7 +15,7 @@ public interface IInvoiceService {
 
     Page<InvoiceResponse> searchInvoice(String name, int page, int limit);
 
-    InvoiceResponse updateInvoice(Long id, InvoiceRequest request);
+    InvoiceResponse updateInvoice(Long id, LocalDateTime paymentTime, Double amountPaid, int status);
 
     void deleteInvoice(Long id);
 }

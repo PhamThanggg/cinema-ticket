@@ -1,5 +1,8 @@
-package com.example.cinematicket.dtos.responses;
+package com.example.cinematicket.dtos.responses.schedule;
 
+import com.example.cinematicket.dtos.responses.CinemaRoomResponse;
+import com.example.cinematicket.dtos.responses.movie.MovieBookedResponse;
+import com.example.cinematicket.dtos.responses.movie.MovieResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,18 +15,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ScheduleResponse {
-    Long id;
-
+public class ScheduleBookedResponse {
     CinemaRoomResponse cinemaRooms;
 
-    Long movieIds;
+    MovieBookedResponse movies;
 
     LocalDate screeningDate;
 
     LocalDateTime startTime;
 
     LocalDateTime endTime;
-
-    int status;
 }

@@ -1,4 +1,4 @@
-package com.example.cinematicket.dtos.requests;
+package com.example.cinematicket.dtos.requests.seat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;

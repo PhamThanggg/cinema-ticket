@@ -1,6 +1,6 @@
 package com.example.cinematicket.dtos.responses;
 
-import com.example.cinematicket.entities.Schedule;
+import com.example.cinematicket.dtos.responses.schedule.ScheduleResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

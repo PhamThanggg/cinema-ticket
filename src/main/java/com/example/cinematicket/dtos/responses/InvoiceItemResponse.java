@@ -1,7 +1,6 @@
 package com.example.cinematicket.dtos.responses;
 
-import com.example.cinematicket.entities.BaseEntity;
-import jakarta.persistence.*;
+import com.example.cinematicket.dtos.responses.item.ItemResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,12 +10,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ItemResponse {
-    Long id;
-
-    String name;
-
-    String description;
-
-    double price;
+public class InvoiceItemResponse {
+    ItemResponse item;
+    int quantity;
 }

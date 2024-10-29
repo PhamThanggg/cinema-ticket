@@ -1,9 +1,7 @@
 package com.example.cinematicket.services.item;
 
-import com.example.cinematicket.dtos.requests.AreaRequest;
 import com.example.cinematicket.dtos.requests.ItemRequest;
-import com.example.cinematicket.dtos.responses.AreaResponse;
-import com.example.cinematicket.dtos.responses.ItemResponse;
+import com.example.cinematicket.dtos.responses.item.ItemResponse;
 
 import java.util.List;
 

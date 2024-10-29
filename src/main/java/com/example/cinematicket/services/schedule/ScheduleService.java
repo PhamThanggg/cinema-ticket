@@ -1,7 +1,7 @@
 package com.example.cinematicket.services.schedule;
 
 import com.example.cinematicket.dtos.requests.ScheduleRequest;
-import com.example.cinematicket.dtos.responses.ScheduleResponse;
+import com.example.cinematicket.dtos.responses.schedule.ScheduleResponse;
 import com.example.cinematicket.entities.CinemaRoom;
 import com.example.cinematicket.entities.Movie;
 import com.example.cinematicket.entities.Schedule;
@@ -11,10 +11,8 @@ import com.example.cinematicket.mapper.ScheduleMapper;
 import com.example.cinematicket.repositories.CinemaRoomRepository;
 import com.example.cinematicket.repositories.MovieRepository;
 import com.example.cinematicket.repositories.ScheduleRepository;
-import com.example.cinematicket.services.schedule.IScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 

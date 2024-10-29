@@ -3,7 +3,7 @@ package com.example.cinematicket.services.cinema;
 import com.example.cinematicket.dtos.requests.CinemaRequest;
 import com.example.cinematicket.dtos.responses.CinemaResponse;
 import com.example.cinematicket.dtos.responses.CinemaScheduleResponse;
-import com.example.cinematicket.dtos.responses.ScheduleResponse;
+import com.example.cinematicket.dtos.responses.schedule.ScheduleResponse;
 import com.example.cinematicket.entities.Area;
 import com.example.cinematicket.entities.Cinema;
 import com.example.cinematicket.entities.Schedule;

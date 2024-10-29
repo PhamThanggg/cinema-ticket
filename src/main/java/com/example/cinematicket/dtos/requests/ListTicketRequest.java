@@ -18,14 +18,11 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ListTicketRequest {
-        @NotEmpty(message = "Schedule cannot be empty")
-        List<Long> scheduleID;
+        Long scheduleID;
 
-        @NotEmpty(message = "Cinema Seat cannot be empty")
         List<Long> cinemaSeatId;
 
-        @NotEmpty(message = "Ticket type cannot be empty")
-        List<Long> ticketTypeId;
+        Long ticketTypeId;
 
         Set<InvoiceItemRequest> invoiceItems;
 

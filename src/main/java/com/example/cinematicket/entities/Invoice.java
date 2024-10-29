@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Table(name="invoices")
@@ -25,11 +26,15 @@ public class Invoice {
     @JoinColumn(name="id_user")
     User user;
 
-    @OneToMany(mappedBy = "invoice")
-    Set<Ticket> tickets;
+    @ManyToOne(fetch =  FetchType.LAZY)
+    @JoinColumn(name = "id_schedule")
+    Schedule schedule;
 
     @OneToMany(mappedBy = "invoice")
-    Set<InvoiceItem> invoiceItems;
+    List<Ticket> tickets;
+
+    @OneToMany(mappedBy = "invoice")
+    List<InvoiceItem> invoiceItems;
 
     Double totalAmount;
 

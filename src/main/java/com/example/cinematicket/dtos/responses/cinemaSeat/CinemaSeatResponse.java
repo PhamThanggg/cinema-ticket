@@ -1,7 +1,11 @@
-package com.example.cinematicket.dtos.responses;
+package com.example.cinematicket.dtos.responses.cinemaSeat;
 
+import com.example.cinematicket.dtos.responses.SeatReservationResponse;
+import com.example.cinematicket.entities.SeatType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -11,8 +15,9 @@ import lombok.experimental.FieldDefaults;
 public class CinemaSeatResponse {
     Long id;
     String name;
-    Long seatTypeId;
+    SeatType seatType;
     Long cinemaRoomId;
+    Set<SeatReservationResponse> seatReservations;
     String row;
     String colum;
     int status;

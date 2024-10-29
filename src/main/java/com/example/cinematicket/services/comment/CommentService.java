@@ -81,6 +81,7 @@ public class CommentService implements ICommentService {
     public void deleteComment(Long id) {
         commentRepository.deleteById(id);
     }
+
     @PostAuthorize("returnObject.email == authentication.name")
     private User getMyInfoLogin(){
         var context = SecurityContextHolder.getContext();
