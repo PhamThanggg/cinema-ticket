@@ -1,5 +1,6 @@
 package com.example.cinematicket.dtos.requests;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -8,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -35,4 +37,7 @@ public class ListTicketRequest {
         @NotNull(message = "CINEMA_NOT_NULL")
         @Min(value = 1, message = "CINEMA_VALID")
         Long cinemaId;
+
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        LocalDateTime paymentExpirationTime;
 }

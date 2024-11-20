@@ -11,6 +11,8 @@ import com.example.cinematicket.mapper.CinemaRoomMapper;
 import com.example.cinematicket.repositories.CinemaRepository;
 import com.example.cinematicket.repositories.CinemaRoomRepository;
 import com.example.cinematicket.repositories.RoomTypeRepository;
+import com.example.cinematicket.services.cinemaSeat.CinemaSeatService;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,7 +31,9 @@ public class CinemaRoomService implements ICinemaRoomService {
     CinemaRepository cinemaRepository;
     RoomTypeRepository roomTypeRepository;
     CinemaRoomMapper cinemaRoomMapper;
+    CinemaSeatService cinemaSeatService;
     @Override
+    @Transactional
     @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ROOM')")
     public CinemaRoomResponse createCinemaRoom(CinemaRoomRequest request) {
         if(cinemaRoomRepository.existsByName(request.getName()))
@@ -44,7 +48,10 @@ public class CinemaRoomService implements ICinemaRoomService {
         CinemaRoom cinemaRoom = cinemaRoomMapper.toCinemaRoom(request);
         cinemaRoom.setCinema(cinema);
         cinemaRoom.setRoomType(roomType);
-        return cinemaRoomMapper.toCinemaRoomResponse(cinemaRoomRepository.save(cinemaRoom));
+
+        CinemaRoom cinemaRoomRes = cinemaRoomRepository.save(cinemaRoom);
+        cinemaSeatService.addSeatsAutomatic(cinemaRoomRes.getId(), 1L, request.getRow(), request.getColumn());
+        return cinemaRoomMapper.toCinemaRoomResponse(cinemaRoomRes);
     }
 
     @Override

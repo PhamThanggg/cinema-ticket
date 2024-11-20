@@ -3,6 +3,7 @@ package com.example.cinematicket.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Table(name = "cinemas")
@@ -28,6 +29,9 @@ public class Cinema {
     private String address;
 
     private int status;
+
+    @Column(name = "created_date")
+    private LocalDate createdDate;
 
     @OneToMany(mappedBy = "cinema", fetch = FetchType.LAZY)
     private Set<CinemaRoom> cinemaRooms;

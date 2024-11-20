@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class VNPayRequest {
     String orderId;
     int amount;
+    int timePay;
     String orderInfo;
     String orderType;
     String returnUrl;

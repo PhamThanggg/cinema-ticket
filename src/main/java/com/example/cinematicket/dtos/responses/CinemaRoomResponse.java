@@ -3,6 +3,8 @@ package com.example.cinematicket.dtos.responses;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,7 +18,7 @@ public class CinemaRoomResponse {
 
     int status;
 
-    CinemaResponse cinema;
+    LocalDate createdDate;
 
     Long roomTypeId;
 }

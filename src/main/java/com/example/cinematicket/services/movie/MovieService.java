@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Service
 public class MovieService implements IMovieService {
-    MovieRepository movieRepository;
+    MovieRepository movieRepository; // tiêm movieRepository vào lớp để sử dụng
     MovieMapper movieMapper;
     MovieImageRepository movieImageRepository;
     MovieImageMapper movieImageMapper;
@@ -111,10 +111,10 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public Page<MovieResponse> searchMovieOrGenre(String nameMovie, Set<Integer> genreId, int page, int limit) {
+    public Page<MovieResponse> searchMovieOrGenre(String nameMovie, Set<Integer> genreId, Integer status, int page, int limit) {
         Pageable pageable = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "id"));
 
-        return movieRepository.findMovieOrGenre(nameMovie, genreId, pageable).map(movieMapper::toMovieResponse);
+        return movieRepository.findMovieOrGenre(nameMovie, status, genreId, pageable).map(movieMapper::toMovieResponse);
     }
 
     @Override

@@ -19,7 +19,7 @@ public interface IMovieService {
 
     Page<MovieResponse> getAllMovie(int page, int limit, int status, Long areaId);
 
-    Page<MovieResponse> searchMovieOrGenre(String nameMovie, Set<Integer> genreId, int page, int limit);
+    Page<MovieResponse> searchMovieOrGenre(String nameMovie, Set<Integer> genreId, Integer status, int page, int limit);
 
     MovieResponse updateMovie(Long id, MovieRequest request);
 

@@ -1,7 +1,6 @@
 package com.example.cinematicket.controllers;
 
 import com.example.cinematicket.dtos.requests.seat.CinemaSeatRequest;
-import com.example.cinematicket.dtos.requests.seat.SeatAutoRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
 import com.example.cinematicket.dtos.responses.cinemaSeat.CinemaSeatResponse;
 import com.example.cinematicket.services.cinemaSeat.CinemaSeatService;
@@ -24,14 +23,6 @@ public class CinemaSeatController {
         return ApiResponse.<CinemaSeatResponse>builder()
                 .message("Create successfully")
                 .result(cinemaSeatService.createCinemaSeat(request))
-                .build();
-    }
-
-    @PostMapping("/add-seat")
-    public ApiResponse<List<CinemaSeatResponse>> createSeatAuto(@RequestBody @Valid SeatAutoRequest request){
-        return ApiResponse.<List<CinemaSeatResponse>>builder()
-                .message("Create successfully")
-                .result(cinemaSeatService.addSeatsAutomatic(request))
                 .build();
     }
 
@@ -61,14 +52,17 @@ public class CinemaSeatController {
                 .build();
     }
 
-    @GetMapping("/search")
+    @GetMapping("/room/{roomId}")
     public ApiResponse<List<CinemaSeatResponse>> getAllCinema(
-            @RequestParam(value = "name", required = false) String name,
-            @RequestParam("page") int page,
-            @RequestParam("limit") int limit,
-            @RequestParam("cinema_id") Long cinemaId
+            @PathVariable("roomId") Long roomId
     ){
-        return null;
+        List<CinemaSeatResponse> cinemaResponses = cinemaSeatService
+                .cinemaSeatByRoom(roomId);
+        int totalCinema = cinemaResponses.size();
+        return ApiResponse.<List<CinemaSeatResponse>>builder()
+                .message("Total cinema room: " + totalCinema)
+                .result(cinemaResponses)
+                .build();
     }
 
     @GetMapping("/{id}")

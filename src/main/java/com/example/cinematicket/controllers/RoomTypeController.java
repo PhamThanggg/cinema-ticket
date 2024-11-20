@@ -29,12 +29,9 @@ public class RoomTypeController {
 
     @GetMapping("")
     ApiResponse<List<RoomTypeResponse>> getRoomType(
-            @RequestParam("page") int page,
-            @RequestParam("limit") int limit
     ){
         return  ApiResponse.<List<RoomTypeResponse>>builder()
-//                .message("Create successfully")
-                .result(roomTypeService.getRoomTypes(page, limit).getContent())
+                .result(roomTypeService.getRoomTypes())
                 .build();
     }
 

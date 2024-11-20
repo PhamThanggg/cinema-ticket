@@ -25,8 +25,8 @@ public class    MovieRequest {
     String producer;
 
     @JsonProperty("title_movie")
-    @NotBlank(message = "TITLE_NOT_BLANK")
-    @Size(min = 1, max = 100, message = "TITLE_VALID")
+//    @NotBlank(message = "TITLE_NOT_BLANK")
+    @Size(max = 100, message = "TITLE_VALID")
     String titleMovie;
 
     @NotBlank(message = "DURATION_NOT_BLANK")
@@ -62,6 +62,5 @@ public class    MovieRequest {
     Set<Long> genres;
 
     @JsonProperty("movie_people")
-    @NotEmpty(message = "MOVIE_PP_NOT_BLANK")
     Set<Long> moviePeople;
 }

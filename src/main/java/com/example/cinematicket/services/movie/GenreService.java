@@ -17,6 +17,8 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -42,10 +44,8 @@ public class GenreService implements IGenreService {
     }
 
     @Override
-    public Page<GenreResponse> getAllGenre(int page, int limit) {
-        Pageable pageable = PageRequest.of(page, limit);
-
-        return genreRepository.findAll(pageable).map(genreMapper::toRoomTypeResponse);
+    public List<GenreResponse> getAllGenre() {
+        return genreRepository.findAll().stream().map(genreMapper::toRoomTypeResponse).toList();
     }
 
     @Override

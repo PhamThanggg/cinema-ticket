@@ -13,7 +13,7 @@ public interface IMoviePeopleService {
 
     MoviePeopleResponse findById(Long id);
 
-    Page<MoviePeopleResponse> getMoviePeopleALl(String name, int page, int limit);
+    Page<MoviePeopleResponse> getMoviePeopleALl(String name, Long roleTyeId, int page, int limit);
 
     MoviePeopleResponse updateMoviePeople(MoviePeopleRequest request, Long id);
 

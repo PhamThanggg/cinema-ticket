@@ -26,7 +26,7 @@ public class AreaService implements IAreaService{
     public AreaResponse createArea(AreaRequest request) {
         if(areaRepository.existsByAreaName(request.getAreaName())){
             throw new AppException(ErrorCode.AREA_EXISTS);
-        }
+        } // kiểm tra tên đã tồn tại trong CSDL chưa
 
         Area area = areaMapper.toArea(request);
         return areaMapper.toAreaResponse(areaRepository.save(area));

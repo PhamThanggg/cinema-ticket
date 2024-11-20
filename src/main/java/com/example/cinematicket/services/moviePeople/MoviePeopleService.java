@@ -52,10 +52,10 @@ public class MoviePeopleService implements IMoviePeopleService {
     }
 
     @Override
-    public Page<MoviePeopleResponse> getMoviePeopleALl(String name, int page, int limit) {
+    public Page<MoviePeopleResponse> getMoviePeopleALl(String name,Long roleTyeId, int page, int limit) {
         Pageable pageable = PageRequest.of(page, limit);
 
-        return moviePeopleRepository.findName(name, pageable).map(moviePeopleMapper::toMoviePeopleResponse);
+        return moviePeopleRepository.findName(name, roleTyeId, pageable).map(moviePeopleMapper::toMoviePeopleResponse);
     }
 
     @Override

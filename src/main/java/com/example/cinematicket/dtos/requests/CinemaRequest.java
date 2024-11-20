@@ -25,7 +25,7 @@ public class CinemaRequest {
     Long idArea;
 
     @NotBlank(message = "ADDRESS_NOT_BLANK")
-    @Size(min = 2,max = 30, message = "ADDRESS_VALID")
+    @Size(min = 2,max = 255, message = "ADDRESS_VALID")
     String address;
 
     int status;

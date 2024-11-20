@@ -12,44 +12,44 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("${api.prefix}/area")
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
-@RequiredArgsConstructor
+@RestController // đánh dấu là bean để spring quản lý
+@RequestMapping("${api.prefix}/area") // định nghĩa đường dẫn
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true) // định nghĩa private final
+@RequiredArgsConstructor // tạo constructor cho các trường là final
 public class AreaController {
-    AreaService areaService;
+    AreaService areaService; // tiêm vào để sử dụng
 
-    @PostMapping("")
+    @PostMapping("") // thêm khu vực
     public ApiResponse<AreaResponse> create(
-            @RequestBody @Valid AreaRequest request
+            @RequestBody @Valid AreaRequest request // dữ liệu nhận từ body + validate(@valid)
     ){
-        return ApiResponse.<AreaResponse>builder()
+        return ApiResponse.<AreaResponse>builder() // sử dụng builder map dữ liệu
                 .message("Create successfully")
-                .result(areaService.createArea(request))
+                .result(areaService.createArea(request)) // gọi service tạo
                 .build();
     }
 
-    @GetMapping("")
+    @GetMapping("") // lấy dữ liệu
     public ApiResponse<List<AreaResponse>> getAllArea(
     ){
         return ApiResponse.<List<AreaResponse>>builder()
-                .result(areaService.getAreaALl())
+                .result(areaService.getAreaALl()) // gọi service lấy dữ liệu
                 .build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}") // sửa dữ liệu
     public ApiResponse<AreaResponse> updateAreaById(
-            @PathVariable("id") Long id,
-            @RequestBody @Valid AreaRequest request
+            @PathVariable("id") Long id, // id nhận tên đường dẫn vd: area/1  id=1
+            @RequestBody @Valid AreaRequest request // dữ liệu nhận từ body + validate(@valid)
     ){
         return ApiResponse.<AreaResponse>builder()
-                .result(areaService.updateArea(request, id))
+                .result(areaService.updateArea(request, id)) // gọi service sửa dữ liệu
                 .build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") // xóa dữ liệu
     public ApiResponse<String> deleteAreaById(@PathVariable("id") Long id){
-        areaService.deleteArea(id);
+        areaService.deleteArea(id); // gọi service xóa dữ liệu
         return ApiResponse.<String>builder()
                 .result("Area has been deleted")
                 .build();

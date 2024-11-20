@@ -34,7 +34,8 @@ public class PaymentController {
     ) {
         var paymentUrl = vnPayService.createPayment(
                 request.getOrderId(), request.getAmount(),
-                request.getOrderInfo(), request.getReturnUrl()
+                request.getOrderInfo(), request.getReturnUrl(),
+                request.getTimePay()
         );
         return ResponseEntity.ok(paymentUrl);
     }

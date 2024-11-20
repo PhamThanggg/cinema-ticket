@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -66,6 +67,7 @@ public class TicketService implements ITicketService {
     }
 
     public boolean isCinemaSeatBooked(Set<Long> cinemaSeatId, Long scheduleId){
-        return ticketRepository.existsByCinemaSeatIdInAndInvoiceScheduleId(cinemaSeatId,  scheduleId);
+        LocalDateTime timeNow = LocalDateTime.now();
+        return ticketRepository.existsByCinemaSeatIdInAndInvoiceScheduleId(cinemaSeatId,  scheduleId, timeNow);
     }
 }

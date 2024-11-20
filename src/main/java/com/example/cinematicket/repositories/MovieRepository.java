@@ -14,8 +14,10 @@ import java.util.Set;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
     @Query("SELECT m FROM Movie m WHERE " +
             "(:nameMovie IS NULL OR :nameMovie = '' OR m.nameMovie LIKE %:nameMovie%) AND " +
+            "(:status IS NULL OR m.status = :status) AND " +
             "(:genreIds IS NULL OR EXISTS (SELECT g.id FROM m.genres g WHERE g.id IN :genreIds))")
     Page<Movie> findMovieOrGenre(@Param("nameMovie") String nameMovie,
+                                 @Param("status") Integer status,
                            @Param("genreIds") Set<Integer> genreIds,
                            Pageable pageable);
 

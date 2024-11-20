@@ -1,9 +1,6 @@
 package com.example.cinematicket.dtos.requests;
 
-import com.example.cinematicket.entities.Cinema;
-import com.example.cinematicket.entities.RoomType;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -34,4 +31,7 @@ public class CinemaRoomRequest {
     @NotNull(message = "")
     @Min(value = 1, message = "ROOM_TYPE_VALID")
     Long roomTypeId;
+
+    int row;
+    int column;
 }

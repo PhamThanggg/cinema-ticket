@@ -1,7 +1,5 @@
 package com.example.cinematicket.services.momo;
 
-import com.example.cinematicket.dtos.requests.vnpay.ConfirmVnpRequest;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,7 +24,7 @@ public class VNPayService {
     private String endpoint;
 
     // Thêm HttpServletRequest để lấy địa chỉ IP
-    public ResponseEntity<?> createPayment(String orderId, int amount, String orderInfo, String returnUrl) {
+    public ResponseEntity<?> createPayment(String orderId, int amount, String orderInfo, String returnUrl, int timePay) {
 //        String vnp_TxnRef = getRandomNumber(8);
         String vnp_IpAddr = getIpAddress();
         int formattedAmount = amount * 100;
@@ -50,7 +48,7 @@ public class VNPayService {
         String vnp_CreateDate = formatter.format(cld.getTime());
         vnpParams.put("vnp_CreateDate", vnp_CreateDate);
 
-        cld.add(Calendar.MINUTE, 15);
+        cld.add(Calendar.MINUTE, timePay);
         String vnp_ExpireDate = formatter.format(cld.getTime());
         vnpParams.put("vnp_ExpireDate", vnp_ExpireDate);
 
@@ -94,26 +92,10 @@ public class VNPayService {
     }
 
     private String getIpAddress() {
-        // Đoạn mã lấy IP của người dùng, tùy theo yêu cầu của bạn
         return "127.0.0.1";
     }
 
     public int orderReturn(Map<String, String> requestData){
-//        Map fields = new HashMap();
-//        for (Enumeration params = request.getParameterNames(); params.hasMoreElements();) {
-//            String fieldName = null;
-//            String fieldValue = null;
-//            try {
-//                fieldName = URLEncoder.encode((String) params.nextElement(), StandardCharsets.US_ASCII.toString());
-//                fieldValue = URLEncoder.encode(request.getParameter(fieldName), StandardCharsets.US_ASCII.toString());
-//            } catch (UnsupportedEncodingException e) {
-//                e.printStackTrace();
-//            }
-//            if ((fieldValue != null) && (fieldValue.length() > 0)) {
-//                fields.put(fieldName, fieldValue);
-//            }
-//        }
-
         String vnp_SecureHash = requestData.get("vnp_SecureHash");
         if (requestData.containsKey("vnp_SecureHashType")) {
             requestData.remove("vnp_SecureHashType");

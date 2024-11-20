@@ -1,7 +1,6 @@
 package com.example.cinematicket.services.cinemaSeat;
 
 import com.example.cinematicket.dtos.requests.seat.CinemaSeatRequest;
-import com.example.cinematicket.dtos.requests.seat.SeatAutoRequest;
 import com.example.cinematicket.dtos.responses.cinemaSeat.CinemaSeatResponse;
 import com.example.cinematicket.dtos.responses.UserResponse;
 import com.example.cinematicket.entities.CinemaRoom;
@@ -17,10 +16,10 @@ import com.example.cinematicket.services.user.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,28 +55,28 @@ public class CinemaSeatService implements ICinemaSeatService {
         return cinemaSeatMapper.toCinemaSeatResponse(cinemaSeatRepository.save(cinemaSeat));
     }
 
-    public List<CinemaSeatResponse> addSeatsAutomatic(SeatAutoRequest request) {
-        if(cinemaSeatRepository.countByCinemaRoomId(request.getCinemaRoomId()) != 0){
+    public List<CinemaSeatResponse> addSeatsAutomatic(Long cinemaRoomId, Long seatTypeId, int row, int column) {
+        if(cinemaSeatRepository.countByCinemaRoomId(cinemaRoomId) > 0){
             throw new AppException(ErrorCode.SEAT_COUNT);
         }
-        SeatType seatType = seatTypeRepository.findById(request.getSeatTypeId()).
+        SeatType seatType = seatTypeRepository.findById(seatTypeId).
                 orElseThrow(()-> new AppException(ErrorCode.SEAT_TYPE_NOT_EXISTED));
 
-        CinemaRoom cinemaRoom = cinemaRoomRepository.findById(request.getCinemaRoomId()).
+        CinemaRoom cinemaRoom = cinemaRoomRepository.findById(cinemaRoomId).
                 orElseThrow(()-> new AppException(ErrorCode.CINEMA_ROOM_NOT_EXISTED));
 
         List<CinemaSeat> cinemaSeats = new ArrayList<>();
 
-        for (int row = 0; row < request.getRow(); row++) {
-            String rowName = String.valueOf((char) ('A' + row));
+        for (int i = 0; i < row; i++) {
+            String rowName = String.valueOf((char) ('A' + i));
 
-            for (int col = 1; col <= request.getColum(); col++) {
+            for (int j = 1; j <= column; j++) {
                 CinemaSeat seat = new CinemaSeat();
-                seat.setName(rowName + col);
+                seat.setName(rowName + j);
                 seat.setCinemaRoom(cinemaRoom);
                 seat.setSeatType(seatType);
                 seat.setRow(rowName);
-                seat.setColum(String.valueOf(col));
+                seat.setColum(String.valueOf(j));
                 seat.setStatus(1);
 
                 cinemaSeats.add(seat);
@@ -109,8 +108,8 @@ public class CinemaSeatService implements ICinemaSeatService {
 
     public List<CinemaSeatResponse> getCinemaSeat(Long scheduleId, int status) {
         UserResponse user = userService.getMyInfo();
-
-        List<CinemaSeat> cinemaSeats = cinemaSeatRepository.findBySeatBooked(scheduleId, status, user.getId());
+        LocalDateTime timeNow = LocalDateTime.now();
+        List<CinemaSeat> cinemaSeats = cinemaSeatRepository.findBySeatBooked(scheduleId, status, user.getId(), timeNow);
 
         return cinemaSeats.stream()
                 .map(cinemaSeatMapper::toCinemaSeatResponse)
@@ -118,8 +117,12 @@ public class CinemaSeatService implements ICinemaSeatService {
     }
 
     @Override
-    public Page<CinemaSeatResponse> searchCinemaSeat(String name, int page, int limit) {
-        return null;
+    public List<CinemaSeatResponse> cinemaSeatByRoom(Long roomId) {
+        List<CinemaSeat> cinemaSeats = cinemaSeatRepository.findByCinemaRoomId(roomId);
+
+        return cinemaSeats.stream()
+                .map(cinemaSeatMapper::toCinemaSeatResponse)
+                .collect(Collectors.toList());
     }
 
     @Override

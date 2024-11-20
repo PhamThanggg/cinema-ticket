@@ -102,17 +102,22 @@ public class MovieController {
     }
 
     @GetMapping("/search")
-    public ApiResponse<List<MovieResponse>> searchMovie(
+    public PageResponse<List<MovieResponse>> searchMovie(
             @RequestParam(value = "nameMovie", required = false) String nameMovie,
             @RequestParam(value = "genreId", required = false) Set<Integer> genreId,
+            @RequestParam(value = "status", required = false) Integer status,
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ){
-        List<MovieResponse> movieResponse = movieService
-                .searchMovieOrGenre(nameMovie, genreId, page, limit)
-                .getContent();
-        return ApiResponse.<List<MovieResponse>> builder()
-                .result(movieResponse)
+        Page<MovieResponse> movieResponse = movieService
+                .searchMovieOrGenre(nameMovie, genreId, status, page, limit);
+
+        return PageResponse.<List<MovieResponse>> builder()
+                .currentPage(movieResponse.getNumber())
+                .totalPages(movieResponse.getTotalPages())
+                .totalElements(movieResponse.getTotalElements())
+                .pageSize(movieResponse.getSize())
+                .result(movieResponse.getContent())
                 .build();
     }
 

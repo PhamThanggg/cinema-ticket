@@ -6,11 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 public interface IRoomTypeService {
     RoomTypeResponse createRoomType(RoomTypeRequest request);
     RoomTypeResponse getRoomTypeById(Long id);
-    Page<RoomTypeResponse> getRoomTypes(int page, int limit);
+    List<RoomTypeResponse> getRoomTypes();
     Page<RoomTypeResponse> searchRoomType(String name, int page, int limit);
     RoomTypeResponse updateRoomType(Long id, RoomTypeRequest request);
     void deleteRoomType(Long id);

@@ -35,11 +35,12 @@ public class MoviePeopleController {
     @GetMapping("")
     public ApiResponse<List<MoviePeopleResponse>> searchMoviePeople(
             @RequestParam(value = "name", required = false) String nameMoviePeople,
+            @RequestParam(value = "roleTypeId") Long roleTypeId,
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ){
         List<MoviePeopleResponse> movieResponse = moviePeopleService
-                .getMoviePeopleALl(nameMoviePeople, page, limit)
+                .getMoviePeopleALl(nameMoviePeople, roleTypeId, page, limit)
                 .getContent();
         return ApiResponse.<List<MoviePeopleResponse>> builder()
                 .result(movieResponse)

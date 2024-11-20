@@ -29,16 +29,10 @@ public class GenreController {
 
     @GetMapping("")
     public ApiResponse<List<GenreResponse>> getAllGenre(
-            @RequestParam("page") int page,
-            @RequestParam("limit") int limit
     ){
-        List<GenreResponse> genreResponses = genreService
-                .getAllGenre(page, limit)
-                .getContent();
-        int totalGenre = genreResponses.size();
         return ApiResponse.<List<GenreResponse>>builder()
-                .message("Total genre: " + totalGenre)
-                .result(genreResponses)
+                .result(genreService
+                        .getAllGenre())
                 .build();
     }
 

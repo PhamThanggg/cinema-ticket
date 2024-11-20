@@ -16,8 +16,9 @@ public interface MoviePeopleRepository extends JpaRepository<MoviePeople, Long> 
     Set<MoviePeople> findByIdIn(Set<Long> ids);
 
     @Query("SELECT m FROM MoviePeople m WHERE " +
+            "m.roleType.id = :roleTypeId AND " +
             "(:nameSearch IS NULL OR :nameSearch = '' OR m.name LIKE %:nameSearch%)")
-    Page<MoviePeople> findName( @Param("nameSearch") String nameSearch, Pageable pageable);
+    Page<MoviePeople> findName( @Param("nameSearch") String nameSearch, Long roleTypeId, Pageable pageable);
 
     Boolean existsByIdAndNameAndDateOfBirth(Long Id, String name, LocalDate dateOfBirth);
 }

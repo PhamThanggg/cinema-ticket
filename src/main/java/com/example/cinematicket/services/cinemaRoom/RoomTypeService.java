@@ -18,6 +18,8 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Service
@@ -43,10 +45,8 @@ public class RoomTypeService implements IRoomTypeService {
     }
 
     @Override
-    public Page<RoomTypeResponse> getRoomTypes(int page, int limit) {
-        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "id"));
-
-        return roomTypeRepository.findAll(pageRequest).map(roomTypeMapper::toRoomTypeResponse);
+    public List<RoomTypeResponse> getRoomTypes() {
+        return roomTypeRepository.findAll().stream().map(roomTypeMapper::toRoomTypeResponse).toList();
     }
 
     @Override

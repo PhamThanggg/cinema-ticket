@@ -10,7 +10,7 @@ public interface ICinemaSeatService {
     CinemaSeatResponse createCinemaSeat(CinemaSeatRequest request);
     CinemaSeatResponse getCinemaSeatById(Long id);
     List<CinemaSeatResponse> getCinemaSeat(Long scheduleId);
-    Page<CinemaSeatResponse> searchCinemaSeat(String name, int page, int limit);
+    List<CinemaSeatResponse> cinemaSeatByRoom(Long roomId);
     CinemaSeatResponse updateCinemaSeat(Long id, CinemaSeatRequest request);
     void deleteCinemaSeat(Long id);
 

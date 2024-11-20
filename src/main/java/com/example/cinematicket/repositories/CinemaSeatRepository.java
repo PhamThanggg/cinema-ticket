@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -28,8 +29,9 @@ public interface CinemaSeatRepository extends JpaRepository<CinemaSeat, Long> {
     @Query("SELECT s FROM CinemaSeat s " +
             "JOIN s.seatType st " +
             "JOIN s.seatReservations sr " +
-            "WHERE sr.schedule.id = :scheduleId AND sr.status = :status AND sr.userId = :userId") // thêm check tgian
-    List<CinemaSeat> findBySeatBooked(Long scheduleId, int status, Long userId);
+            "WHERE sr.schedule.id = :scheduleId AND sr.status = :status " +
+            "AND sr.userId = :userId AND sr.expiryTime > :timeNow") // thêm check tgian
+    List<CinemaSeat> findBySeatBooked(Long scheduleId, int status, Long userId, LocalDateTime timeNow);
 
     Long countByCinemaRoomId(Long cinemaRoomId);
 }

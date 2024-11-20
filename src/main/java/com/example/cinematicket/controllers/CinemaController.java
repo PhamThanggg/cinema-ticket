@@ -4,11 +4,13 @@ import com.example.cinematicket.dtos.requests.CinemaRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
 import com.example.cinematicket.dtos.responses.CinemaResponse;
 import com.example.cinematicket.dtos.responses.CinemaScheduleResponse;
+import com.example.cinematicket.dtos.responses.PageResponse;
 import com.example.cinematicket.services.cinema.CinemaService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -22,7 +24,8 @@ public class CinemaController {
     CinemaService cinemaService;
 
     @PostMapping("")
-    public ApiResponse<CinemaResponse> create(@RequestBody @Valid CinemaRequest request){
+    public ApiResponse<CinemaResponse> create(
+            @RequestBody @Valid CinemaRequest request){
         return ApiResponse.<CinemaResponse>builder()
                 .message("Create successfully")
                 .result(cinemaService.createCinema(request))
@@ -58,16 +61,20 @@ public class CinemaController {
     }
 
     @GetMapping("/search")
-    public ApiResponse<List<CinemaResponse>> getAllCinema(
+    public PageResponse<List<CinemaResponse>> getAllCinema(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ){
-        List<CinemaResponse> cinemaResponses = cinemaService.searchCinema(name, page, limit).getContent();
+        Page<CinemaResponse> cinemaResponses = cinemaService.searchCinema(name, page, limit);
         Long totalCinema = cinemaService.totalCinema();
-        return ApiResponse.<List<CinemaResponse>>builder()
+        return PageResponse.<List<CinemaResponse>>builder()
                 .message("Total cinema: " + totalCinema)
-                .result(cinemaResponses)
+                .currentPage(cinemaResponses.getNumber())
+                .totalPages(cinemaResponses.getTotalPages())
+                .totalElements(cinemaResponses.getTotalElements())
+                .pageSize(cinemaResponses.getSize())
+                .result(cinemaResponses.getContent())
                 .build();
     }
 

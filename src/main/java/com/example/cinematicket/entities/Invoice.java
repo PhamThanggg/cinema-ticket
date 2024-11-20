@@ -55,7 +55,6 @@ public class Invoice {
     @PrePersist
     protected void onCreate() {
         this.reservationTime = LocalDateTime.now();
-        this.paymentExpirationTime = LocalDateTime.now().plusMinutes(10);
     }
 
     @PreUpdate

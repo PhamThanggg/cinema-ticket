@@ -46,8 +46,10 @@ public class CinemaService implements ICinemaService {
         Area area = areaRepository.findById(request.getIdArea())
                 .orElseThrow(() -> new AppException(ErrorCode.AREA_NOT_EXISTS));
 
+        LocalDate localDate = LocalDate.now();
         Cinema cinema = cinemaMapper.toCinema(request);
         cinema.setArea(area);
+        cinema.setCreatedDate(localDate);
         return cinemaMapper.toCinemaResponse(cinemaRepository.save(cinema));
     }
 
@@ -98,17 +100,11 @@ public class CinemaService implements ICinemaService {
     @Override
     public Page<CinemaResponse> searchCinema(String name, int page, int limit) {
         PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "id"));
-        Page<CinemaResponse> pageUser;
-        if(name == null){
-            pageUser = cinemaRepository.findAll(pageRequest).map(cinemaMapper::toCinemaResponse);
-        }else{
-            pageUser = cinemaRepository.findByNameContaining(name, pageRequest).map(cinemaMapper::toCinemaResponse);
-        }
+        Page<CinemaResponse> pageUser = cinemaRepository.findCinemasOrName(name, pageRequest).map(cinemaMapper::toCinemaResponse);;
         return pageUser;
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     public Long totalCinema() {
         return cinemaRepository.count();
     }

@@ -7,12 +7,14 @@ import com.example.cinematicket.dtos.responses.GenreResponse;
 import com.example.cinematicket.dtos.responses.UserResponse;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public interface IGenreService {
     GenreResponse createGenre(GenreRequest request);
 
     GenreResponse findById(Long id);
 
-    Page<GenreResponse> getAllGenre(int page, int limit);
+    List<GenreResponse> getAllGenre();
 
     Page<GenreResponse> searchGenre(String search, int page, int limit);
 

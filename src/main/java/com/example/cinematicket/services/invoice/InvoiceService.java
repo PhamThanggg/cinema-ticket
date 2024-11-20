@@ -57,6 +57,11 @@ public class InvoiceService implements IInvoiceService {
         TicketType ticketType = ticketTypeRepository.findById(request.getTicketTypeId())
                 .orElseThrow(() -> new AppException(ErrorCode.TICKET_TYPE_NOT_EXISTS));
 
+        LocalDateTime timeNow = LocalDateTime.now();
+        if(schedule.getStartTime().isBefore(timeNow)){
+            throw new RuntimeException("Bạn không thể đặt vé khi đã đến giờ chiếu");
+        }
+
         int listSize = request.getCinemaSeatId().size();
         Set<Long> cinemaSeatIds = new HashSet<>(request.getCinemaSeatId());
 
@@ -79,6 +84,7 @@ public class InvoiceService implements IInvoiceService {
                 .user(user)
                 .schedule(schedule)
                 .totalAmount(request.getTotalAmount())
+                .paymentExpirationTime(request.getPaymentExpirationTime())
                 .build();
         Invoice invoiceResult = invoiceRepository.save(invoice);
 
