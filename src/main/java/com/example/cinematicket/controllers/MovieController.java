@@ -158,5 +158,13 @@ public class MovieController {
                 .build();
     }
 
+    @DeleteMapping("/image")
+    public ApiResponse<String> deleteImageById(@RequestParam("ids") Set<Long> ids) throws IOException {
+        movieService.deleteMovieImage(ids);
+        return ApiResponse.<String>builder()
+                .result("Movie has been deleted")
+                .build();
+    }
+
 
 }

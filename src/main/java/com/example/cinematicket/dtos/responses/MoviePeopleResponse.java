@@ -14,10 +14,9 @@ import java.time.LocalDate;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MoviePeopleResponse {
-
     Long id;
 
-    Long roleTypeId;
+    MovieRoleType roleType;
 
     String name;
 

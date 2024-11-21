@@ -29,10 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -176,7 +173,7 @@ public class MovieService implements IMovieService {
         // k cho insert qua 5 anh cho 1 san pham
         int size = movieImageRepository.findByMovieId(movieId).size();
         if(size >= MovieImage.MAXIMUM_IMAGES_PER_MOVIE){
-            throw new RuntimeException("Number of image must be < " + MovieImage.MAXIMUM_IMAGES_PER_MOVIE);
+            throw new AppException(ErrorCode.IMAGE_EXISTS);
         }
 
         Movie existingMovie = movieRepository
@@ -199,12 +196,13 @@ public class MovieService implements IMovieService {
 
     @Override
     @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
-    public void deleteMovieImage(Set<String> movieId) throws IOException {
+    @Transactional
+    public void deleteMovieImage(Set<Long> movieId) throws IOException {
         Set<MovieImage> movieImages = movieImageRepository.findByIdIn(movieId);
         if(movieImages.isEmpty())
             throw new RuntimeException("Image does not exist");
 
-        Set<Long> imageId = null;
+        Set<Long> imageId = new HashSet<>();
         for (MovieImage list : movieImages){
             String publicId = getPublicId(list.getImageUrl());
             if(publicId != null){

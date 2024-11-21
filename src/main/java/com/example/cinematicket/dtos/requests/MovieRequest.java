@@ -42,6 +42,8 @@ public class    MovieRequest {
     @Max(value = 18, message = "AGE_VALID_MAX")
     int ageLimit;
 
+    String trailer;
+
     String nation;
 
     int status;

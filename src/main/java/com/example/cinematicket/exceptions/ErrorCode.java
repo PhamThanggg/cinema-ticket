@@ -165,7 +165,7 @@ public enum ErrorCode {
     IMAGE_NOT_NULL(2201, "Image name is required", HttpStatus.BAD_REQUEST),
     IMAGE_INVALID(2202, "Image name must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
 
-    IMAGE_EXISTS(2202, "Image name exists", HttpStatus.BAD_REQUEST),
+    IMAGE_EXISTS(2202, "Image existed", HttpStatus.BAD_REQUEST),
     IMAGE_NOT_EXISTS(2202, "Image not exists", HttpStatus.BAD_REQUEST),
     //=================== MOVIE IMAGE END =======================
 

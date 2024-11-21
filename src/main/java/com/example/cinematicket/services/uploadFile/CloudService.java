@@ -81,9 +81,9 @@ public class CloudService implements ICloudService {
 
     @Override
     public void deleteImage(String publicId) throws IOException {
-        cloudinary.uploader().destroy(publicId,
-                ObjectUtils.asMap("resource_type", "image",
-                        "folder", "cinema/movieImages"));
+        Map<String, Object> result = cloudinary.uploader().destroy("cinema/movieImages/"+publicId, ObjectUtils.asMap(
+                "resource_type", "image"
+        ));
     }
 
     @Override

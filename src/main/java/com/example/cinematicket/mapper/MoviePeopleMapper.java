@@ -11,7 +11,7 @@ import org.mapstruct.MappingTarget;
 public interface MoviePeopleMapper {
     MoviePeople toMoviePeople(MoviePeopleRequest request);
 
-    @Mapping(source = "roleType.id", target = "roleTypeId")
+//    @Mapping(source = "roleType.id", target = "roleTypeId")
     MoviePeopleResponse toMoviePeopleResponse(MoviePeople moviePeople);
 
     void updateMoviePeople(@MappingTarget MoviePeople moviePeople, MoviePeopleRequest request);

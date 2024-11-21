@@ -11,7 +11,7 @@ import java.util.Set;
 public interface MovieImageRepository extends JpaRepository<MovieImage, Long> {
     List<MovieImage> findByMovieId(Long id);
 
-    Set<MovieImage> findByIdIn(Set<String> id);
+    Set<MovieImage> findByIdIn(Set<Long> id);
 
     void deleteByIdIn(Set<Long> id);
 }

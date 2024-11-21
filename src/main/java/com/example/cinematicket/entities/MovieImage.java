@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MovieImage {
-    public static final int MAXIMUM_IMAGES_PER_MOVIE = 5;
+    public static final int MAXIMUM_IMAGES_PER_MOVIE = 1;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_movie_images")

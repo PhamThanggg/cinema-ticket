@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,9 @@ public class GenreService implements IGenreService {
 
     @Override
     public Page<GenreResponse> searchGenre(String search, int page, int limit) {
-        return null;
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "id"));
+
+        return genreRepository.findGenreOrName(search, pageable).map(genreMapper::toRoomTypeResponse);
     }
 
     @Override

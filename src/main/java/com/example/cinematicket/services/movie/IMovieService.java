@@ -27,7 +27,7 @@ public interface IMovieService {
 
     List<MovieImageResponse> createMovieImage(Long movieId, List<MultipartFile> files) throws IOException;
 
-    void deleteMovieImage(Set<String> movieId) throws IOException;
+    void deleteMovieImage(Set<Long> movieId) throws IOException;
 
     MovieResponse createMovieVideo(Long movieId, MultipartFile file) throws IOException;
 
