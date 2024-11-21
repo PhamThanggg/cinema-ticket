@@ -1,6 +1,8 @@
 package com.example.cinematicket.dtos.responses.schedule;
 
 import com.example.cinematicket.dtos.responses.CinemaRoomResponse;
+import com.example.cinematicket.dtos.responses.movie.MovieResponse;
+import com.example.cinematicket.dtos.responses.movie.MovieScheduleResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -20,7 +22,7 @@ public class ScheduleResponse {
 
     Long scheduleId;
 
-    Long movieIds;
+    MovieScheduleResponse movies;
 
     LocalDate screeningDate;
 

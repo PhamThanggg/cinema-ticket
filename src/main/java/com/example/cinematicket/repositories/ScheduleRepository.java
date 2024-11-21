@@ -24,21 +24,23 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
                                   @Param("endTime") LocalDateTime endTime,
                                   @Param("roomId") Long roomId);
 
-//    @Query("SELECT s FROM Schedule s " +
-//            "JOIN s.movies m " +
-//            "JOIN s.cinemaRooms cr " +
-//            "JOIN cr.cinema c " +
-//            "JOIN c.area a " +
-//            "WHERE m.id = :movieId " +
-//            "AND (:cinemaId IS NULL OR c.id = :cinemaId) " +
-//            "AND (:areaId IS NULL OR a.id = :areaId) " +
-//            "AND s.screeningDate = :screeningDate")
-//    List<Schedule> findSchedulesByCriteria(
-//            @Param("movieId") Long movieId,
-//            @Param("cinemaId") Long cinemaId,
-//            @Param("areaId") Long areaId,
-//            @Param("screeningDate") LocalDate screeningDate
-//    );
+    @Query("SELECT s FROM Schedule s " +
+            "WHERE (s.startTime < :endTime " +
+            "AND s.endTime > :startTime " +
+            "AND s.cinemaRooms.id = :roomId)")
+    Schedule findOverlappingScreeningss(@Param("startTime") LocalDateTime startTime,
+                                  @Param("endTime") LocalDateTime endTime,
+                                  @Param("roomId") Long roomId);
+
+    @Query("SELECT s FROM Schedule s " +
+            "JOIN s.cinemaRooms cr " +
+            "WHERE cr.id = :roomId " +
+            "AND s.screeningDate = :screeningDate")
+    Page<Schedule> findSchedulesByRoom(
+            @Param("roomId") Long roomId,
+            @Param("screeningDate") LocalDate screeningDate,
+            Pageable Pageable
+    );
 
 }
 

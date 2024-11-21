@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -33,6 +34,9 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Query("SELECT m FROM Movie m WHERE (:status IS NULL OR m.status = :status)")
     Page<Movie> findByStatus(@Param("status") int status, Pageable pageable);
+
+    @Query("SELECT m FROM Movie m WHERE m.status = 1    ")
+    List<Movie> findMovieShowNow();
 
     boolean existsByProducerAndDuration(String producer, String duration);
 }

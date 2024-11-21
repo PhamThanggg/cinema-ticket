@@ -3,6 +3,7 @@ package com.example.cinematicket.services.movie;
 import com.example.cinematicket.dtos.requests.MovieRequest;
 import com.example.cinematicket.dtos.responses.MovieImageResponse;
 import com.example.cinematicket.dtos.responses.movie.MovieResponse;
+import com.example.cinematicket.dtos.responses.movie.MovieScheduleResponse;
 import com.example.cinematicket.entities.Genre;
 import com.example.cinematicket.entities.Movie;
 import com.example.cinematicket.entities.MovieImage;
@@ -91,6 +92,10 @@ public class MovieService implements IMovieService {
                 orElseThrow(()-> new AppException(ErrorCode.MOVIE_NOT_EXISTED));
 
         return movieMapper.toMovieResponse(movie);
+    }
+
+    public List<MovieScheduleResponse> getAllMovieShowNow() {
+        return movieRepository.findMovieShowNow().stream().map(movieMapper::toMovieScheduleResponse).toList();
     }
 
     @Override

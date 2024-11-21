@@ -11,7 +11,6 @@ import org.mapstruct.MappingTarget;
 public interface ScheduleMapper {
     Schedule toSchedule(ScheduleRequest scheduleRequest);
 
-    @Mapping(source = "movies.id", target = "movieIds")
     ScheduleResponse toScheduleResponse(Schedule schedule);
 
     void updateSchedule(@MappingTarget Schedule schedule, ScheduleRequest scheduleRequest);

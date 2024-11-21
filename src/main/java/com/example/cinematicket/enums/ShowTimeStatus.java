@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 public enum ShowTimeStatus {
-    SCHEDULED(0),
-    ONGOING(1),
-    COMPLETED(2),
-    CANCELLED(2);
+    SCHEDULED(1),
+    ONGOING(2),
+    COMPLETED(3),
+    CANCELLED(4);
 
     private final int value;
 

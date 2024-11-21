@@ -2,14 +2,17 @@ package com.example.cinematicket.controllers;
 
 import com.example.cinematicket.dtos.requests.ScheduleRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
+import com.example.cinematicket.dtos.responses.PageResponse;
 import com.example.cinematicket.dtos.responses.schedule.ScheduleResponse;
 import com.example.cinematicket.services.schedule.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -26,40 +29,32 @@ public class ScheduleController {
                 .build();
     }
 
-    @GetMapping("")
-    public ApiResponse<List<ScheduleResponse>> getAllCinemaSeat(
+    @GetMapping("/search")
+    public PageResponse<List<ScheduleResponse>> getAllSchedule(
             @RequestParam("page") int page,
-            @RequestParam("limit") int limit
+            @RequestParam("limit") int limit,
+            @RequestParam("roomId") Long roomId,
+            @RequestParam("screeningDate") LocalDate screeningDate
     ){
-        List<ScheduleResponse> scheduleResponses = scheduleService
-                .getAllSchedule(page, limit)
-                .getContent();
-        int totalCinema = scheduleResponses.size();
-        return ApiResponse.<List<ScheduleResponse>>builder()
-                .message("Total genre: " + totalCinema)
-                .result(scheduleResponses)
+        Page<ScheduleResponse> scheduleResponses = scheduleService.searchSchedule(roomId, screeningDate, page, limit);
+        return PageResponse.<List<ScheduleResponse>>builder()
+                .currentPage(scheduleResponses.getNumber())
+                .totalPages(scheduleResponses.getTotalPages())
+                .totalElements(scheduleResponses.getTotalElements())
+                .pageSize(scheduleResponses.getSize())
+                .result(scheduleResponses.getContent())
                 .build();
     }
 
-    @GetMapping("/search")
-    public ApiResponse<List<ScheduleResponse>> getAllCinema(
-            @RequestParam(value = "name", required = false) String name,
-            @RequestParam("page") int page,
-            @RequestParam("limit") int limit,
-            @RequestParam("cinema_id") Long cinemaId
-    ){
-        return null;
-    }
-
     @GetMapping("/{id}")
-    public ApiResponse<ScheduleResponse> getCinemaById(@PathVariable("id") Long id){
+    public ApiResponse<ScheduleResponse> getScheduleById(@PathVariable("id") Long id){
         return ApiResponse.<ScheduleResponse>builder()
                 .result(scheduleService.findById(id))
                 .build();
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<ScheduleResponse> updateCinemaById(
+    public ApiResponse<ScheduleResponse> updateScheduleById(
             @PathVariable("id") Long id,
             @RequestBody @Valid ScheduleRequest request
     ){
@@ -69,7 +64,7 @@ public class ScheduleController {
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<String> deleteCinemaById(@PathVariable("id") Long id){
+    public ApiResponse<String> deleteScheduleById(@PathVariable("id") Long id){
         scheduleService.deleteSchedule(id);
         return ApiResponse.<String>builder()
                 .result("Gender has been deleted")

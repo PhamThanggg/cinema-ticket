@@ -23,6 +23,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -68,6 +70,12 @@ public class CinemaRoomService implements ICinemaRoomService {
         return cinemaRoomRepository
                 .findByCinemaId(cinema_id, pageRequest)
                 .map(cinemaRoomMapper::toCinemaRoomResponse);
+    }
+
+    public List<CinemaRoomResponse> getAllCinemaRoom(Long cinema_id) {
+        return cinemaRoomRepository
+                .findByCinemaId(cinema_id)
+                .stream().map(cinemaRoomMapper::toCinemaRoomResponse).toList();
     }
 
     @Override

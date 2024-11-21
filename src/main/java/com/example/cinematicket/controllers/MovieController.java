@@ -5,6 +5,7 @@ import com.example.cinematicket.dtos.responses.ApiResponse;
 import com.example.cinematicket.dtos.responses.MovieImageResponse;
 import com.example.cinematicket.dtos.responses.movie.MovieResponse;
 import com.example.cinematicket.dtos.responses.PageResponse;
+import com.example.cinematicket.dtos.responses.movie.MovieScheduleResponse;
 import com.example.cinematicket.services.movie.MovieService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -125,6 +126,13 @@ public class MovieController {
     public ApiResponse<MovieResponse> getMovieById(@PathVariable("id") Long id){
         return ApiResponse.<MovieResponse>builder()
                 .result(movieService.findById(id))
+                .build();
+    }
+
+    @GetMapping("/show-now")
+    public ApiResponse<List<MovieScheduleResponse>> getMovieById(){
+        return ApiResponse.<List<MovieScheduleResponse>>builder()
+                .result(movieService.getAllMovieShowNow())
                 .build();
     }
 

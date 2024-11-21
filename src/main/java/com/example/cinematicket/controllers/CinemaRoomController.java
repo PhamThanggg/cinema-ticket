@@ -76,6 +76,13 @@ public class CinemaRoomController {
                 .build();
     }
 
+    @GetMapping("cinema/{id}")
+    public ApiResponse<List<CinemaRoomResponse>> getCinemaByRoomId(@PathVariable("id") Long id){
+        return ApiResponse.<List<CinemaRoomResponse>>builder()
+                .result(cinemaRoomService.getAllCinemaRoom(id))
+                .build();
+    }
+
     @PutMapping("/{id}")
     public ApiResponse<CinemaRoomResponse> updateCinemaById(
             @PathVariable("id") Long id,

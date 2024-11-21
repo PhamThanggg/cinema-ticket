@@ -13,6 +13,9 @@ import com.example.cinematicket.repositories.MovieRepository;
 import com.example.cinematicket.repositories.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -57,15 +60,11 @@ public class ScheduleService implements IScheduleService {
 
         return scheduleMapper.toScheduleResponse(schedule);
     }
-
     @Override
-    public Page<ScheduleResponse> getAllSchedule(int page, int limit) {
-        return null;
-    }
+    public Page<ScheduleResponse> searchSchedule(Long roomId, LocalDate screeningDate, int page, int limit) {
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "screeningDate"));
 
-    @Override
-    public Page<ScheduleResponse> searchSchedule(String search, int page, int limit) {
-        return null;
+        return scheduleRepository.findSchedulesByRoom(roomId, screeningDate, pageable).map(scheduleMapper::toScheduleResponse);
     }
 
     @Override
@@ -75,7 +74,7 @@ public class ScheduleService implements IScheduleService {
                 .orElseThrow(() -> new AppException(ErrorCode.SCHEDULE_NOT_EXISTS));
 
         LocalDateTime currentDateTime = LocalDateTime.now();
-        if(ChronoUnit.MINUTES.between(currentDateTime, request.getStartTime()) >= 30){
+        if(ChronoUnit.MINUTES.between(currentDateTime, request.getStartTime()) < 30){
             throw new RuntimeException("You can only edit the showtime 30 minutes before the movie starts");
         }
 
@@ -95,6 +94,7 @@ public class ScheduleService implements IScheduleService {
             checkOverlappingScreenings(request);
         }
 
+        scheduleMapper.updateSchedule(schedule, request);
         schedule.setCinemaRooms(cinemaRoom);
         schedule.setMovies(movie);
         return scheduleMapper.toScheduleResponse(scheduleRepository.save(schedule));
