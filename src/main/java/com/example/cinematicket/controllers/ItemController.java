@@ -38,6 +38,16 @@ public class ItemController {
                 .build();
     }
 
+    @GetMapping("/{id}")
+    public ApiResponse<ItemResponse> getItemById(
+            @PathVariable("id") Long id
+    ){
+        return ApiResponse.<ItemResponse>builder()
+                .result(itemService.getItemById(id))
+                .build();
+    }
+
+
     @PutMapping("/{id}")
     public ApiResponse<ItemResponse> updateItemById(
             @PathVariable("id") Long id,

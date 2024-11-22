@@ -42,6 +42,13 @@ public class ItemService implements IItemService {
         return itemRepository.findByIdCinema(cinemaId).stream().map(itemMapper::toItemResponse).toList();
     }
 
+    public ItemResponse getItemById(Long itemId) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_EXISTS));
+
+        return itemMapper.toItemResponse(item);
+    }
+
     @Override
     @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ITEM')")
     public ItemResponse updateItem(ItemRequest request, Long id) {
