@@ -1,8 +1,6 @@
 package com.example.cinematicket.dtos.requests;
 
-import com.example.cinematicket.entities.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

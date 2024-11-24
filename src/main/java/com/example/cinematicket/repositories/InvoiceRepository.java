@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Repository
@@ -16,4 +17,21 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     Optional<Invoice> findByIdWithItems(@Param("invoiceId") Long invoiceId);
 
     Page<Invoice> findByUserId(Pageable pageable, Long userId);
+
+    @Query("SELECT i FROM Invoice i " +
+            "JOIN i.schedule s " +
+            "JOIN s.movies m " +
+            "JOIN s.cinemaRooms cr " +
+            "JOIN cr.cinema c " +
+            "WHERE (:invoiceId IS NULL OR i.id = :invoiceId) " +
+            "AND (:nameMovie IS NULL OR :nameMovie = '' OR m.nameMovie LIKE %:nameMovie%) " +
+            "AND (:cinemaId IS NULL OR c.id = :cinemaId) " +
+            "AND (:status IS NULL OR s.status = :status) " +
+            "AND (:dateRes IS NULL OR FUNCTION('DATE', i.reservationTime) = :dateRes) ")
+    Page<Invoice> searchInvoiceAllParams( @Param("invoiceId") Long invoiceId,
+                                          @Param("nameMovie") String nameMovie,
+                                          @Param("cinemaId") Long cinemaId,
+                                          @Param("status") Integer status,
+                                          @Param("dateRes") LocalDate dateRes,
+                                          Pageable pageable);
 }

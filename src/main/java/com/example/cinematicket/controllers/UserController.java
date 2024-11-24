@@ -4,12 +4,14 @@ import com.example.cinematicket.dtos.requests.UserCreationRequest;
 import com.example.cinematicket.dtos.requests.UserUpdateRequest;
 import com.example.cinematicket.dtos.requests.user.UserUpdateRoleRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
+import com.example.cinematicket.dtos.responses.PageResponse;
 import com.example.cinematicket.dtos.responses.UserResponse;
 import com.example.cinematicket.services.user.UserService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,16 +53,19 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public ApiResponse<List<UserResponse>> searchUser(
+    public PageResponse<List<UserResponse>> searchUser(
             @RequestParam(name = "name", required = false) String name,
+            @RequestParam(name = "email", required = false) String email,
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ) {
-        List<UserResponse> userResponses = userService.searchUsers(name, page, limit).getContent();
-        int totalPages = userService.getAllUsers(page, limit).getTotalPages();
-        return ApiResponse.<List<UserResponse>>builder()
-                .message("TotalPages = " + totalPages)
-                .result(userResponses)
+        Page<UserResponse> userResponses = userService.searchUsers(name,email, page, limit);
+        return PageResponse.<List<UserResponse>>builder()
+                .currentPage(userResponses.getNumber())
+                .totalPages(userResponses.getTotalPages())
+                .totalElements(userResponses.getTotalElements())
+                .pageSize(userResponses.getSize())
+                .result(userResponses.getContent())
                 .build();
     }
 

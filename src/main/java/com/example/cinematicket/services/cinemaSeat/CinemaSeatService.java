@@ -1,6 +1,8 @@
 package com.example.cinematicket.services.cinemaSeat;
 
 import com.example.cinematicket.dtos.requests.seat.CinemaSeatRequest;
+import com.example.cinematicket.dtos.responses.SeatReservationResponse;
+import com.example.cinematicket.dtos.responses.SeatTypeResponse;
 import com.example.cinematicket.dtos.responses.cinemaSeat.CinemaSeatResponse;
 import com.example.cinematicket.dtos.responses.UserResponse;
 import com.example.cinematicket.entities.CinemaRoom;
@@ -19,6 +21,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,13 +110,15 @@ public class CinemaSeatService implements ICinemaSeatService {
     }
 
     public List<CinemaSeatResponse> getCinemaSeat(Long scheduleId, int status) {
-        UserResponse user = userService.getMyInfo();
         LocalDateTime timeNow = LocalDateTime.now();
-        List<CinemaSeat> cinemaSeats = cinemaSeatRepository.findBySeatBooked(scheduleId, status, user.getId(), timeNow);
+        List<Object[]> results  = cinemaSeatRepository.findBySeatBookedNative(scheduleId, status, timeNow);
 
-        return cinemaSeats.stream()
-                .map(cinemaSeatMapper::toCinemaSeatResponse)
-                .collect(Collectors.toList());
+        return mapCinemaSeatResponse(results);
+    }
+
+    public List<CinemaSeatResponse> getCinemaSeatBought(Long scheduleId, int status) {
+        List<Object[]> results  = cinemaSeatRepository.findBySeatBoughtNative(scheduleId, status);
+        return mapCinemaSeatResponse(results);
     }
 
     @Override
@@ -176,5 +181,61 @@ public class CinemaSeatService implements ICinemaSeatService {
             }
         }
         return true;
+    }
+
+    public List<CinemaSeatResponse> mapCinemaSeatResponse(List<Object[]> results){
+        List<CinemaSeatResponse> seatResponses = new ArrayList<>();
+        for (Object[] objects : results){
+            SeatReservationResponse seatReservationResponse = SeatReservationResponse.builder()
+                    .id((Long) objects[6])
+                    .userId((Long) objects[7])
+                    .status((Integer) objects[9])
+                    .reservationTime(((Timestamp) objects[10]).toLocalDateTime())
+                    .expiryTime(((Timestamp) objects[11]).toLocalDateTime())
+                    .build();
+
+            SeatType seatType = SeatType.builder()
+                    .id((Long) objects[12])
+                    .name((String) objects[13])
+                    .price((Double) objects[14])
+                    .build();
+
+            CinemaSeatResponse cinemaSeatResponse = CinemaSeatResponse.builder()
+                    .id((Long) objects[0])
+                    .name((String) objects[1])
+                    .row((String) objects[2])
+                    .colum((String) objects[3])
+                    .status((Integer) objects[4])
+                    .cinemaRoomId((Long) objects[5])
+                    .seatReservations(seatReservationResponse)
+                    .seatType(seatType)
+                    .build();
+            seatResponses.add(cinemaSeatResponse);
+        }
+        return seatResponses;
+    }
+
+    public List<CinemaSeatResponse> mapCinemaSeatDeleteResponse(List<Object[]> results){
+        List<CinemaSeatResponse> seatResponses = new ArrayList<>();
+        for (Object[] objects : results){
+            SeatType seatType = SeatType.builder()
+                    .id((Long) objects[12])
+                    .name((String) objects[13])
+                    .price((Double) objects[14])
+                    .build();
+
+            CinemaSeatResponse cinemaSeatResponse = CinemaSeatResponse.builder()
+                    .id((Long) objects[0])
+                    .name((String) objects[1])
+                    .row((String) objects[2])
+                    .colum((String) objects[3])
+                    .status((Integer) objects[4])
+                    .cinemaRoomId((Long) objects[5])
+                    .seatReservations(null)
+                    .seatType(seatType)
+                    .build();
+            seatResponses.add(cinemaSeatResponse);
+        }
+        return seatResponses;
     }
 }

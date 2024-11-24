@@ -41,10 +41,25 @@ public class CinemaSeatController {
 
     @GetMapping("/seatBooked")
     public ApiResponse<List<CinemaSeatResponse>> getCinemaSeatBooked(
-            @RequestParam("schedule_id") Long scheduleId
+            @RequestParam("schedule_id") Long scheduleId,
+            @RequestParam("status") int status
     ){
         List<CinemaSeatResponse> cinemaResponses = cinemaSeatService
-                .getCinemaSeat(scheduleId, 0);
+                .getCinemaSeat(scheduleId, status);
+        int totalCinema = cinemaResponses.size();
+        return ApiResponse.<List<CinemaSeatResponse>>builder()
+                .message("Total cinema room: " + totalCinema)
+                .result(cinemaResponses)
+                .build();
+    }
+
+    @GetMapping("/seatBought")
+    public ApiResponse<List<CinemaSeatResponse>> getCinemaSeatBought(
+            @RequestParam("schedule_id") Long scheduleId,
+            @RequestParam("status") int status
+    ){
+        List<CinemaSeatResponse> cinemaResponses = cinemaSeatService
+                .getCinemaSeatBought(scheduleId, status);
         int totalCinema = cinemaResponses.size();
         return ApiResponse.<List<CinemaSeatResponse>>builder()
                 .message("Total cinema room: " + totalCinema)

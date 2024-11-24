@@ -14,7 +14,7 @@ public interface IUserService {
 
     Page<UserResponse> getAllUsers(int page, int limit);
 
-    Page<UserResponse> searchUsers(String search, int page, int limit);
+    Page<UserResponse> searchUsers(String name, String email, int page, int limit);
 
     Long getCountUsers();
 

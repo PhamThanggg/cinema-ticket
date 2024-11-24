@@ -17,8 +17,8 @@ public class CinemaSeatResponse {
     String name;
     SeatType seatType;
     Long cinemaRoomId;
-    Set<SeatReservationResponse> seatReservations;
     String row;
     String colum;
     int status;
+    SeatReservationResponse seatReservations;
 }

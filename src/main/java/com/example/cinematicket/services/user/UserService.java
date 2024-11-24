@@ -100,15 +100,10 @@ public class UserService implements IUserService {
 
     @Override
     @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ACCOUNT')")
-    public Page<UserResponse> searchUsers(String search, int page, int limit) {
+    public Page<UserResponse> searchUsers(String name, String email, int page, int limit) {
         PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "id"));
-        Page<UserResponse> pageUser;
-        if(search == null){
-            pageUser = userRepository.findAll(pageRequest).map(userMapper::toUserResponse);
-        }else{
-            pageUser = userRepository.findByFullNameContaining(search, pageRequest).map(userMapper::toUserResponse);
-        }
-        return pageUser;
+
+        return userRepository.findByFullNameEmail(name, email, pageRequest).map(userMapper::toUserResponse);
     }
 
     @Override

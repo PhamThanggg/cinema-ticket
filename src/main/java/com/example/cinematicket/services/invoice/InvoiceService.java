@@ -21,6 +21,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -121,24 +122,21 @@ public class InvoiceService implements IInvoiceService {
 
     @Override
     @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
-    public Page<InvoiceResponse> getAllInvoice(int page, int limit) {
+    public Page<InvoiceResponse> getAllInvoice(
+            int page, int limit, Long invoiceId, String movieName,
+            Long cinemaId, Integer status, LocalDate date
+    ) {
         Pageable pageable = PageRequest.of(page, limit);
-
-        return invoiceRepository.findAll(pageable).map(invoiceMapper::toInvoiceResponse);
+        return invoiceRepository.searchInvoiceAllParams(
+                invoiceId, movieName, cinemaId, status, date, pageable)
+                .map(invoiceMapper::toInvoiceResponse);
     }
-
 
     public Page<InvoiceResponse> getMyInvoice(int page, int limit) {
         var user = userService.getMyInfo();
         Pageable pageable = PageRequest.of(page, limit);
 
         return invoiceRepository.findByUserId(pageable, user.getId()).map(invoiceMapper::toInvoiceResponse);
-    }
-
-    @Override
-    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
-    public Page<InvoiceResponse> searchInvoice(String name, int page, int limit) {
-        return null;
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.example.cinematicket.dtos.requests.ListTicketRequest;
 import com.example.cinematicket.dtos.responses.InvoiceResponse;
 import org.springframework.data.domain.Page;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public interface IInvoiceService {
@@ -11,11 +12,15 @@ public interface IInvoiceService {
 
     InvoiceResponse getInvoiceById(Long id);
 
-    Page<InvoiceResponse> getAllInvoice(int page, int limit);
+    Page<InvoiceResponse> getAllInvoice(
+            int page, int limit, Long invoiceId,
+            String movieName, Long cinemaId,
+            Integer status, LocalDate date
+    );
 
-    Page<InvoiceResponse> searchInvoice(String name, int page, int limit);
-
-    InvoiceResponse updateInvoice(Long id, LocalDateTime paymentTime, Double amountPaid, int status);
-
+    InvoiceResponse updateInvoice(
+            Long id, LocalDateTime paymentTime,
+            Double amountPaid, int status
+    );
     void deleteInvoice(Long id);
 }

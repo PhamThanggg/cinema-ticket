@@ -21,4 +21,6 @@ public class CinemaRoomResponse {
     LocalDate createdDate;
 
     Long roomTypeId;
+
+    CinemaResponse cinema;
 }

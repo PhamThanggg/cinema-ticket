@@ -3,6 +3,7 @@ package com.example.cinematicket.controllers;
 import com.example.cinematicket.dtos.requests.seat.SeatReservationRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
 import com.example.cinematicket.dtos.responses.SeatReservationResponse;
+import com.example.cinematicket.dtos.responses.cinemaSeat.CinemaSeatResponse;
 import com.example.cinematicket.services.seatReservation.SeatReservationService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -22,13 +23,13 @@ public class SeatReservationController {
     SeatReservationService seatReservationService;
 
     @PostMapping("")
-    public ApiResponse<String> create(
+    public ApiResponse<List<CinemaSeatResponse>> create(
             @RequestBody @Valid SeatReservationRequest request
     ){
-        seatReservationService.createSeatReservation(request);
-        return ApiResponse.<String>builder()
+
+        return ApiResponse.<List<CinemaSeatResponse>>builder()
                 .message("Create successfully")
-                .result(null)
+                .result(seatReservationService.createSeatReservation(request))
                 .build();
     }
 

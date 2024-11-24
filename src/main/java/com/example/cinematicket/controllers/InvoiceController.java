@@ -14,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -34,9 +35,14 @@ public class InvoiceController {
     @GetMapping("")
     public PageResponse<List<InvoiceResponse>> getAll(
             @RequestParam("page") int page,
-            @RequestParam("limit") int limit
+            @RequestParam("limit") int limit,
+            @RequestParam(name = "invoiceId", required = false) Long invoiceId,
+            @RequestParam(name = "movieName", required = false) String movieName,
+            @RequestParam(name = "cinemaId", required = false) Long cinemaId,
+            @RequestParam(name = "status", required = false) Integer status,
+            @RequestParam(name = "date", required = false) LocalDate date
     ) {
-        Page<InvoiceResponse> userResponses = invoiceService.getAllInvoice(page, limit);
+        Page<InvoiceResponse> userResponses = invoiceService.getAllInvoice(page, limit, invoiceId, movieName, cinemaId, status, date);
         return PageResponse.<List<InvoiceResponse>>builder()
                 .currentPage(userResponses.getNumber())
                 .totalPages(userResponses.getTotalPages())
@@ -51,13 +57,13 @@ public class InvoiceController {
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ) {
-        Page<InvoiceResponse> userResponses = invoiceService.getMyInvoice(page, limit);
+        Page<InvoiceResponse> Responses = invoiceService.getMyInvoice(page, limit);
         return PageResponse.<List<InvoiceResponse>>builder()
-                .currentPage(userResponses.getNumber())
-                .totalPages(userResponses.getTotalPages())
-                .totalElements(userResponses.getTotalElements())
-                .pageSize(userResponses.getSize())
-                .result(userResponses.getContent())
+                .currentPage(Responses.getNumber())
+                .totalPages(Responses.getTotalPages())
+                .totalElements(Responses.getTotalElements())
+                .pageSize(Responses.getSize())
+                .result(Responses.getContent())
                 .build();
     }
 

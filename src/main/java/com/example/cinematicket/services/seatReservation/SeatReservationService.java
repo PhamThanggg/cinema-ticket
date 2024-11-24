@@ -12,6 +12,7 @@ import com.example.cinematicket.repositories.CinemaSeatRepository;
 import com.example.cinematicket.repositories.ScheduleRepository;
 import com.example.cinematicket.repositories.SeatReservationRepository;
 import com.example.cinematicket.repositories.UserRepository;
+import com.example.cinematicket.services.cinemaSeat.CinemaSeatService;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -37,9 +38,10 @@ public class SeatReservationService  {
     UserRepository userRepository;
     SimpMessagingTemplate messagingTemplate;
     CinemaSeatMapper cinemaSeatMapper;
+    CinemaSeatService cinemaSeatService;
 
     @Transactional
-    public void createSeatReservation(SeatReservationRequest request) {
+    public List<CinemaSeatResponse> createSeatReservation(SeatReservationRequest request) {
         Schedule schedule = scheduleRepository.findById(request.getScheduleId())
                 .orElseThrow(() -> new AppException(ErrorCode.SCHEDULE_NOT_EXISTS));
 
@@ -84,33 +86,48 @@ public class SeatReservationService  {
                 .toList();
 
         seatReservationRepository.saveAll(seatReservations);
-        notifySeatUpdate(request.getSeatIds());
+        return notifySeatUpdate(request.getSeatIds());
     }
 
     @PreAuthorize("hasRole('ADMIN') or @securityService.isSeatReservationOwner(#seatIds, authentication.principal.getClaimAsString('id'))")
-    public void updateStatus(Set<Long> seatIds){
+    public List<CinemaSeatResponse> updateStatus(Set<Long> seatIds){
         seatReservationRepository.updateStatusByIds(seatIds);
-        notifySeatUpdate(seatIds);
+        return notifySeatUpdate(seatIds);
     }
 
     @PreAuthorize("hasRole('ADMIN') or @securityService.isSeatReservationOwner(#cinemaSeatId, #scheduleId, #expiryTime, authentication.principal.getClaimAsString('id'))")
     @Transactional
     public void deleteSeatReservations(Long cinemaSeatId, Long scheduleId,  LocalDateTime expiryTime) {
-        seatReservationRepository.deleteByCinemaSeatId(cinemaSeatId, scheduleId, expiryTime);
         Set<Long> ids = new HashSet<>();
         ids.add(cinemaSeatId);
-        notifySeatUpdate(ids);
+        List<Object[]> responses = cinemaSeatRepository.findBySeatInID(ids);
+        List<CinemaSeatResponse> seatReservationResponse = cinemaSeatService.mapCinemaSeatDeleteResponse(responses);
+
+        seatReservationRepository.deleteByCinemaSeatId(cinemaSeatId, scheduleId, expiryTime);
+
+        notifySeatDelet(seatReservationResponse);
     }
 
-    public void notifySeatUpdate(Set<Long> seatIds) {
-        List<CinemaSeat> seats = cinemaSeatRepository.findAllById(seatIds);
+    public List<CinemaSeatResponse> notifySeatUpdate(Set<Long> seatIds) {
 
-        if (seats.isEmpty()) {
-            throw new AppException(ErrorCode.CINEMA_SEAT_NOT_EXISTED);
-        }
+//        List<CinemaSeat> seats = cinemaSeatRepository.findAllById(seatIds);
+//
+//        if (seats.isEmpty()) {
+//            throw new AppException(ErrorCode.CINEMA_SEAT_NOT_EXISTED);
+//        }
+//
+//        List<CinemaSeatResponse> seatResponses = cinemaSeatMapper.toCinemaSeatResponse(seats);
 
-        List<CinemaSeatResponse> seatResponses = cinemaSeatMapper.toCinemaSeatResponse(seats);
-
-        messagingTemplate.convertAndSend("/topic/seats", seatResponses);
+        List<Object[]> responses = cinemaSeatRepository.findBySeatInID(seatIds);
+        List<CinemaSeatResponse> seatReservationResponse = cinemaSeatService.mapCinemaSeatResponse(responses);
+        messagingTemplate.convertAndSend("/topic/seats", seatReservationResponse);
+        return seatReservationResponse;
     }
+
+    public List<CinemaSeatResponse> notifySeatDelet(List<CinemaSeatResponse> seatReservationResponse) {
+
+        messagingTemplate.convertAndSend("/topic/seats", seatReservationResponse);
+        return seatReservationResponse;
+    }
+
 }
