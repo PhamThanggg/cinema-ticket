@@ -30,7 +30,13 @@ public enum ErrorCode {
     PHONE_VALID(1608, "Phone must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
     EMAIL_FORMAT(1607, "Email is not in correct format", HttpStatus.BAD_REQUEST),
     EMAIL_VALID(1608, "Email must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
+    EMAIL_INVALID(1014, "Email phải nằm trong khoảng từ {min} đến {max} ký tự", HttpStatus.BAD_REQUEST),
     EMAIL_NOT_BLANK(1607, "Email cannot be blank", HttpStatus.BAD_REQUEST),
+    STAR_NUMBER(1607, "Điểm star phải >= 20 và <= 100", HttpStatus.BAD_REQUEST),
+    STAR_SATISFY(1607, "Điểm star của bạn không đủ", HttpStatus.BAD_REQUEST),
+    DATE_OF_BIRTH(1607, "Ngày tháng năm sinh k được trống", HttpStatus.BAD_REQUEST),
+    DATE_PAST(1607, "Ngày tháng năm sinh phải là quá khứ", HttpStatus.BAD_REQUEST),
+    DATE_FORMAT(1607, "Ngày tháng năm không đúng định dạng", HttpStatus.BAD_REQUEST),
 
     //=================== USER BEGIN =====================
     PASSWORD_NOT_SAME(1001, "Passwords are not the same", HttpStatus.BAD_REQUEST),
@@ -220,10 +226,14 @@ public enum ErrorCode {
     USER_NOT_NULL(2501, "User is required", HttpStatus.BAD_REQUEST),
     USER_INVALID(2502, "Ticket type ID must be greater than {value}", HttpStatus.BAD_REQUEST),
     GENDER_NOT_BLANK(2501, "Gender cannot be blank", HttpStatus.BAD_REQUEST),
+    GENDER_FORMAT(2501, "Giới tính không đúng định dạng", HttpStatus.BAD_REQUEST),
 
     PASSWORD_NOT_BLANK(2301, "Password is required", HttpStatus.BAD_REQUEST),
     REPASSWORD_NOT_BLANK(2301, "Repassword is required", HttpStatus.BAD_REQUEST),
     PASSWORD_INVALID(2302, "Password must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
+    PASSWORD_CHANGE(2302, "Mật khẩu cũ không đúng", HttpStatus.BAD_REQUEST),
+    PASSWORD_EQUAL(2302, "Mật khẩu không khớp", HttpStatus.BAD_REQUEST),
+    PASSWORD_FORMAT(2302, "Mật khẩu phải chứa từ 8 đến 64 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.", HttpStatus.BAD_REQUEST),
     //=================== USER END =======================
 
 
@@ -242,6 +252,14 @@ public enum ErrorCode {
     ROLE_EXISTS(2602, "Role name exists", HttpStatus.BAD_REQUEST),
     ROLE_NOT_EXISTS(2602, "Role not exists", HttpStatus.BAD_REQUEST),
     //=================== ROLE END =======================
+
+    //=================== PROMOTION BEGIN =====================
+    PROMOTION_NOT_BLANK(2501, "Khuyễn mãi là bắt buộc", HttpStatus.BAD_REQUEST),
+    PROMOTION_INVALID(2502, "ID khuyến mãi phải lớn hơn {value}", HttpStatus.BAD_REQUEST),
+
+    PROMOTION_EXISTS(2602, "Tên khuyến mãi đã tồn tại." ,HttpStatus.BAD_REQUEST),
+    PROMOTION_NOT_EXISTS(2602, "Khuyến mãi không tồn tại", HttpStatus.BAD_REQUEST),
+    //=================== PROMOTION END =======================
 
     ;
 

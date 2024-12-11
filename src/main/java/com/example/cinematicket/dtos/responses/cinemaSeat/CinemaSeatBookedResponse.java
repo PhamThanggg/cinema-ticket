@@ -1,5 +1,6 @@
 package com.example.cinematicket.dtos.responses.cinemaSeat;
 
+import com.example.cinematicket.entities.SeatType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,4 +13,6 @@ public class CinemaSeatBookedResponse {
     Long id;
 
     String name;
+
+    SeatType seatType;
 }

@@ -81,14 +81,16 @@ public class MovieController {
                 .build();
     }
 
-    @GetMapping("/show-area/{status}/{areaId}")
+    @GetMapping("/show-movie")
     public PageResponse<List<MovieResponse>> getMovieArea(
             @RequestParam("page") int page,
             @RequestParam("limit") int limit,
-            @PathVariable("status") int status,
-            @PathVariable("areaId") Long areaId
+            @RequestParam("status") Integer status,
+            @RequestParam(value = "areaId" , required = false) Long areaId,
+            @RequestParam(value = "genreId" , required = false) Long genreId,
+            @RequestParam(value = "name", required = false) String name
     ){
-        Page<MovieResponse> moviePage = movieService.getAllMovie(page, limit, status, areaId);
+        Page<MovieResponse> moviePage = movieService.getAllMovie(page, limit, genreId, name, status, areaId);
 
         List<MovieResponse> movieResponses = moviePage.getContent();
         int totalCinema = movieResponses.size();

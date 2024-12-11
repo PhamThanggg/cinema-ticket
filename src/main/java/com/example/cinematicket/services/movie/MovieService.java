@@ -25,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,7 +51,8 @@ public class MovieService implements IMovieService {
     @Transactional
     @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_MOVIE')")
     public MovieResponse createMovie(MovieRequest request) throws IOException {
-        if(movieRepository.existsByProducerAndDuration(request.getProducer(), request.getDuration())){
+        if(movieRepository.existsByProducerAndDurationAndNameMovie(
+                request.getProducer(), request.getDuration(), request.getNameMovie())){
             throw new AppException(ErrorCode.MOVIE_EXISTED);
         }
 
@@ -106,10 +108,10 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public Page<MovieResponse> getAllMovie(int page, int limit, int status, Long areaId) {
+    public Page<MovieResponse> getAllMovie(int page, int limit, Long genreId, String name, Integer status, Long areaId) {
         Pageable pageable = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "id"));
 
-        return movieRepository.findMoviesByAreaIdAndStatus(areaId, status, pageable).map(movieMapper::toMovieResponse);
+        return movieRepository.findMoviesByAreaIdAndStatus(areaId, genreId, name, status, pageable).map(movieMapper::toMovieResponse);
     }
 
     @Override
@@ -126,8 +128,11 @@ public class MovieService implements IMovieService {
                 orElseThrow(()-> new AppException(ErrorCode.MOVIE_NOT_EXISTED));
 
         if(!request.getDuration().equals(movie.getDuration())
-            || !request.getProducer().equals(movie.getProducer())){
-            if(movieRepository.existsByProducerAndDuration(request.getProducer(), request.getDuration())){
+            || !request.getProducer().equals(movie.getProducer())
+            || !request.getNameMovie().equals(movie.getNameMovie())
+        ){
+            if(movieRepository.existsByProducerAndDurationAndNameMovie(
+                    request.getProducer(), request.getDuration(), request.getNameMovie())){
                 throw new AppException(ErrorCode.MOVIE_EXISTED);
             }
         }

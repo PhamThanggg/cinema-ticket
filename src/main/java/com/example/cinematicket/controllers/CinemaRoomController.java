@@ -1,6 +1,7 @@
 package com.example.cinematicket.controllers;
 
-import com.example.cinematicket.dtos.requests.CinemaRoomRequest;
+import com.example.cinematicket.dtos.requests.cinemaRoom.CinemaRoomRequest;
+import com.example.cinematicket.dtos.requests.cinemaRoom.CinemaRoomUpdateRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
 import com.example.cinematicket.dtos.responses.CinemaRoomResponse;
 import com.example.cinematicket.dtos.responses.PageResponse;
@@ -51,11 +52,12 @@ public class CinemaRoomController {
     @GetMapping("/search")
     public PageResponse<List<CinemaRoomResponse>> getAllCinema(
             @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "status", required = false) Integer status,
             @RequestParam("page") int page,
             @RequestParam("limit") int limit,
             @RequestParam("cinema_id") Long cinemaId
     ){
-        Page<CinemaRoomResponse> cinemaResponses = cinemaRoomService.searchCinemaRoom(name, cinemaId, page, limit);
+        Page<CinemaRoomResponse> cinemaResponses = cinemaRoomService.searchCinemaRoom(name, status, cinemaId, page, limit);
         Long totalCinema = name==null
                 ?cinemaRoomService.totalCinemaRoom(cinemaId)
                 :cinemaRoomService.totalCinemaRoomSearch(name);
@@ -86,7 +88,7 @@ public class CinemaRoomController {
     @PutMapping("/{id}")
     public ApiResponse<CinemaRoomResponse> updateCinemaById(
             @PathVariable("id") Long id,
-            @RequestBody @Valid CinemaRoomRequest request
+            @RequestBody @Valid CinemaRoomUpdateRequest request
     ){
         return ApiResponse.<CinemaRoomResponse>builder()
                 .result(cinemaRoomService.updateCinemaRoom(id, request))

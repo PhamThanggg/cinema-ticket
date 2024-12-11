@@ -151,12 +151,12 @@ public class CinemaSeatService implements ICinemaSeatService {
         SeatType seatType = seatTypeRepository.findById(request.getSeatTypeId()).
                 orElseThrow(()-> new AppException(ErrorCode.SEAT_TYPE_NOT_EXISTED));
 
-        CinemaRoom cinemaRoom = cinemaRoomRepository.findById(request.getCinemaRoomId()).
-                orElseThrow(()-> new AppException(ErrorCode.CINEMA_ROOM_NOT_EXISTED));
-
         cinemaSeatMapper.updateCinemaSeat(seat, request);
+        seat.setName(request.getName());
+        seat.setStatus(request.getStatus());
+        seat.setColum(request.getColum());
+        seat.setRow(request.getRow());
         seat.setSeatType(seatType);
-        seat.setCinemaRoom(cinemaRoom);
         return cinemaSeatMapper.toCinemaSeatResponse(cinemaSeatRepository.save(seat));
     }
 

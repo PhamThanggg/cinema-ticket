@@ -1,4 +1,4 @@
-package com.example.cinematicket.dtos.requests;
+package com.example.cinematicket.dtos.requests.cinemaRoom;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;

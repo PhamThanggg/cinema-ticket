@@ -1,6 +1,7 @@
 package com.example.cinematicket.mapper;
 
-import com.example.cinematicket.dtos.requests.CinemaRoomRequest;
+import com.example.cinematicket.dtos.requests.cinemaRoom.CinemaRoomRequest;
+import com.example.cinematicket.dtos.requests.cinemaRoom.CinemaRoomUpdateRequest;
 import com.example.cinematicket.dtos.responses.CinemaRoomResponse;
 import com.example.cinematicket.entities.CinemaRoom;
 import org.mapstruct.Mapper;
@@ -14,5 +15,6 @@ public interface CinemaRoomMapper {
     @Mapping(source = "roomType.id", target = "roomTypeId")
     CinemaRoomResponse toCinemaRoomResponse(CinemaRoom cinemaRoom);
 
-    void updateCinemaRoom(@MappingTarget CinemaRoom cinema, CinemaRoomRequest request);
+
+    void updateCinemaRoom(@MappingTarget CinemaRoom cinema, CinemaRoomUpdateRequest request);
 }

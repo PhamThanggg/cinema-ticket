@@ -14,6 +14,7 @@ public interface CinemaSeatMapper {
     CinemaSeat toCinemaSeat(CinemaSeatRequest request);
 
     @Mapping(source = "cinemaRoom.id", target = "cinemaRoomId")
+    @Mapping(target = "seatReservations", ignore = true)
     CinemaSeatResponse toCinemaSeatResponse(CinemaSeat cinemaSeat);
 
     List<CinemaSeatResponse> toCinemaSeatResponse(List<CinemaSeat> cinemaSeats);

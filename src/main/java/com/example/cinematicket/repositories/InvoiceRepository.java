@@ -16,7 +16,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     @Query("SELECT i FROM Invoice i JOIN FETCH i.invoiceItems WHERE i.id = :invoiceId")
     Optional<Invoice> findByIdWithItems(@Param("invoiceId") Long invoiceId);
 
-    Page<Invoice> findByUserId(Pageable pageable, Long userId);
+    Page<Invoice> findByUserIdAndStatus(Pageable pageable, Long userId, Integer status);
 
     @Query("SELECT i FROM Invoice i " +
             "JOIN i.schedule s " +
@@ -34,4 +34,11 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
                                           @Param("status") Integer status,
                                           @Param("dateRes") LocalDate dateRes,
                                           Pageable pageable);
+
+    @Query("SELECT SUM(i.amountPaid) " +
+            "FROM Invoice i " +
+            "JOIN user u " +
+            "WHERE u.id = :userId " +
+            "AND FUNCTION('YEAR', i.paymentTime) = :currentYear")
+    Integer countTotalPriceInvoice(@Param("userId") Long userId,  @Param("currentYear") int currentYear);
 }

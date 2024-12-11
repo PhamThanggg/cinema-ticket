@@ -23,12 +23,18 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
                            Pageable pageable);
 
     @Query("SELECT m FROM Movie m " +
-            "JOIN Schedule s ON s.movies.id = m.id " +
-            "JOIN CinemaRoom cr ON cr.id = s.cinemaRooms.id " +
-            "JOIN Cinema c ON c.id = cr.cinema.id " +
-            "WHERE c.area.id = :areaId " +
-            "AND (:status IS NULL OR m.status = :status)")
+            "LEFT JOIN m.genres g " +
+            "LEFT JOIN Schedule s ON s.movies.id = m.id " +
+            "LEFT JOIN CinemaRoom cr ON cr.id = s.cinemaRooms.id " +
+            "LEFT JOIN Cinema c ON c.id = cr.cinema.id " +
+            "WHERE (:areaId IS NULL OR c.area.id = :areaId) AND " +
+            "(:status IS NULL OR m.status = :status) AND " +
+            "(:genreId IS NULL OR g.id = :genreId) AND " +
+            "(:name IS NULL OR :name = '' OR m.nameMovie LIKE %:name%) " +
+            "GROUP BY m")
     Page<Movie> findMoviesByAreaIdAndStatus(@Param("areaId") Long areaId,
+                                            @Param("genreId") Long genreId,
+                                            @Param("name") String name,
                                             @Param("status") Integer status,
                                             Pageable pageable);
 
@@ -38,5 +44,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     @Query("SELECT m FROM Movie m WHERE m.status = 0 ")
     List<Movie> findMovieShowNow();
 
-    boolean existsByProducerAndDuration(String producer, String duration);
+    boolean existsByProducerAndDurationAndNameMovie(String producer, String duration, String nameMovie);
+
 }

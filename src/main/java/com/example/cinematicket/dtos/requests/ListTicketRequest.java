@@ -40,4 +40,8 @@ public class ListTicketRequest {
 
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime paymentExpirationTime;
+
+        String promotionId;
+
+        Integer star;
 }

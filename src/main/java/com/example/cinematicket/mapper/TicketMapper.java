@@ -12,10 +12,12 @@ import org.mapstruct.MappingTarget;
 public interface TicketMapper {
     Ticket toTicket(TicketRequest request);
 
-
     @Mapping(source = "ticketType.id", target = "ticketTypeId")
     @Mapping(source = "invoice.id", target = "invoiceId")
     TicketResponse toTicketResponse(Ticket ticket);
+
+    @Mapping(target = "cinemaSeat.seatReservations", ignore = true)
     CreateTicketResponse toCreateTicketResponse(Ticket ticket);
+
     void updateTicket(@MappingTarget Ticket ticket, TicketRequest request);
 }

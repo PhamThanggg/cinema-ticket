@@ -3,6 +3,7 @@ package com.example.cinematicket.services.user;
 import com.example.cinematicket.constant.PredefinedRole;
 import com.example.cinematicket.dtos.requests.UserCreationRequest;
 import com.example.cinematicket.dtos.requests.UserUpdateRequest;
+import com.example.cinematicket.dtos.requests.user.UserChangePasswordRequest;
 import com.example.cinematicket.dtos.responses.UserInfo;
 import com.example.cinematicket.dtos.responses.UserResponse;
 import com.example.cinematicket.entities.Role;
@@ -28,6 +29,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -91,6 +93,16 @@ public class UserService implements IUserService {
         return userMapper.toUserResponse(user);
     }
 
+    @PostAuthorize("returnObject.id.toString() == authentication.principal.getClaimAsString('id') or hasRole('ADMIN')")
+    public User getMyInfoUser() {
+        var context = SecurityContextHolder.getContext();
+        String email = context.getAuthentication().getName();
+
+        User user =  userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        return user;
+    }
+
     @Override
     @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ACCOUNT')")
     public Page<UserResponse> getAllUsers(int page, int limit) {
@@ -120,8 +132,28 @@ public class UserService implements IUserService {
         );
         userMapper.updateUser(user, request);
 
-        var roles = roleRepository.findAllById(request.getRoleId());
-        user.setRoles(new HashSet<>(roles));
+        return userMapper.toUserResponse(userRepository.save(user));
+    }
+
+    @PostAuthorize("returnObject.id.toString() == authentication.principal.getClaimAsString('id') or hasRole('ADMIN')")
+    public UserResponse updatePasswordUser(UserChangePasswordRequest request) {
+        var context = SecurityContextHolder.getContext();
+        Jwt jwt = (Jwt) context.getAuthentication().getPrincipal();
+        Long id = Long.parseLong(jwt.getClaimAsString("id"));
+
+        if(!request.getNewPassword().equals(request.getReNewPassword())){
+            throw new AppException(ErrorCode.PASSWORD_EQUAL);
+        }
+
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXISTED)
+        );
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new AppException(ErrorCode.PASSWORD_CHANGE);
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
 
         return userMapper.toUserResponse(userRepository.save(user));
     }

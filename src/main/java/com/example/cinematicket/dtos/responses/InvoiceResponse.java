@@ -25,6 +25,8 @@ public class InvoiceResponse {
 
     ScheduleBookedResponse schedule;
 
+    PromotionResponse promotion;
+
     List<TicketResponse> tickets;
 
     List<InvoiceItemBookedResponse> invoiceItems;
@@ -40,5 +42,7 @@ public class InvoiceResponse {
     Double amountPaid;
 
     int status;
+
+    Integer star;
 
 }

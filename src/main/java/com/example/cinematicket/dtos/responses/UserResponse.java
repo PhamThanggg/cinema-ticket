@@ -20,5 +20,6 @@ public class UserResponse {
     private String dateOfBirth;
     private String email;
     private int status;
+    private int star;
     private Set<RoleResponse> roles;
 }

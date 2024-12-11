@@ -63,10 +63,12 @@ public class CinemaController {
     @GetMapping("/search")
     public PageResponse<List<CinemaResponse>> getAllCinema(
             @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "status", required = false) Integer status,
+            @RequestParam(value = "areaId", required = false) Long areaId,
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ){
-        Page<CinemaResponse> cinemaResponses = cinemaService.searchCinema(name, page, limit);
+        Page<CinemaResponse> cinemaResponses = cinemaService.searchCinema(name, status, areaId, page, limit);
         Long totalCinema = cinemaService.totalCinema();
         return PageResponse.<List<CinemaResponse>>builder()
                 .message("Total cinema: " + totalCinema)

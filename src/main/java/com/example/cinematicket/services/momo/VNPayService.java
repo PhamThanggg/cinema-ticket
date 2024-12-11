@@ -115,7 +115,7 @@ public class VNPayService {
         }
     }
     public  String hashAllFields(Map fields) {
-        List fieldNames = new ArrayList(fields.keySet());
+            List fieldNames = new ArrayList(fields.keySet());
         Collections.sort(fieldNames);
         StringBuilder sb = new StringBuilder();
         Iterator itr = fieldNames.iterator();

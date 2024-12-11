@@ -13,8 +13,16 @@ import java.util.List;
 
 @Repository
 public interface CinemaRoomRepository extends JpaRepository<CinemaRoom, Long> {
-    boolean existsByName(String name);
-    Page<CinemaRoom> findByNameContainingAndCinemaId(String name, Long id, PageRequest request);
+    boolean existsByNameAndCinemaId(String name, Long cinemaId);
+
+    @Query("SELECT cr FROM CinemaRoom cr " +
+            "JOIN cr.cinema c " +
+            "WHERE (:name IS NULL OR :name = '' OR cr.name LIKE %:name%) AND " +
+            "(:status IS NULL OR cr.status = :status) AND " +
+            "c.id = :cinemaId")
+    Page<CinemaRoom> cinemaRoomSearch(@Param("name") String name,
+                                      @Param("status") Integer status,
+                                      @Param("cinemaId") Long cinemaId, PageRequest request);
 
     Page<CinemaRoom> findByCinemaId(Long cinemaId, Pageable request);
 

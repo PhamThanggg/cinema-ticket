@@ -38,6 +38,8 @@ public class User {
 
     private int status;
 
+    private int star;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_roles",

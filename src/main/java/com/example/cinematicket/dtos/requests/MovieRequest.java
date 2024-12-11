@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class    MovieRequest {
+public class  MovieRequest {
     @JsonProperty("name_movie")
     @NotBlank(message = "MOVIE_NAME_NOT_BLANK")
     @Size(min = 1, max = 100, message = "MOVIE_NAME_VALID")

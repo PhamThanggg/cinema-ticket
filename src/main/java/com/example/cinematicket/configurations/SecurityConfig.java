@@ -47,7 +47,7 @@ public class SecurityConfig {
             "/api/v1/cinema_seat", "/api/v1/seat_reservation/**",
             "/api/v1/item/**", "/api/v1/payment/vnpay-callback",
             "api/v1/cinema_seat/room/**",  "api/v1/room_type/**",
-            "api/v1/cinema_seat/seatBought/**"
+            "api/v1/cinema_seat/seatBought/**", "api/v1/promotion/**"
     };
 
     @Autowired

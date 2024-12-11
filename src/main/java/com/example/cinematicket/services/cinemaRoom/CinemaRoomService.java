@@ -1,6 +1,7 @@
 package com.example.cinematicket.services.cinemaRoom;
 
-import com.example.cinematicket.dtos.requests.CinemaRoomRequest;
+import com.example.cinematicket.dtos.requests.cinemaRoom.CinemaRoomRequest;
+import com.example.cinematicket.dtos.requests.cinemaRoom.CinemaRoomUpdateRequest;
 import com.example.cinematicket.dtos.responses.CinemaRoomResponse;
 import com.example.cinematicket.entities.Cinema;
 import com.example.cinematicket.entities.CinemaRoom;
@@ -38,7 +39,7 @@ public class CinemaRoomService implements ICinemaRoomService {
     @Transactional
     @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ROOM')")
     public CinemaRoomResponse createCinemaRoom(CinemaRoomRequest request) {
-        if(cinemaRoomRepository.existsByName(request.getName()))
+        if(cinemaRoomRepository.existsByNameAndCinemaId(request.getName(), request.getCinemaId()))
             throw new AppException(ErrorCode.CINEMA_ROOM_EXISTED);
 
         Cinema cinema = cinemaRepository.findById(request.getCinemaId()).
@@ -79,21 +80,12 @@ public class CinemaRoomService implements ICinemaRoomService {
     }
 
     @Override
-    public Page<CinemaRoomResponse> searchCinemaRoom(String name, Long cinema_id, int page, int limit) {
-        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "id"));
+    public Page<CinemaRoomResponse> searchCinemaRoom(String name, Integer status, Long cinema_id, int page, int limit) {
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "id"));
 
-        Page<CinemaRoomResponse> cinemaRoomResponses;
-        if(name==null){
-            cinemaRoomResponses = cinemaRoomRepository
-                    .findByCinemaId(cinema_id, pageRequest)
-                    .map(cinemaRoomMapper::toCinemaRoomResponse);
-        }else{
-            cinemaRoomResponses = cinemaRoomRepository
-                    .findByNameContainingAndCinemaId(name, cinema_id, pageRequest)
-                    .map(cinemaRoomMapper::toCinemaRoomResponse);
-        }
-
-        return cinemaRoomResponses;
+        return cinemaRoomRepository
+                .cinemaRoomSearch(name, status, cinema_id, pageRequest)
+                .map(cinemaRoomMapper::toCinemaRoomResponse);
     }
 
     @Override
@@ -108,18 +100,19 @@ public class CinemaRoomService implements ICinemaRoomService {
 
     @Override
     @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ROOM')")
-    public CinemaRoomResponse updateCinemaRoom(Long id, CinemaRoomRequest request) {
+    public CinemaRoomResponse updateCinemaRoom(Long id, CinemaRoomUpdateRequest request) {
         CinemaRoom cinemaRoom = cinemaRoomRepository.findById(id).
                 orElseThrow(()->new AppException(ErrorCode.CINEMA_ROOM_NOT_EXISTED));
 
-        Cinema cinema = cinemaRepository.findById(request.getCinemaId()).
-                orElseThrow(()->new AppException(ErrorCode.CINEMA_NOT_EXISTED));
+        if(!cinemaRoom.getName().equals(request.getName())){
+            if(cinemaRoomRepository.existsByNameAndCinemaId(request.getName(), request.getCinemaId()))
+                throw new AppException(ErrorCode.CINEMA_ROOM_EXISTED);
+        }
 
         RoomType roomType = roomTypeRepository.findById(request.getRoomTypeId()).
                 orElseThrow(()->new AppException(ErrorCode.ROOM_TYPE_NOT_EXISTED));
 
         cinemaRoomMapper.updateCinemaRoom(cinemaRoom, request);
-        cinemaRoom.setCinema(cinema);
         cinemaRoom.setRoomType(roomType);
         return cinemaRoomMapper.toCinemaRoomResponse(cinemaRoomRepository.save(cinemaRoom));
     }

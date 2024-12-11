@@ -17,7 +17,7 @@ public interface IMovieService {
 
     Page<MovieResponse> getAllMovie(int page, int limit, int status);
 
-    Page<MovieResponse> getAllMovie(int page, int limit, int status, Long areaId);
+    Page<MovieResponse> getAllMovie(int page, int limit, Long genreId, String name, Integer status, Long areaId);
 
     Page<MovieResponse> searchMovieOrGenre(String nameMovie, Set<Integer> genreId, Integer status, int page, int limit);
 

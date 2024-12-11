@@ -74,6 +74,14 @@ public class InvoiceController {
                 .build();
     }
 
+    @GetMapping("/totalPrice")
+    public ApiResponse<Integer> getTotalPriceUser() {
+        return ApiResponse.<Integer>builder()
+                .result(invoiceService.getInvoiceTotalPriceByUser())
+                .build();
+    }
+
+
     @DeleteMapping("/{userId}")
     public ApiResponse<String> delete(@PathVariable("userId") Long id) {
         invoiceService.deleteInvoice(id);

@@ -19,7 +19,7 @@ public interface ICinemaService {
 
     List<CinemaScheduleResponse> getCinemaSchedule(Long cinemaId, Long movieId, Long areaId, LocalDate screeningDate);
 
-    Page<CinemaResponse> searchCinema(String name, int page, int limit);
+    Page<CinemaResponse> searchCinema(String name, Integer status, Long areaId, int page, int limit);
 
     Long totalCinema();
 

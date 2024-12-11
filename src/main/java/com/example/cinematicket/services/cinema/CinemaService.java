@@ -98,9 +98,9 @@ public class CinemaService implements ICinemaService {
     }
 
     @Override
-    public Page<CinemaResponse> searchCinema(String name, int page, int limit) {
-        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "id"));
-        Page<CinemaResponse> pageUser = cinemaRepository.findCinemasOrName(name, pageRequest).map(cinemaMapper::toCinemaResponse);;
+    public Page<CinemaResponse> searchCinema(String name, Integer status, Long areaId, int page, int limit) {
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "id"));
+        Page<CinemaResponse> pageUser = cinemaRepository.findCinemasOrName(name, status, areaId, pageRequest).map(cinemaMapper::toCinemaResponse);;
         return pageUser;
     }
 

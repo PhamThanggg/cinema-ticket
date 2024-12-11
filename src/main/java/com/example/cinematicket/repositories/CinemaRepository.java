@@ -37,9 +37,14 @@ public interface CinemaRepository extends JpaRepository<Cinema, Long> {
     );
 
     @Query("SELECT c FROM Cinema c " +
-            "WHERE (:name IS NULL OR c.name LIKE %:name%) ")
+            "JOIN c.area a " +
+            "WHERE (:name IS NULL OR :name = '' OR c.name LIKE %:name%) AND " +
+            "(:status IS NULL OR c.status = :status) AND " +
+            "(:areaId IS NULL OR a.id = :areaId)")
     Page<Cinema> findCinemasOrName(
             @Param("name") String name,
+            @Param("status") Integer status,
+            @Param("areaId") Long areaId,
             PageRequest pageRequest
     );
 }

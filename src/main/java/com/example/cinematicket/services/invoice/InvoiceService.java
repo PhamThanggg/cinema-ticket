@@ -1,5 +1,6 @@
 package com.example.cinematicket.services.invoice;
 
+import com.cloudinary.utils.StringUtils;
 import com.example.cinematicket.dtos.requests.ListTicketRequest;
 import com.example.cinematicket.dtos.responses.InvoiceResponse;
 import com.example.cinematicket.entities.*;
@@ -18,7 +19,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -40,6 +43,7 @@ public class InvoiceService implements IInvoiceService {
     CinemaSeatRepository cinemaSeatRepository;
     TicketTypeRepository ticketTypeRepository;
     InvoiceRepository invoiceRepository;
+    PromotionRepository promotionRepository;
     InvoiceMapper invoiceMapper;
     TicketService ticketService;
     InvoiceItemService invoiceItemService;
@@ -57,6 +61,22 @@ public class InvoiceService implements IInvoiceService {
 
         TicketType ticketType = ticketTypeRepository.findById(request.getTicketTypeId())
                 .orElseThrow(() -> new AppException(ErrorCode.TICKET_TYPE_NOT_EXISTS));
+
+        Promotion promotion = null;
+        if(StringUtils.isNotBlank(request.getPromotionId())){
+            promotion = promotionRepository.findById(request.getPromotionId())
+                    .orElseThrow(() -> new AppException(ErrorCode.PROMOTION_NOT_EXISTS));
+        }
+
+        if(request.getStar() != null){
+            if(request.getStar() < 20 || request.getStar() > 100){
+                throw new AppException(ErrorCode.STAR_NUMBER);
+            }
+
+            if(user.getStar() < request.getStar()){
+                throw new AppException(ErrorCode.STAR_SATISFY);
+            }
+        }
 
         LocalDateTime timeNow = LocalDateTime.now();
         if(schedule.getStartTime().isBefore(timeNow)){
@@ -85,6 +105,8 @@ public class InvoiceService implements IInvoiceService {
                 .user(user)
                 .schedule(schedule)
                 .totalAmount(request.getTotalAmount())
+                .promotion(promotion)
+                .star(request.getStar())
                 .paymentExpirationTime(request.getPaymentExpirationTime())
                 .build();
         Invoice invoiceResult = invoiceRepository.save(invoice);
@@ -120,6 +142,16 @@ public class InvoiceService implements IInvoiceService {
         return invoiceMapper.toInvoiceResponse(invoice);
     }
 
+
+    public Integer getInvoiceTotalPriceByUser() {
+            int currentYear = LocalDate.now().getYear();
+        var context = SecurityContextHolder.getContext();
+        Jwt jwt = (Jwt) context.getAuthentication().getPrincipal();
+        Long id = Long.parseLong(jwt.getClaimAsString("id"));
+
+        return invoiceRepository.countTotalPriceInvoice(id, currentYear);
+    }
+
     @Override
     @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
     public Page<InvoiceResponse> getAllInvoice(
@@ -136,7 +168,7 @@ public class InvoiceService implements IInvoiceService {
         var user = userService.getMyInfo();
         Pageable pageable = PageRequest.of(page, limit);
 
-        return invoiceRepository.findByUserId(pageable, user.getId()).map(invoiceMapper::toInvoiceResponse);
+        return invoiceRepository.findByUserIdAndStatus(pageable, user.getId(), 1).map(invoiceMapper::toInvoiceResponse);
     }
 
     @Override

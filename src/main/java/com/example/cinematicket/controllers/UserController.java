@@ -2,6 +2,7 @@ package com.example.cinematicket.controllers;
 
 import com.example.cinematicket.dtos.requests.UserCreationRequest;
 import com.example.cinematicket.dtos.requests.UserUpdateRequest;
+import com.example.cinematicket.dtos.requests.user.UserChangePasswordRequest;
 import com.example.cinematicket.dtos.requests.user.UserUpdateRoleRequest;
 import com.example.cinematicket.dtos.responses.ApiResponse;
 import com.example.cinematicket.dtos.responses.PageResponse;
@@ -84,6 +85,15 @@ public class UserController {
         return ApiResponse.<UserResponse>builder()
                 .message("update successfully")
                 .result(userService.updateUser(id, request))
+                .build();
+    }
+
+    @PutMapping("/change-pass")
+    public ApiResponse<UserResponse> updatePasswordUser(
+            @RequestBody @Valid UserChangePasswordRequest request) {
+        return ApiResponse.<UserResponse>builder()
+                .message("update successfully")
+                .result(userService.updatePasswordUser(request))
                 .build();
     }
 

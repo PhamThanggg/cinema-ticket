@@ -26,6 +26,10 @@ public class Invoice {
     @JoinColumn(name="id_user")
     User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="promotion_id")
+    Promotion promotion;
+
     @ManyToOne(fetch =  FetchType.LAZY)
     @JoinColumn(name = "id_schedule")
     Schedule schedule;
@@ -51,6 +55,8 @@ public class Invoice {
     Double amountPaid;
 
     int status;
+
+    Integer star;
 
     @PrePersist
     protected void onCreate() {
