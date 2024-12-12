@@ -1,10 +1,7 @@
 package com.example.cinematicket.dtos.requests.cinemaRoom;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -20,18 +17,30 @@ public class CinemaRoomRequest {
     @Size(min = 2,max = 60, message = "ROOM_NAME_VALID")
     String name;
 
+    @Min(value = 0, message = "STATUS_LENGTH")
+    @Max(value = 2, message = "STATUS_LENGTH")
+    @NotNull(message = "STATUS_NOT_NULL")
     int status;
 
     @JsonProperty("id_cinema")
     @NotNull(message = "CINEMA_NOT_NULL")
     @Min(value = 1, message = "CINEMA_VALID")
+    @Max(value = Integer.MAX_VALUE, message = "VALUE_TOO_LARGE")
     Long cinemaId;
 
     @JsonProperty("id_room_type")
-    @NotNull(message = "")
+    @NotNull(message = "ROOM_TYPE_NOT_NULL")
     @Min(value = 1, message = "ROOM_TYPE_VALID")
+    @Max(value = Integer.MAX_VALUE, message = "VALUE_TOO_LARGE")
     Long roomTypeId;
 
+    @Min(value = 1, message = "ROW_MIN")
+    @Max(value = 26, message = "ROW_MAX")
+    @NotNull(message = "ROW_NOT_NULL")
     int row;
+
+    @Min(value = 1, message = "COLUMN_MIN")
+    @Max(value = 26, message = "COLUMN_MAX")
+    @NotNull(message = "COLUMN_NOT_NULL")
     int column;
 }

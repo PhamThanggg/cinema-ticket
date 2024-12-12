@@ -1,5 +1,6 @@
 package com.example.cinematicket.dtos.requests;
 
+import com.example.cinematicket.exceptions.ValidDoubleMax;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
@@ -31,6 +32,7 @@ public class ListTicketRequest {
         @JsonProperty("total_amount")
         @NotNull(message = "INVOICE_TOTAL_NOT_NULL")
         @Min(value = 0, message = "INVOICE_TOTAL_INVALID")
+        @ValidDoubleMax(message = "VALUE_TOO_LARGE")
         Double TotalAmount;
 
         @JsonProperty("cinema_id")

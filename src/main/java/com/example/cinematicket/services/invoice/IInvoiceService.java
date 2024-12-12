@@ -15,7 +15,8 @@ public interface IInvoiceService {
     Page<InvoiceResponse> getAllInvoice(
             int page, int limit, Long invoiceId,
             String movieName, Long cinemaId,
-            Integer status, LocalDate date
+            Integer status, LocalDate date,
+            Long areaId
     );
 
     InvoiceResponse updateInvoice(

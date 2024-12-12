@@ -16,6 +16,9 @@ public class RoleRequest {
     @NotBlank(message = "ROLE_NOT_BLANK")
     @Size(min = 3,max = 30, message = "ROLE_INVALID")
     String name;
+
+    @Size(max = 1000, message = "DESCRIPTION_INVALID")
     String description;
+
     Set<Long> permissionIds;
 }

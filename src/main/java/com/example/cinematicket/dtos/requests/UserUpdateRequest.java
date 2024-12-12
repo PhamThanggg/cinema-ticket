@@ -20,6 +20,7 @@ public class UserUpdateRequest {
     private String fullName;
 
     @NotBlank(message = "GENDER_NOT_BLANK")
+    @Pattern(regexp = "^(?i)nam|nữ$", message = "GENDER_FORMAT")
     private String gender;
 
     @Size(min = 10, max = 10, message = "PHONE_VALID")

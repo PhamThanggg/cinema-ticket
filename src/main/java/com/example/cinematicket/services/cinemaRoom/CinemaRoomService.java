@@ -66,7 +66,7 @@ public class CinemaRoomService implements ICinemaRoomService {
 
     @Override
     public Page<CinemaRoomResponse> getAllCinemaRoom(int page, int limit, Long cinema_id) {
-        Pageable pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "id"));
+        Pageable pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "id"));
 
         return cinemaRoomRepository
                 .findByCinemaId(cinema_id, pageRequest)

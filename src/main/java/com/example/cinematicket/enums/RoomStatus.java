@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @Getter
 public enum RoomStatus {
-    AVAILABLE(0),
-    OCCUPIED(1),
-    MAINTENANCE(2);
+    AVAILABLE(0), // hoạt động
+    OCCUPIED(1), // dừng hoạt động
+    MAINTENANCE(2); // đang bảo trì
 
     private final int value;
 

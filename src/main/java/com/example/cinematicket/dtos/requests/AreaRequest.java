@@ -16,6 +16,6 @@ import lombok.NoArgsConstructor;
 public class AreaRequest {
     @JsonProperty("area_name")
     @NotBlank(message = "AREA_NOT_NULL")
-    @Size(min = 3,max = 30, message = "AREA_INVALID")
+    @Size(min = 3,max = 45, message = "AREA_INVALID")
     String areaName;
 }

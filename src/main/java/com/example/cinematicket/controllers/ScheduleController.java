@@ -34,7 +34,7 @@ public class ScheduleController {
             @RequestParam("page") int page,
             @RequestParam("limit") int limit,
             @RequestParam("roomId") Long roomId,
-            @RequestParam("screeningDate") LocalDate screeningDate
+            @RequestParam(value = "screeningDate", required = false) LocalDate screeningDate
     ){
         Page<ScheduleResponse> scheduleResponses = scheduleService.searchSchedule(roomId, screeningDate, page, limit);
         return PageResponse.<List<ScheduleResponse>>builder()

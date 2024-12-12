@@ -16,9 +16,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     @Query("SELECT u FROM User u " +
+            "JOIN u.roles r " +
             "WHERE (:name IS NULL OR :name = '' OR u.fullName LIKE %:name%) " +
-            "AND (:email IS NULL OR :email = '' OR u.email LIKE %:email%)")
+            "AND (:email IS NULL OR :email = '' OR u.email LIKE %:email%) " +
+            "AND (:roleId IS NULL OR r.id = :roleId)")
     Page<User> findByFullNameEmail(@Param("name") String name,
                                    @Param("email") String email,
+                                   @Param("roleId") Long roleId,
                                    PageRequest pageRequest);
 }

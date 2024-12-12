@@ -35,7 +35,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     @Query("SELECT s FROM Schedule s " +
             "JOIN s.cinemaRooms cr " +
             "WHERE cr.id = :roomId " +
-            "AND s.screeningDate = :screeningDate")
+            "AND (:screeningDate IS NULL OR s.screeningDate = :screeningDate)")
     Page<Schedule> findSchedulesByRoom(
             @Param("roomId") Long roomId,
             @Param("screeningDate") LocalDate screeningDate,

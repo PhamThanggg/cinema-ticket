@@ -13,6 +13,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,10 +59,11 @@ public class UserController {
     public PageResponse<List<UserResponse>> searchUser(
             @RequestParam(name = "name", required = false) String name,
             @RequestParam(name = "email", required = false) String email,
+            @RequestParam(name = "roleId", required = false) Long roleId,
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ) {
-        Page<UserResponse> userResponses = userService.searchUsers(name,email, page, limit);
+        Page<UserResponse> userResponses = userService.searchUsers(name,email, roleId, page, limit);
         return PageResponse.<List<UserResponse>>builder()
                 .currentPage(userResponses.getNumber())
                 .totalPages(userResponses.getTotalPages())
@@ -91,9 +94,13 @@ public class UserController {
     @PutMapping("/change-pass")
     public ApiResponse<UserResponse> updatePasswordUser(
             @RequestBody @Valid UserChangePasswordRequest request) {
+        var context = SecurityContextHolder.getContext();
+        Jwt jwt = (Jwt) context.getAuthentication().getPrincipal();
+        Long id = Long.parseLong(jwt.getClaimAsString("id"));
+
         return ApiResponse.<UserResponse>builder()
                 .message("update successfully")
-                .result(userService.updatePasswordUser(request))
+                .result(userService.updatePasswordUser(request, id))
                 .build();
     }
 

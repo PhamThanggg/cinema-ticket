@@ -21,6 +21,7 @@ public class TicketTypeRequest {
     @Positive(message = "PRICE_INVALID")
     double ticketPrice;
 
+    @Size(max = 1000, message = "DESCRIPTION_INVALID")
     String description;
 
     @DecimalMin(value = "0.0", inclusive = true, message = "Discount must be greater than or equal to 0")

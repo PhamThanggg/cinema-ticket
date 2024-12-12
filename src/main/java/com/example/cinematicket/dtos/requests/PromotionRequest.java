@@ -11,15 +11,16 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class PromotionRequest {
-    @NotBlank(message = "Tên khuyến mãi không được để trống")
-    @Size(min = 1, max = 60, message = "Tên khuyến mãi phải từ 1 đến 60 ký tự")
+    @NotBlank(message = "PROMOTION_NAME_IS_REQUIRED")
+    @Size(min = 1, max = 60, message = "PROMOTION_NAME_NOT_BLANK")
     private String name;
 
     @Size(max = 255, message = "Mô tả không được vượt quá 255 ký tự")
     private String description;
 
-    @Min(value = 0, message = "Giảm giá không được âm")
-    @Max(value = 100, message = "Giảm giá không được vượt quá 100%")
+    @Min(value = 0, message = "DISCOUNT_MIN")
+    @Max(value = 100, message = "DISCOUNT_MAX")
+    @NotNull(message = "DISCOUNT")
     private int discount;
 
     @Min(value = 0, message = "Số lượng không được âm")
@@ -33,12 +34,10 @@ public class PromotionRequest {
 
     Integer max;
 
-    @NotNull(message = "Ngày bắt đầu không được để trống")
-    @FutureOrPresent(message = "Ngày bắt đầu phải là hôm nay hoặc tương lai")
+    @NotNull(message = "START_DATE")
     private LocalDate startDate;
 
-    @NotNull(message = "Ngày kết thúc không được để trống")
-    @Future(message = "Ngày kết thúc phải là tương lai")
+    @NotNull(message = "END_DATE")
     private LocalDate endDate;
 
     public boolean isValidDateRange() {

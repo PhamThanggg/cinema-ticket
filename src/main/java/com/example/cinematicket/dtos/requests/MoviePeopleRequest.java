@@ -20,6 +20,7 @@ public class MoviePeopleRequest {
     @JsonProperty("id_role_type")
     @NotNull(message = "ROLE_TYPE_NOT_NULL")
     @Min(value = 1, message = "ROLE_TYPE_INVALID")
+    @Max(value = Integer.MAX_VALUE, message = "VALUE_TOO_LARGE")
     Long idRoleType;
 
     @NotBlank(message = "MOVIE_PP_NOT_BLANK")

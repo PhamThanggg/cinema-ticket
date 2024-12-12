@@ -51,7 +51,7 @@ public class RoomTypeService implements IRoomTypeService {
 
     @Override
     public Page<RoomTypeResponse> searchRoomType(String name, int page, int limit) {
-        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "id"));
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "id"));
 
         Page<RoomTypeResponse> roomTypeResponses;
         if(name==null){

@@ -23,16 +23,19 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
             "JOIN s.movies m " +
             "JOIN s.cinemaRooms cr " +
             "JOIN cr.cinema c " +
+            "JOIN c.area a " +
             "WHERE (:invoiceId IS NULL OR i.id = :invoiceId) " +
             "AND (:nameMovie IS NULL OR :nameMovie = '' OR m.nameMovie LIKE %:nameMovie%) " +
             "AND (:cinemaId IS NULL OR c.id = :cinemaId) " +
-            "AND (:status IS NULL OR s.status = :status) " +
-            "AND (:dateRes IS NULL OR FUNCTION('DATE', i.reservationTime) = :dateRes) ")
+            "AND (:status IS NULL OR i.status = :status) " +
+            "AND (:dateRes IS NULL OR FUNCTION('DATE', i.reservationTime) = :dateRes) " +
+            "AND (:areaId IS NULL OR a.id = :areaId)")
     Page<Invoice> searchInvoiceAllParams( @Param("invoiceId") Long invoiceId,
                                           @Param("nameMovie") String nameMovie,
                                           @Param("cinemaId") Long cinemaId,
                                           @Param("status") Integer status,
                                           @Param("dateRes") LocalDate dateRes,
+                                          @Param("areaId") Long areaId,
                                           Pageable pageable);
 
     @Query("SELECT SUM(i.amountPaid) " +

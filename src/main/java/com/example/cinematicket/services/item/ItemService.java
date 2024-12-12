@@ -6,6 +6,7 @@ import com.example.cinematicket.entities.Item;
 import com.example.cinematicket.exceptions.AppException;
 import com.example.cinematicket.exceptions.ErrorCode;
 import com.example.cinematicket.mapper.ItemMapper;
+import com.example.cinematicket.repositories.CinemaRepository;
 import com.example.cinematicket.repositories.ItemRepository;
 import com.example.cinematicket.repositories.MovieRepository;
 import lombok.AccessLevel;
@@ -22,14 +23,14 @@ import java.util.List;
 public class ItemService implements IItemService {
     ItemRepository itemRepository;
     ItemMapper itemMapper;
-    MovieRepository movieRepository;
+    CinemaRepository cinemaRepository;
     @Override
     @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ITEM')")
     public ItemResponse createItem(ItemRequest request) {
-        if(movieRepository.existsById(request.getIdCinema())){
+        if(!cinemaRepository.existsById(request.getIdCinema())){
             throw new AppException(ErrorCode.CINEMA_NOT_EXISTED);
         }
-        if(itemRepository.existsByName(request.getName())){
+        if(itemRepository.existsByNameAndIdCinema(request.getName(), request.getIdCinema())){
             throw new AppException(ErrorCode.ITEM_EXISTS);
         }
 
@@ -52,14 +53,14 @@ public class ItemService implements IItemService {
     @Override
     @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ITEM')")
     public ItemResponse updateItem(ItemRequest request, Long id) {
-        if(movieRepository.existsById(request.getIdCinema())){
+        if(!cinemaRepository.existsById(request.getIdCinema())){
             throw new AppException(ErrorCode.CINEMA_NOT_EXISTED);
         }
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_EXISTS));
 
         if(!item.getName().equals(request.getName())){
-            if(itemRepository.existsByName(request.getName())){
+            if(itemRepository.existsByNameAndIdCinema(request.getName(), request.getIdCinema())){
                 throw new AppException(ErrorCode.ITEM_EXISTS);
             }
         }

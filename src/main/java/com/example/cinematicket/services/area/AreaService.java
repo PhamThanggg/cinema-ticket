@@ -2,6 +2,7 @@ package com.example.cinematicket.services.area;
 
 import com.example.cinematicket.dtos.requests.AreaRequest;
 import com.example.cinematicket.dtos.responses.AreaResponse;
+import com.example.cinematicket.dtos.responses.GenreResponse;
 import com.example.cinematicket.entities.Area;
 import com.example.cinematicket.exceptions.AppException;
 import com.example.cinematicket.exceptions.ErrorCode;
@@ -10,6 +11,10 @@ import com.example.cinematicket.repositories.AreaRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +40,12 @@ public class AreaService implements IAreaService{
     @Override
     public List<AreaResponse> getAreaALl() {
         return areaRepository.findAll().stream().map(areaMapper::toAreaResponse).toList();
+    }
+
+    public Page<AreaResponse> searchArea(String search, int page, int limit) {
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "id"));
+
+        return areaRepository.findAreaOrName(search, pageable).map(areaMapper::toAreaResponse);
     }
 
     @Override

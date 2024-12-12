@@ -40,7 +40,7 @@ public class SecurityConfig {
     private SecurityService securityService;
 
     private final String[] PUBLIC_GET_ENDPOINTS = {
-            "/api/v1/area", "/api/v1/cinema/**",
+            "/api/v1/area/**", "/api/v1/cinema/**",
             "/api/v1/cinema_room/**", "/api/v1/movie/comment/**",
             "/api/v1/genre/**", "/api/v1/movie/**","/api/v1/movie/show/**",
             "/api/v1/moviePeople/**", "/api/v1/schedule/**",

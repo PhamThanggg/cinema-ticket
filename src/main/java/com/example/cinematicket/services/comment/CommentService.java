@@ -68,7 +68,7 @@ public class CommentService implements ICommentService {
     }
 
     @Override
-    @PostAuthorize("returnObject.userId.toString() == authentication.principal.getClaimAsString('id')")
+    @PreAuthorize("@securityService.isCommentOwner(#commentId, authentication) or hasRole('ADMIN')")
     public CommentResponse updateComment(CommentRequest request, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_EXISTED));

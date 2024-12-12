@@ -40,9 +40,11 @@ public class InvoiceController {
             @RequestParam(name = "movieName", required = false) String movieName,
             @RequestParam(name = "cinemaId", required = false) Long cinemaId,
             @RequestParam(name = "status", required = false) Integer status,
-            @RequestParam(name = "date", required = false) LocalDate date
+            @RequestParam(name = "date", required = false) LocalDate date,
+            @RequestParam(name = "areaId", required = false) Long areaId
     ) {
-        Page<InvoiceResponse> userResponses = invoiceService.getAllInvoice(page, limit, invoiceId, movieName, cinemaId, status, date);
+        Page<InvoiceResponse> userResponses = invoiceService.getAllInvoice(
+                page, limit, invoiceId, movieName, cinemaId, status, date, areaId);
         return PageResponse.<List<InvoiceResponse>>builder()
                 .currentPage(userResponses.getNumber())
                 .totalPages(userResponses.getTotalPages())

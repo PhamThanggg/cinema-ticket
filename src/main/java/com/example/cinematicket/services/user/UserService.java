@@ -106,16 +106,16 @@ public class UserService implements IUserService {
     @Override
     @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ACCOUNT')")
     public Page<UserResponse> getAllUsers(int page, int limit) {
-        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "id"));
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "id"));
         return userRepository.findAll(pageRequest).map(userMapper::toUserResponse);
     }
 
     @Override
     @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_ACCOUNT')")
-    public Page<UserResponse> searchUsers(String name, String email, int page, int limit) {
-        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "id"));
+    public Page<UserResponse> searchUsers(String name, String email, Long roleId, int page, int limit) {
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "id"));
 
-        return userRepository.findByFullNameEmail(name, email, pageRequest).map(userMapper::toUserResponse);
+        return userRepository.findByFullNameEmail(name, email, roleId, pageRequest).map(userMapper::toUserResponse);
     }
 
     @Override
@@ -125,7 +125,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    @PostAuthorize("returnObject.id.toString() == authentication.principal.getClaimAsString('id') or hasRole('ADMIN')")
+    @PreAuthorize("#id.toString() == authentication.principal.getClaimAsString('id') or hasRole('ADMIN')")
     public UserResponse updateUser(Long id, UserUpdateRequest request) {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
@@ -135,12 +135,8 @@ public class UserService implements IUserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    @PostAuthorize("returnObject.id.toString() == authentication.principal.getClaimAsString('id') or hasRole('ADMIN')")
-    public UserResponse updatePasswordUser(UserChangePasswordRequest request) {
-        var context = SecurityContextHolder.getContext();
-        Jwt jwt = (Jwt) context.getAuthentication().getPrincipal();
-        Long id = Long.parseLong(jwt.getClaimAsString("id"));
-
+    @PreAuthorize("authentication.principal.getClaimAsString('id') == #id.toString() or hasRole('ADMIN')")
+    public UserResponse updatePasswordUser(UserChangePasswordRequest request, Long id) {
         if(!request.getNewPassword().equals(request.getReNewPassword())){
             throw new AppException(ErrorCode.PASSWORD_EQUAL);
         }

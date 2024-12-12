@@ -17,6 +17,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -80,14 +81,14 @@ public class InvoiceService implements IInvoiceService {
 
         LocalDateTime timeNow = LocalDateTime.now();
         if(schedule.getStartTime().isBefore(timeNow)){
-            throw new RuntimeException("Bạn không thể đặt vé khi đã đến giờ chiếu");
+            throw new AppException(ErrorCode.SCHEDULE_BEGIN);
         }
 
         int listSize = request.getCinemaSeatId().size();
         Set<Long> cinemaSeatIds = new HashSet<>(request.getCinemaSeatId());
 
         if(ticketService.isCinemaSeatBooked(cinemaSeatIds, request.getScheduleID())){
-            throw new RuntimeException("The chair has been booked");
+            throw new AppException(ErrorCode.SEAT_BOOKED);
         }
 
         Map<Long, CinemaSeat> cinemaSeatMap = cinemaSeatRepository.findAllById(cinemaSeatIds).stream()
@@ -156,17 +157,17 @@ public class InvoiceService implements IInvoiceService {
     @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET')")
     public Page<InvoiceResponse> getAllInvoice(
             int page, int limit, Long invoiceId, String movieName,
-            Long cinemaId, Integer status, LocalDate date
+            Long cinemaId, Integer status, LocalDate date, Long areaId
     ) {
-        Pageable pageable = PageRequest.of(page, limit);
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "id"));
         return invoiceRepository.searchInvoiceAllParams(
-                invoiceId, movieName, cinemaId, status, date, pageable)
+                invoiceId, movieName, cinemaId, status, date, areaId, pageable)
                 .map(invoiceMapper::toInvoiceResponse);
     }
 
     public Page<InvoiceResponse> getMyInvoice(int page, int limit) {
         var user = userService.getMyInfo();
-        Pageable pageable = PageRequest.of(page, limit);
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "id"));
 
         return invoiceRepository.findByUserIdAndStatus(pageable, user.getId(), 1).map(invoiceMapper::toInvoiceResponse);
     }

@@ -1,8 +1,10 @@
 package com.example.cinematicket.dtos.requests;
 
 
+import com.example.cinematicket.exceptions.ValidDoubleMax;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -23,16 +25,19 @@ public class ScheduleRequest {
     @JsonProperty("id_cinema_room")
     @NotNull(message = "CINEMA_ROOM_NOT_NULL")
     @Min(value = 1, message = "CINEMA_ROOM_VALID")
+    @Max(value = Integer.MAX_VALUE, message = "VALUE_TOO_LARGE")
     Long cinemaRoomId;
 
     @JsonProperty("id_movie")
     @NotNull(message = "MOVIE_NOT_NULL")
     @Min(value = 1, message = "MOVIE_VALID")
+    @Max(value = Integer.MAX_VALUE, message = "VALUE_TOO_LARGE")
     Long movieId;
 
     @JsonProperty("screening_date")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "Screening Date is required")
+    @Max(value = Integer.MAX_VALUE, message = "VALUE_TOO_LARGE")
 //    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "DATE_VALID")
     LocalDate screeningDate;
 
@@ -50,6 +55,7 @@ public class ScheduleRequest {
 
     @NotNull(message = "PRICE_NOT_NULL")
     @Min(value = 1, message = "PRICE_INVALID")
+    @ValidDoubleMax(message = "VALUE_TOO_LARGE")
     double price;
 
     int status;

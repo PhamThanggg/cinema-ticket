@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
-    boolean existsByName(String name);
+    boolean existsByNameAndIdCinema(String name, Long cinemaId);
 
     List<Item> findByIdCinema(Long cinemaId);
 

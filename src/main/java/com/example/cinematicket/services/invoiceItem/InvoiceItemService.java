@@ -5,6 +5,8 @@ import com.example.cinematicket.entities.Cinema;
 import com.example.cinematicket.entities.Invoice;
 import com.example.cinematicket.entities.InvoiceItem;
 import com.example.cinematicket.entities.Item;
+import com.example.cinematicket.exceptions.AppException;
+import com.example.cinematicket.exceptions.ErrorCode;
 import com.example.cinematicket.repositories.CinemaRepository;
 import com.example.cinematicket.repositories.InvoiceItemRepository;
 import com.example.cinematicket.repositories.InvoiceRepository;
@@ -31,10 +33,10 @@ public class InvoiceItemService implements IInvoiceItemService{
     public List<InvoiceItem> create(Set<InvoiceItemRequest> requests, Long cinemaId, Long invoiceId) {
 
         if(!cinemaRepository.existsById(cinemaId))
-                throw new RuntimeException("Cinema not exists");
+                throw new AppException(ErrorCode.CINEMA_NOT_EXISTED);
 
         Invoice invoice = invoiceRepository.findById(invoiceId)
-                .orElseThrow(() -> new RuntimeException("invoice not exists"));
+                .orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_EXISTS));
 
         Set<Long> itemIds = new HashSet<>();
         for(InvoiceItemRequest request : requests){

@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @Getter
 public enum SeatStatus {
-    AVAILABLE(0),
-    BOOKED(1),
-    RESERVED(2);
+    AVAILABLE(1), // hoạt động
+    BOOKED(2), // khoảng trống
+    RESERVED(3); // xóa mềm
 
     private final int value;
 

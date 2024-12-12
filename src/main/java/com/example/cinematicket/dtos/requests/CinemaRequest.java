@@ -1,10 +1,7 @@
 package com.example.cinematicket.dtos.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -22,11 +19,13 @@ public class CinemaRequest {
     @JsonProperty("area_id")
     @NotNull(message = "AREA_BLANK")
     @Min(value = 1, message = "AREA_VALID")
+    @Max(value = Integer.MAX_VALUE, message = "VALUE_TOO_LARGE")
     Long idArea;
 
     @NotBlank(message = "ADDRESS_NOT_BLANK")
     @Size(min = 2,max = 255, message = "ADDRESS_VALID")
     String address;
+
 
     int status;
 }

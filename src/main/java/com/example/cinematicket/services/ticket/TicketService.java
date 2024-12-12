@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -54,14 +55,14 @@ public class TicketService implements ITicketService {
     }
 
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET') or @securityService.isTicketOwner(#id, authentication)")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET') or @securityService.isTicketOwner(#id, authentication)")
     public TicketResponse updateTicket(Long id, TicketRequest request) {
 
         return null;
     }
 
     @Override
-    @PostAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET') or @securityService.isTicketOwner(#id, authentication)")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('MANAGE_TICKET') or @securityService.isTicketOwner(#id, authentication)")
     public void deleteTicket(Long id) {
         ticketRepository.deleteById(id);
     }

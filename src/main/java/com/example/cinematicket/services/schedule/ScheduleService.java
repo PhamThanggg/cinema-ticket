@@ -75,7 +75,7 @@ public class ScheduleService implements IScheduleService {
 
         LocalDateTime currentDateTime = LocalDateTime.now();
         if(ChronoUnit.MINUTES.between(currentDateTime, request.getStartTime()) < 30){
-            throw new RuntimeException("You can only edit the showtime 30 minutes before the movie starts");
+            throw new AppException(ErrorCode.SCHEDULE_EDIT);
         }
 
         Movie movie = movieRepository.findById(request.getMovieId())
@@ -109,33 +109,31 @@ public class ScheduleService implements IScheduleService {
     private void checkSchedule(ScheduleRequest request, int timeMovie){
         LocalDate localDateStart = request.getStartTime().toLocalDate();
         if(!request.getScreeningDate().equals(localDateStart))
-            throw new RuntimeException("Movie show date and movie start time must be the same day");
+            throw new AppException(ErrorCode.SCHEDULE_DATE_SAME);
 
         LocalDate curentLocalDate = LocalDate.now();
         if(curentLocalDate.isAfter(request.getScreeningDate())
                 || curentLocalDate.isAfter(localDateStart)
         ){
-            throw new RuntimeException(("Show date must be greater than or equal to today's date"));
+            throw new AppException(ErrorCode.SCHEDULE_DATE);
         }
 
         LocalDateTime currentDateTime = LocalDateTime.now();
         if(ChronoUnit.MINUTES.between(currentDateTime, request.getStartTime()) < TIME_BEFORE_START){
-            throw new RuntimeException(
-                    String.format("You must make an schedule at least %d hour in advance", TIME_BEFORE_START));
+            throw new AppException(ErrorCode.SCHEDULE_TIME);
         }
 
         LocalDateTime timeEndMovie = request.getEndTime().plusMinutes(timeMovie + 10);
         if(request.getStartTime().isAfter(request.getEndTime())
                 && timeEndMovie.isAfter(request.getEndTime()))
-            throw new RuntimeException(("The start time must be less than the end time " +
-                    "and the total time must be equal to the movie viewing time plus 10 minutes of waiting time."));
+            throw new AppException(ErrorCode.SCHEDULE_TIME_MOVIE);
     }
 
     private void checkOverlappingScreenings(ScheduleRequest request){
         if(scheduleRepository.findOverlappingScreenings
                 (request.getStartTime(), request.getEndTime(), request.getCinemaRoomId()) > 0
         ){
-            throw new RuntimeException(("The calendar already exists"));
+            throw new AppException(ErrorCode.SCHEDULE_TIME_EXISTS);
         }
     }
 }
