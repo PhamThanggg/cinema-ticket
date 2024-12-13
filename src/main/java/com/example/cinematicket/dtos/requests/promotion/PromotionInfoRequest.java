@@ -1,4 +1,4 @@
-package com.example.cinematicket.dtos.requests;
+package com.example.cinematicket.dtos.requests.promotion;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -10,29 +10,18 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PromotionRequest {
+public class PromotionInfoRequest {
     @NotBlank(message = "PROMOTION_NAME_IS_REQUIRED")
     @Size(min = 1, max = 60, message = "PROMOTION_NAME_NOT_BLANK")
     private String name;
 
-    @Size(max = 255, message = "Mô tả không được vượt quá 255 ký tự")
+    @Size(max = 2000, message = "DESCRIPTION_INVALID")
+    @NotBlank(message = "DESCRIPTION_NOT_BLANK")
     private String description;
 
-    @Min(value = 0, message = "DISCOUNT_MIN")
-    @Max(value = 100, message = "DISCOUNT_MAX")
-    @NotNull(message = "DISCOUNT")
-    private int discount;
-
-    @Min(value = 0, message = "Số lượng không được âm")
-    private int count;
-
+    @NotBlank(message = "PROMOTION_TYPE")
+    @Size(max = 20, message = "promotion type m 20 character")
     String promotionType;
-
-    String discountType;
-
-    Integer min;
-
-    Integer max;
 
     @NotNull(message = "START_DATE")
     private LocalDate startDate;

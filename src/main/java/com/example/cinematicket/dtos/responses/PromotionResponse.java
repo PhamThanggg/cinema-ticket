@@ -28,6 +28,8 @@ public class PromotionResponse {
 
     Integer max;
 
+    String imageUrl;
+
     LocalDate startDate;
 
     LocalDate endDate;

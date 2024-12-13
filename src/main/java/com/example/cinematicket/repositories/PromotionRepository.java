@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,9 +29,25 @@ public interface PromotionRepository extends JpaRepository<Promotion, String> {
     Optional<Promotion> findValidByName(@Param("name") String name);
 
     @Query("SELECT pr FROM Promotion pr " +
-            "WHERE :name IS NULL OR pr.name LIKE %:name% ")
+            "WHERE (:name IS NULL OR :name = '' OR pr.name LIKE %:name%) " +
+            "AND (:promotionType IS NULL OR :promotionType = '' OR pr.promotionType = :promotionType) " +
+            "AND (:dateNow IS NULL OR pr.endDate >= :dateNow) " +
+            "AND (:dateNow2 IS NULL OR pr.endDate <= :dateNow2)")
     Page<Promotion> findByPromotionOrName(
             @Param("name") String name,
+            @Param("promotionType") String promotionType,
+            @Param("dateNow") LocalDate dateNow,
+            @Param("dateNow2") LocalDate dateNow2,
+            Pageable pageable
+    );
+
+    @Query("SELECT pr FROM Promotion pr " +
+            "WHERE (:name IS NULL OR :name = '' OR pr.name LIKE %:name%) " +
+            "AND (pr.promotionType = 'INFO') " +
+            "AND (pr.endDate >= :dateNow) ")
+    Page<Promotion> findByPromotionInfoOrName(
+            @Param("name") String name,
+            @Param("dateNow") LocalDate dateNow,
             Pageable pageable
     );
 }

@@ -184,6 +184,7 @@ public enum ErrorCode {
     ITEM_EXISTS(2102, "Món hàng đã tồn tại", HttpStatus.BAD_REQUEST),
     ITEM_NOT_EXISTS(2102, "Món hàng không tồn tại", HttpStatus.BAD_REQUEST),
     DESCRIPTION_INVALID(2102, "Mô tả không được quá {max} ký tự", HttpStatus.BAD_REQUEST),
+    DESCRIPTION_NOT_BLANK(2102, "Mô tả không được để trống", HttpStatus.BAD_REQUEST),
 //=================== AREA END =======================
 
     //=================== MOVIE IMAGE BEGIN =====================
@@ -294,10 +295,15 @@ public enum ErrorCode {
     DISCOUNT_MAX(2502, "Giảm giá không được vượt quá {value}%", HttpStatus.BAD_REQUEST),
     DISCOUNT_MIN(2502, "Giảm giá không được âm", HttpStatus.BAD_REQUEST),
     DISCOUNT(2502, "% giảm giá không được để trống", HttpStatus.BAD_REQUEST),
+    DISCOUNT_P(2502, "Giảm giá phải từ 1-100%", HttpStatus.BAD_REQUEST),
 
-
+    COUNT_MIN(2502, "Số lượng không được âm", HttpStatus.BAD_REQUEST),
+    PROMOTION_TYPE(2502, "Loại khuyến mãi là bắt buộc", HttpStatus.BAD_REQUEST),
+    DISCOUNT_TYPE(2502, "Loại giảm giá là bắt buộc", HttpStatus.BAD_REQUEST),
     //=================== PROMOTION END =======================
 
+
+    IMAGE_MAX(2502, "Vui lòng chọn 1 ảnh / 1 lần", HttpStatus.BAD_REQUEST),
     ;
 
 

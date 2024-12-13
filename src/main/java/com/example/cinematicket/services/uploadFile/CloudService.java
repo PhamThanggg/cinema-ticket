@@ -113,4 +113,20 @@ public class CloudService implements ICloudService {
         }
         return "";
     }
+
+    public String getPublicId(String imagePath){
+        if (imagePath == null || !imagePath.contains("/")) {
+            throw new RuntimeException("Invalid path");
+        }
+
+        String[] pathSegments = imagePath.split("/");
+
+        if (pathSegments.length > 0) {
+            String publicIdWithFormat = pathSegments[pathSegments.length-1];
+            String[] publicIdSegments = publicIdWithFormat.split("\\.");
+            return publicIdSegments[0];
+        }
+
+        return null;
+    }
 }

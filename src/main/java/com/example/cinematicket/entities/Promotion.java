@@ -37,4 +37,6 @@ public class Promotion {
     LocalDate startDate;
 
     LocalDate endDate;
+
+    String imageUrl;
 }
